@@ -1,8 +1,10 @@
 <?php 
 
+
 	require_once ( $local_root. $local_simbolic . "/control/ajax/Classes/common/Validacoes.php");
 	$oValidacoes = new Validacoes();
 
+	
 	require_once ( $local_root. $local_simbolic . "/control/ajax/Classes/companies/Comp.php");
 	$oComp = new Comp();
 	
