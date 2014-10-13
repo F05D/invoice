@@ -6,19 +6,14 @@ class Comp extends CompDb {
    	
 	private $oCompDb;
 	
-	//Companies
-	public $oCompCreate;
-	public $oCompUpdate;
-	public $oCompRead;
-	
 	public function __construct()
 	{
 		$this->oCompDb = new CompDb; //Acess to DB/Parser
 	}
 	
-	public function delete($id) 
+	public function delete($id)
 	{
-		return $this->oDbComp->deleteUserDB($id);
+		return $this->oCompDb->deleteDB($id);
 	}
 	
 	public function update($arr_args)
@@ -26,7 +21,7 @@ class Comp extends CompDb {
 		return $this->oCompDb->updateDB($arr_args);
 	}
 
-	public function create()
+	public function create($arr_args)
 	{
 		return $this->oCompDb->createDB($arr_args);
 	}
@@ -34,6 +29,11 @@ class Comp extends CompDb {
 	public function read()
 	{
 		return $this->oCompDb->getList();
+	}
+	
+	public function get($id)
+	{
+		return $this->oCompDb->getDB($id);
 	}
 	
 }

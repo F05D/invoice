@@ -116,7 +116,7 @@
 <!-- AJAX CONTROLS -->
 <script>
 
-	function deletar (id,empresa,code,code_user)
+	function deletar(id,empresa,code,code_user)
 	{
 
 		var r = confirm("<?=$oConfigs->get('cadastro_usuario','deseja_deletar_empresa')?> '"+empresa+"' ?");
@@ -141,9 +141,12 @@
 			},  
 			dataType:"html",         
 			success: function (data) {
+
+				console.log(data);
+				
 				var obj = JSON.parse(data);
 				if( obj.transaction == 'OK' ) {			
-					window.location.assign("logon.php?p=2288f694a0dc334479e1d95c8b762b20");							
+					window.location.assign("logon.php?p=0db3a8b117580a98352b0594752b0bc5");							
 				} else {
 					$("#msg").html(obj.msg);
 					$("#msg").scrollToMe();

@@ -15,9 +15,9 @@
 	$oConfigs = new Configs();
 	$oConfigs->setLanguage($_POST['lang']);
 	
-	require_once ( $local_root. $local_simbolic . "/control/ajax/Classes/companies/register/Delete.php");
-	$oCompDelete = new CompDelete();
-	
+	require_once ( dirname(__FILE__) . "/../../Classes/companies/Comp.php");
+	$oComp = new Comp();
+		
 	require_once ( $local_root. $local_simbolic . "/control/ajax/Classes/common/Validacoes.php");
 	$oValiacoes = new Validacoes();
 	
@@ -26,15 +26,15 @@
 	$error = false;
 	
 	
-	if(!$oUserDelete->ver_permissao_usuario($_POST['id_usuario'],$_POST['code_auth_user'] ) ) {
-		$cache_html .= "Erro de integridade. Contacte o administrador do sistema.<br>";
-		$error = true;
-	}
+// 	if(!$oUserDelete->ver_permissao_usuario($_POST['id_usuario'],$_POST['code_auth_user'] ) ) {
+// 		$cache_html .= "Erro de integridade. Contacte o administrador do sistema.<br>";
+// 		$error = true;
+// 	}
 	
-	if($oUserDelete->ver_permissao_usuario($_POST['id_usuario'],$_POST['code_auth_user']) != 1 ) {
-		$cache_html .= "Usuário do sistema não possui permissão para esta operação.<br>";
-		$error = true;
-	}
+// 	if($oUserDelete->ver_permissao_usuario($_POST['id_usuario'],$_POST['code_auth_user']) != 1 ) {
+// 		$cache_html .= "Usuário do sistema não possui permissão para esta operação.<br>";
+// 		$error = true;
+// 	}
 	
 	if($_POST['id_delete'] == $_POST['id_usuario']) {
 		$cache_html .= "Não é possível deletar seu próprio usuário.<br>";
@@ -51,10 +51,10 @@
 		$error = true;
 	}
 	
-	if($code_auth && !$oUserDelete->validar_delete_usuario($_POST['id_delete'], $_POST['code_auth'])) {
-		$cache_html .= "Problemas de autenticacao, favor contactar seu administrador.<br>";
-		$error = true;
-	}
+// 	if($code_auth && !$oUserDelete->validar_delete_usuario($_POST['id_delete'], $_POST['code_auth'])) {
+// 		$cache_html .= "Problemas de autenticacao, favor contactar seu administrador.<br>";
+// 		$error = true;
+// 	}
 	
 	
 	if( !$_POST['id_usuario'] && !is_numeric($_POST['id_usuario'])) {
@@ -74,7 +74,9 @@
 		return;
 	}
 	
-	$result = $oUserDelete->deleteUser($_POST['id_delete']);
+
+	
+	$result = $oComp->delete($_POST['id_delete']);
 	
 	if ($result) {
 		$arr = array('transaction' => 'OK', 'msg' => $oConfigs->get('cadastro_usuario','delete_usuario_sucesso') );			

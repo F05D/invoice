@@ -111,7 +111,7 @@
 	
 	$cache_html = "";
 	
-	$return = $oComp->oCompCreate->create($arr_args);
+	$return = $oComp->create($arr_args);
 	
 	if ($return) {
 		$cache_html .= $oConfigs->get('cadastro_companies','cadastro_sucesso') . "<br>";
