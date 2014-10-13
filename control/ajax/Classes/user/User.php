@@ -22,7 +22,7 @@ class User extends DbUser {
 		//LOCALIZACAO DE ARQUIVOS {
 		if($_SERVER['DOCUMENT_ROOT'] == "/Library/WebServer/Sites") {
 			$local_root = $_SERVER['DOCUMENT_ROOT'];
-			$local_simbolic = "/www.invoice.artsulgranitos.com.br";
+			$local_simbolic = "/invoice";
 		} else {
 			$local_root = $_SERVER['DOCUMENT_ROOT'];
 			$local_simbolic = "";

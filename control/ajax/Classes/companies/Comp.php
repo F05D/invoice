@@ -8,7 +8,7 @@ class Comp extends DBComp {
 	private $oDBComp;
 	
 	function __construct() {
-		//if(!$this->oDBComp) $this->oDBComp = new DBComp();
+		if(!$this->oDBComp) $this->oDBComp = new DBComp();
 	}
 
 	public function getList() {

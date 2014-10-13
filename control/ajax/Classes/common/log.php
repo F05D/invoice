@@ -6,8 +6,9 @@ class Emails {
 	public function send_email_para_validacao($email, $code_validacao_email) {
 		
 		$email_md5 = md5($email);
-				
-		$url_validacao = "http://localhost/Sites/www.invoice.artsulgranitos.com.br/validation.php?c=$code_validacao_email&m=$email_md5";
+
+		//TODO: REMOVER LINK NA VERSAO OFICIAL
+		$url_validacao = "http://localhost/Sites/invoice/validation.php?c=$code_validacao_email&m=$email_md5";
 		
 		print $url_validacao;
 		
