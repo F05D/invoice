@@ -5,8 +5,8 @@
 	$oConfigs = new Configs();
 	$oConfigs->setLanguage($_POST['lang'], false);
 	
-	require_once ( dirname(__FILE__) . "/../../Classes/companies/register/Create.php");
-	$oCompCreate = new CompCreate();
+	require_once ( dirname(__FILE__) . "/../../Classes/companies/Comp.php");
+	$oComp = new Comp();
 	
 	require_once ( dirname(__FILE__) . "/../../Classes/common/Validacoes.php");
 	$oValiacoes = new Validacoes();
@@ -111,7 +111,7 @@
 	
 	$cache_html = "";
 	
-	$return = $oCompCreate->create($arr_args);
+	$return = $oComp->oCompCreate->create($arr_args);
 	
 	if ($return) {
 		$cache_html .= $oConfigs->get('cadastro_companies','cadastro_sucesso') . "<br>";

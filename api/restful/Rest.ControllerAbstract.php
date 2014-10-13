@@ -30,7 +30,8 @@ abstract class ControllerAbstract {
     /**
      * Constructor
      */
-    public function __construct() {
+    public public function __construct()
+{
         // set the request method
         $this->setRequestMethod();
 

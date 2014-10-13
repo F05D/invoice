@@ -28,7 +28,8 @@ class Configs extends Enigma {
 		return $inst;
 	}
 	
-	function __construct() {		
+	public function __construct()
+{		
 		$this->setTimezone("America/Sao_Paulo");
 		$this->year_now = date("Y");		
 	}

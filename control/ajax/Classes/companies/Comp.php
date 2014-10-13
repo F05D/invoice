@@ -1,46 +1,40 @@
 <?php 
 
-require_once ( dirname(__FILE__) . "/db/DBComp.php");
+require_once ( dirname(__FILE__) . "/CompDb.php");
 
-class Comp extends DBComp {
+class Comp extends CompDb {
    	
-	//Companies DB	
-	private $oDBComp;
+	private $oCompDb;
 	
-	function __construct() {
-		if(!$this->oDBComp) $this->oDBComp = new DBComp();
+	//Companies
+	public $oCompCreate;
+	public $oCompUpdate;
+	public $oCompRead;
+	
+	public function __construct()
+	{
+		$this->oCompDb = new CompDb; //Acess to DB/Parser
+	}
+	
+	public function delete($id) 
+	{
+		return $this->oDbComp->deleteUserDB($id);
+	}
+	
+	public function update($arr_args)
+	{
+		return $this->oCompDb->updateDB($arr_args);
 	}
 
-	public function getList() {
-		$arrResult = array();
-		
-		$result = $this->oDBComp->getList();
-		if( $result->num_rows ) {
-			while ( $obj = $result->fetch_object () ) {
-				array_push( $arrResult, array(
-						'id'        => $obj->id,
-						'nome'      => $obj->nome,
-						'end'       => $obj->endereco,
-						'map_ln'    => $obj->mapa_link,
-						'tel_p'     => $obj->tel_princ,
-						'tel_s'     => $obj->tel_sec,
-						'cnpj_id'   => $obj->cnpj_id,
-						'site'      => $obj->site,
-						'email'     => $obj->email,
-						'nome_prop' => $obj->nome_proprietario,
-						'pais'      => $obj->pais,
-						'estado'    => $obj->estado,
-						'cidade'    => $obj->cidade,
-						'coment'    => $obj->comentarios,
-						'ativo'     => $obj->ativo
-					)
-				);
-			}
-		}
-		
-		return $arrResult;
+	public function create()
+	{
+		return $this->oCompDb->createDB($arr_args);
 	}
-
+	
+	public function read()
+	{
+		return $this->oCompDb->getList();
+	}
 	
 }
 

@@ -4,7 +4,8 @@ class Db {
 	public $oDb;
 	
 	// Create a database connection for use by all functions in this class
-	function __construct() {
+	public function __construct()
+{
 		
 		//require_once ( dirname(__FILE__) . "/db.config.php");
 		
@@ -30,32 +31,32 @@ class Db {
 	}
 	
 	// Create a standard data format for insertion of PHP dates into MySQL
-	public function date($php_date) {
+	protected function date($php_date) {
 		return date ( 'Y-m-d H:i:s', strtotime ( $php_date ) );
 	}
 	
 	// All text added to the DB should be cleaned with mysqli_real_escape_string
 	// to block attempted SQL insertion exploits
-	public function escape($str) {
+	protected function escape($str) {
 		return mysqli_real_escape_string ( $this->oDb, $str );
 	}
 	
 	// Test to see if a specific field value is already in the DB
 	// Return false if no, true if yes
-	public function in_table($table, $where) {
+	protected function in_table($table, $where) {
 		$query = 'SELECT * FROM ' . $table . ' WHERE ' . $where;
 		$result = mysqli_query ( $this->oDb, $query );
 		return mysqli_num_rows ( $result ) > 0;
 	}
 	
 	// Perform a generic select and return a pointer to the result
-	public function select($query) {
+	protected function select($query) {
 		$result = mysqli_query ( $this->oDb, $query );
 		return $result;		
 	}
 
 	// Add a row to any table
-	public function insertValues($table, $values) {
+	protected function insertValues($table, $values) {
 		$query = 'INSERT INTO ' . $table . ' VALUES (' . $values . ')';
 	
 		if (!mysqli_query ( $this->oDb, $query ) ) {
@@ -68,7 +69,7 @@ class Db {
 	}
 	
 	// Add a row to any table
-	public function insert($table, $field_values) {
+	protected function insert($table, $field_values) {
 		$query = 'INSERT INTO ' . $table . ' SET ' . $field_values;
 
 		if (!mysqli_query ( $this->oDb, $query ) ) {
@@ -81,7 +82,7 @@ class Db {
 	}
 	
 	// Update any row that matches a WHERE clause
-	public function update($table, $field_values, $where) {
+	protected function update($table, $field_values, $where) {
 		$query = 'UPDATE ' . $table . ' SET ' . $field_values . ' WHERE ' . $where;
 		
 		if (!mysqli_query ( $this->oDb, $query ) ) {

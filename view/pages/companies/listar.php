@@ -13,7 +13,7 @@
 	
 	
 	$arr_result = array();
-	$arr_result = $oComp->getList();
+	$arr_result = $oComp->read();
 
 ?>						
 

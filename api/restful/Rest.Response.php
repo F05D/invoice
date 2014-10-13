@@ -111,7 +111,8 @@ class Response {
     /**
      * Constructor
      */
-    public function __construct() {
+    public public function __construct()
+{
         $this->addHeader('Content-type: '. $this->content_type);
     }
 

@@ -4,7 +4,8 @@ class Enigma {
 
 	private $enigma;
 	
-	function __construct() {
+	public function __construct()
+{
 		
 		$this->enigma =  array(			
 			array('A','A3','H5','O6'),

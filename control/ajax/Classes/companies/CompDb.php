@@ -1,22 +1,50 @@
 <?php 
 
-require_once ( dirname(__FILE__) . "/../../../../../api/restful/Db.php");
+//TODO: Verificar esse link de acesso a classe;
+require_once ( dirname(__FILE__) . "/../../../../api/restful/Db.php");
 
-class DbComp extends Db  {
+class CompDb extends Db  {
    	
 	//DB	
 	private $oDB;
 	
-	function __construct() {
+	public function __construct()
+	{
 		if(!$this->oDB) $this->oDB = new db(); //DB
 	}
 	
 	protected function getList(){
+		$arrResult = array();
+		
 		$query = "SELECT * FROM companies WHERE ativo = true;";
-		return $this->oDB->select ( $query );		
+		$result = $this->oDB->select ( $query );	
+		
+		if( $result->num_rows ) {
+			while ( $obj = $result->fetch_object () ) {
+				array_push( $arrResult, array(
+				'id'        => $obj->id,
+				'nome'      => $obj->nome,
+				'end'       => $obj->endereco,
+				'map_ln'    => $obj->mapa_link,
+				'tel_p'     => $obj->tel_princ,
+				'tel_s'     => $obj->tel_sec,
+				'cnpj_id'   => $obj->cnpj_id,
+				'site'      => $obj->site,
+				'email'     => $obj->email,
+				'nome_prop' => $obj->nome_proprietario,
+				'pais'      => $obj->pais,
+				'estado'    => $obj->estado,
+				'cidade'    => $obj->cidade,
+				'coment'    => $obj->comentarios,
+				'ativo'     => $obj->ativo
+				)
+				);
+			}
+		}
+		return $arrResult;
 	}
 	
-	protected function CompCreate($arr_args){
+	protected function createDB($arr_args){
 		
 		//TODO: SERAH USADO PARA REGISTRO LOG
 		//$arr_args['id_usuario']
@@ -40,6 +68,24 @@ class DbComp extends Db  {
 		
 		return $this->oDB->insert("companies", $field_values);
 		
+	}
+	
+	protected function verPermissaoUsuarioDB($id_usuario,$code_auth_user){
+		$query = "SELECT * FROM usuarios WHERE id = '$id_usuario' LIMIT 1";
+	
+		$result = $this->oDB->select ( $query );
+			
+		if( $result->num_rows ) {
+			while ( $obj = $result->fetch_object () ) {
+				$user_code   =  md5($obj->usuario.$obj->id.$obj->lingua);
+	
+				if( $user_code == $code_auth_user) {
+					return $obj->privilegios;
+				}
+			}
+		}
+	
+		return false;
 	}
 	
 		

@@ -10,7 +10,8 @@ class DbUser extends Db  {
 	//DB	
 	private $oDB;
 	
-	function __construct() {
+	public function __construct()
+{
 		if(!$this->oDB) $this->oDB = new db(); //DB
 	}
 	
@@ -169,9 +170,7 @@ class DbUser extends Db  {
 	
 		return false;
 	}
-	
-	
-	
+		
 	protected function ver_permissao_usuario($id_usuario,$code_auth_user){
 		$query = "SELECT * FROM usuarios WHERE id = '$id_usuario' LIMIT 1";
 		

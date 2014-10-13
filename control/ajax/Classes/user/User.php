@@ -7,7 +7,8 @@ class User extends DbUser {
 	//User DB	
 	private $oDbUser;
 	
-	function __construct() {
+	public function __construct()
+{
 		if(!$this->oDbUser) $this->oDbUser = new DbUser(); //User DB New
 	}
    
