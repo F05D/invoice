@@ -1,0 +1,49 @@
+.table_empresa {
+	background-color: #E9E9E9;
+}
+
+/* RESPONSIVE  */
+/* USADO PELO SISTEMA  */
+@media (min-width: 980px) {
+  .full {
+  	display:block;
+  }
+
+  .ipad {
+  	display:none;
+  }
+  
+  
+  .mobile {
+  	display:none;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 979px) {
+  .full {
+  	display:none;
+  }
+
+  .ipad {
+  	display:block;
+  }
+  
+  .mobile {
+  	display:none;
+  }
+}
+
+@media (max-width: 767px) {
+  .full {
+  	display:none;
+  }
+  
+  .ipad {
+  	display:none;
+  }
+  
+  .mobile {  	
+  	display:block;
+  }
+	
+}
