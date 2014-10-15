@@ -25,18 +25,23 @@
 	//ERROS:
 	$cache_html = "";$error = false;
 	
-	if(!$oUser->userPermission($_POST['id_usuario'],$_POST['code_user']) ) {
-		$cache_html .= "Erro de integridade. Contacte o administrador do sistema.<br>";
+	if(!$oUser->userPermission($_POST['id_usuario'].'*%',$_POST['code_user']) ) {
+		$cache_html .= "Usuario: Erro de integridade. Contacte o administrador do sistema.<br>";
 		$error = true;
 	}
 	
-	if(!$oUser->userPermission($oUser->getLastId(),$_POST['code_create'] ) ) {
-		$cache_html .= "Erro de integridade. Clique no botao 'Cadastrar' novamente.<br>";
+	if(!$oUser->userPermission($_POST['id_alter'].'#!',$_POST['code_edit'] ) ) {
+		$cache_html .= "Permissao: Erro de integridade. Contacte o administrador do sistema.<br>";
 		$error = true;
 	}
 	
-	if( !$_POST['id_usuario'] && !is_numeric($_POST['id_usuario'])) {
+	if( !$_POST['id_usuario'] || !is_numeric($_POST['id_usuario'])) {
 		$cache_html .= $oConfigs->get('cadastro_usuario','usuario_nao_logado') . "<br>";
+		$error = true;
+	}
+	
+	if( !$_POST['id_alter'] || !is_numeric($_POST['id_alter'])) {
+		$cache_html .= $oConfigs->get('cadastro_usuario','erro_usuario_localizar') . "<br>";
 		$error = true;
 	}
 		
@@ -86,7 +91,7 @@
 		$error = true;
 	}
 	
-	if( $_POST['user_email'] && $oUser->verificaUserInDB($_POST['user_email']) ) {
+	if( $_POST['user_email'] && $oUser->verificaUserInDB( $_POST['user_email'] , $_POST['id_alter'] )) {
 		$cache_html .= $oConfigs->get('cadastro_usuario','email_ja_existente') . "<br>";
 		$error = true;
 	}
@@ -116,7 +121,7 @@
 		$error = true;		
 	}
 		
-	if( $_POST['user_privilegio'] > 1 &&  !$_POST['user_empresa']) {
+	if( $_POST['user_privilegio'] > 1 && !$_POST['user_empresa']) {
 		$cache_html .= "Usuário deve pertencer a uma empresa." . "<br>";
 		$error = true;		
 	}
@@ -125,7 +130,7 @@
 		$cache_html = $oConfigs->get('cadastro_usuario','erros_encontrados') . "<br><br>" . $cache_html;
 		$arr = array('transaction' => 'NO', 'msg' => $cache_html );
 		print json_encode($arr);
-		return;
+		die();
 	}
 	
 	$code_validacao_email = md5( $oUser->getCodeSecurity($_POST['user_senha']) );

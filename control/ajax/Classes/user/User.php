@@ -63,14 +63,19 @@ class User extends UserDb {
 		return $this->oUserDb->createDB($arr_user);
 	}
 	
+	public function update($arr_user)
+	{
+		return $this->oUserDb->updateDB($arr_user);
+	}
+	
 	public  function delete($id)
 	{
 		return $this->oUserDb->deleteDB($id);		
 	}	
 	
-	public function verificaUserInDB($email) 
+	public function verificaUserInDB($email,$id = null)
 	{
-		return $this->oUserDb->verificaUserInDB($email);
+		return $this->oUserDb->verificaUserInDB($email,$id);
 	}
 	
 	public function getListPrivilegios()

@@ -96,10 +96,13 @@ $arrIdBindCompany = $oUser->getBindCompany($id);
 	
 	function ajax_control()
 	{
-		var id_usuario = "<?=$user['id']?>"; //PERMANENTE
-		var lang       = "<?=$user['lingua']?>"; //PERMANENTE
+		var id_usuario = "<?=$oUser->get('id')?>"; //PERMANENTE
+		var lang       = "<?=$oUser->get('lingua')?>"; //PERMANENTE
 
-		var id_alter        = '<?=$_GET['i']?>';		
+		var code_user   = "<?=$oUser->getCodeSecurity( $oUser->get('id').'*%' )?>";
+		var code_edit   = "<?=$oUser->getCodeSecurity( $id.'#!'  )?>";		
+
+		var id_alter        = '<?=$id?>';
 		var user_nome       = $('#user_nome').val();
 		var user_dt_nasc    = $('#user_dt_nasc').val();
 		var user_email      = $('#user_email').val();
@@ -117,6 +120,9 @@ $arrIdBindCompany = $oUser->getBindCompany($id);
             data: {
 	            'id_usuario':id_usuario,//PERMANENTE
 	            'lang':lang,//PERMANENTE
+
+	            'code_user':code_user,
+	            'code_edit':code_edit,
 	            
 	            'user_nome':user_nome,
 	            'user_dt_nasc':user_dt_nasc,

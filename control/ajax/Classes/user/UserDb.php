@@ -134,11 +134,48 @@ class UserDb extends Db {
 		return $this->oSupport->transcriberToList($result)[0];
 	}
 	
-	protected function verificaUserInDB($email)
+	protected function verificaUserInDB($email,$id = null)
 	{
-		$query = "SELECT usuario FROM usuarios WHERE usuario = '$email';";
+		$strNotIn = ( $id ? " AND id NOT IN($id) " : '' ); 
+		$query = "SELECT usuario FROM usuarios WHERE usuario = '$email' $strNotIn;";
+		
+		print $query . "<br>";
 		$result = $this->oDB->select ( $query );
 		return ($result->num_rows > 0 ? true : false);
+	}
+
+	protected function updateDB($arr_user) {
+	
+		//TODO: SERAH USADO PARA REGISTRO LOG
+		//$arr_args['id_usuario']
+		//$arr_args['lang']
+	
+		$field_values  = "";
+		$field_values .= " nome = '" . $arr_user['user_nome'] . "',";
+		$field_values .= " dt_nascimento = '" . $arr_user['user_dt_nasc'] . "',";
+		$field_values .= " usuario = '" . $arr_user['user_email'] . "',";
+		$field_values .= " senha = '" . $arr_user['user_senha'] . "',";
+		$field_values .= " dica_senha = '" . $arr_user['user_dica'] . "',";
+		$field_values .= " privilegios = '" . $arr_user['user_privilegio'] . "',";
+		$field_values .= " lingua = '" . $arr_user['user_lang'] . "',";
+	
+		$field_values .= " code_validacao_email = '" . $arr_user['code_validacao_email'] . "', ";
+		$field_values .= " code_validado = " . $arr_user['code_validado'] . ",";
+		$field_values .= " ativo = " . $arr_user['ativo'] . ",";
+		$field_values .= " is_new = " . $arr_user['is_new'];
+	
+		$result_insert_user = $this->oDB->insert("usuarios", $field_values);
+	
+		if($result_insert_user && $arr_user['user_empresa'])
+		{
+			$lastId = $this->oDB->lastId('usuarios','id');
+			$result_insert_bind = $this->bind( array('id_usuario'=>$lastId,'id_company'=>$arr_user['user_empresa'] ),'companies_bind_usuarios');
+		}
+	
+		return array(
+				'result_insert_user' => $result_insert_user,
+				'result_insert_bind' => $result_insert_bind
+		);
 	}
 	
 	protected function createDB($arr_user) {
@@ -189,6 +226,8 @@ class UserDb extends Db {
 		}
 		return false;
 	}
+	
+	
 	
 	
 	

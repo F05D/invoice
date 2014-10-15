@@ -35,7 +35,7 @@
 		$error = true;
 	}
 	
-	if( !$_POST['id_usuario'] && !is_numeric($_POST['id_usuario'])) {
+	if( !$_POST['id_usuario'] || !is_numeric($_POST['id_usuario'])) {
 		$cache_html .= $oConfigs->get('cadastro_usuario','usuario_nao_logado') . "<br>";
 		$error = true;
 	}
