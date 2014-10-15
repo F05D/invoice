@@ -1,6 +1,6 @@
 <?php
 session_start();
-
+session_destroy();// Destroy todos os dados de sessao anteriores
 
 //CONFIGURACOES E TRADUCOES
 require_once ( dirname(__FILE__) . "/control/ajax/Classes/configs/Configs.php");
@@ -10,7 +10,7 @@ $oConfigs->setLanguage($_GET['lang'],true);
 $active_men ['login'] = "active";
 $active_men ['invoices'] = "";
 
-session_destroy();// Destroy todos os dados de sessao anteriores
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -52,8 +52,8 @@ session_destroy();// Destroy todos os dados de sessao anteriores
 							</div>
 							<div class="control-group">
 								<div class="controls">
-									<button type="button" class="btn btn-cn" onclick="fazerLogin()"><?=$oConfigs->get('login','entrar')?></button>
-									<button type="button" class="btn" onclick="reenviarSenha()"><?=$oConfigs->get('login','reenviar')?></button>								
+									<button type="button" class="btn btn-cn" onclick="login()"><?=$oConfigs->get('login','entrar')?></button>&nbsp;&nbsp;
+									<a href="#" onclick="reenviar()"><?=$oConfigs->get('login','reenviar')?></a>								
 								</div>
 							</div>
 							<div class="control-group">								
@@ -76,7 +76,7 @@ session_destroy();// Destroy todos os dados de sessao anteriores
         	}});
 		</script>
 	<script>
-	function fazerLogin()
+	function login()
 	{
 		var lang  = '<?=$oConfigs->getLangSTR()?>';
 		var email = $('#Email').val();
@@ -84,7 +84,7 @@ session_destroy();// Destroy todos os dados de sessao anteriores
 
 		//VERIFICACAO E CONTROLE
         $.ajax({
-            url: 'control/ajax/delegate_to/user/login.php',            
+            url: 'control/ajax/delegate_to/login/login.php',            
             type: 'POST',
             data: {
 	            'lang':lang,
@@ -94,14 +94,18 @@ session_destroy();// Destroy todos os dados de sessao anteriores
 			dataType:"html",         
 			success: function (data) {
 				console.log(data);
-				if( data ) {
-					window.location.assign("logon.php?"+data);
+				
+				var obj = JSON.parse(data);
+				if( obj.transaction == 'OK' ) {
+					debugger					
+					window.location.assign("logon.php?lang=<?=$_GET['lang']?>&pincode="+ obj.pincode);
 				} else {
-					$("#msg").html("<?=$oConfigs->get('login','erro_logar')?>");
+					$("#msg").html( obj.msg );
 					$("#msg").scrollToMe(); 
 				}
 	      	},
 			error: function (data) {
+				console.log(data);
 				
 				if(data) { $("#msg").html("<?=$oConfigs->get('login','erro_logar')?>"); $("#msg").scrollToMe();  }				
 			},
@@ -111,14 +115,14 @@ session_destroy();// Destroy todos os dados de sessao anteriores
 		});
 	}	
 
-	function reenviarSenha()
+	function reenviar()
 	{
 		var email = $('#Email').val();	
 		var lang  = '<?=$oConfigs->getLangSTR()?>';	
 
 		//VERIFICACAO E CONTROLE
         $.ajax({
-        	url: 'control/ajax/delegate_to/user/reenviar_senha.php',
+        	url: 'control/ajax/delegate_to/login/reenviar.php',
             type: 'POST',
             data: {
 	            'code':'login_remember',
@@ -129,8 +133,9 @@ session_destroy();// Destroy todos os dados de sessao anteriores
 			dataType:"html",         
 			success: function (data) {
 				console.log(data);
-				$("#msg").html(data);
-				$("#msg").scrollToMe();										
+				var obj = JSON.parse(data);
+				$("#msg").html( obj.msg );
+				$("#msg").scrollToMe(); 																	
 	      	},
 			error: function (data) {
 				console.log(data);

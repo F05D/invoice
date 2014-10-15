@@ -56,7 +56,10 @@ class Configs extends Enigma {
 					break;
 			}
 				
-			if($change_link) header("Location: index.php?lang=".$this->CODE_LANG_SRT);
+			if($change_link) {
+				header("Location: index.php?lang=".$this->CODE_LANG_SRT);
+				die();
+			}
 		
 		} else
 			$this->CODE_LANG_SRT = $lang_code;

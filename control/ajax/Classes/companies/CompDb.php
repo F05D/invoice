@@ -1,77 +1,53 @@
 <?php 
 
-//TODO: Verificar esse link de acesso a classe;
-require_once ( dirname(__FILE__) . "/../../../../api/restful/Db.php");
+//TODO:Arrumar esta forma de buscar diretorio
+if($_SERVER['DOCUMENT_ROOT'] == "/Library/WebServer/Sites") {
+	$local_root = $_SERVER['DOCUMENT_ROOT'];
+	$local_simbolic = "/invoice";
+} else {
+	$local_root = $_SERVER['DOCUMENT_ROOT'];
+	$local_simbolic = "";
+}
+
+require_once ( $local_root . $local_simbolic . "/api/restful/Db.php");
 
 class CompDb extends Db  {
    	
-	//DB	
 	private $oDB;
+	private $oSupport;
 	
 	public function __construct()
 	{
 		if(!$this->oDB) $this->oDB = new db(); //DB
+		
+		//TODO:Arrumar esta forma de buscar diretorio
+		if($_SERVER['DOCUMENT_ROOT'] == "/Library/WebServer/Sites") {
+			$local_root = $_SERVER['DOCUMENT_ROOT'];
+			$local_simbolic = "/invoice";
+		} else {
+			$local_root = $_SERVER['DOCUMENT_ROOT'];
+			$local_simbolic = "";
+		}
+		
+		require_once ( $local_root . $local_simbolic . "/control/ajax/Classes/common/Support.php");
+		$this->oSupport = New Support();
 	}
 	
 	protected function getDB($id){
 		$arrResult = array();
 	
 		$query = "SELECT * FROM companies WHERE ativo = true AND id = $id;";
-		$result = $this->oDB->select ( $query );
-	
-		if( $result->num_rows ) {
-			while ( $obj = $result->fetch_object () ) {
-				$arrResult = array(
-				'id'        => $obj->id,
-				'nome'      => $obj->nome,
-				'end'       => $obj->endereco,
-				'map_ln'    => $obj->mapa_link,
-				'tel_p'     => $obj->tel_princ,
-				'tel_s'     => $obj->tel_sec,
-				'cnpj_id'   => $obj->cnpj_id,
-				'site'      => $obj->site,
-				'email'     => $obj->email,
-				'nome_prop' => $obj->nome_proprietario,
-				'pais'      => $obj->pais,
-				'estado'    => $obj->estado,
-				'cidade'    => $obj->cidade,
-				'coment'    => $obj->comentarios,
-				'ativo'     => $obj->ativo
-				);
-			}
-		}
-		return $arrResult;
+		$result = $this->oDB->select ( $query );	
+		return $this->oSupport->transcriberToList($result);		 
 	}
 	
-	protected function getList(){
+	protected function getList($arr_campos=null){
 		$arrResult = array();
 		
-		$query = "SELECT * FROM companies WHERE ativo = true;";
+		$fields = ($arr_campos ? $this->oSupport->arrToText($arr_campos) : '*');
+		$query = "SELECT $fields FROM companies WHERE ativo = true;";
 		$result = $this->oDB->select ( $query );	
-		
-		if( $result->num_rows ) {
-			while ( $obj = $result->fetch_object () ) {
-				array_push( $arrResult, array(
-				'id'        => $obj->id,
-				'nome'      => $obj->nome,
-				'end'       => $obj->endereco,
-				'map_ln'    => $obj->mapa_link,
-				'tel_p'     => $obj->tel_princ,
-				'tel_s'     => $obj->tel_sec,
-				'cnpj_id'   => $obj->cnpj_id,
-				'site'      => $obj->site,
-				'email'     => $obj->email,
-				'nome_prop' => $obj->nome_proprietario,
-				'pais'      => $obj->pais,
-				'estado'    => $obj->estado,
-				'cidade'    => $obj->cidade,
-				'coment'    => $obj->comentarios,
-				'ativo'     => $obj->ativo
-				)
-				);
-			}
-		}
-		return $arrResult;
+		return $this->oSupport->transcriberToList($result);		
 	}
 	
 	protected function createDB($arr_args){

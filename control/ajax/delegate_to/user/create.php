@@ -1,21 +1,39 @@
 <?php
 	
 
+	//LOCALIZACAO DE ARQUIVOS {
+	if($_SERVER['DOCUMENT_ROOT'] == "/Library/WebServer/Sites") {
+		$local_root = $_SERVER['DOCUMENT_ROOT'];
+		$local_simbolic = "/invoice";
+	} else {
+		$local_root = $_SERVER['DOCUMENT_ROOT'];
+		$local_simbolic = "";
+	}
+	//LOCALIZACAO DE ARQUIVOS }
+
 	//TRADUCAO DOS TEXTOS:
-	require_once ( dirname(__FILE__) . "/../../Classes/configs/Configs.php");
+	require_once ( $local_root . $local_simbolic . "/control/ajax/Classes/configs/Configs.php");
 	$oConfigs = new Configs();
 	$oConfigs->setLanguage($_POST['lang'], false);
 	
-	require_once ( dirname(__FILE__) . "/../../Classes/user/register/Create.php");
-	$oUserCreate = new UserCreate();
+	require_once ( $local_root . $local_simbolic . "/control/ajax/Classes/user/User.php");
+	$oUser = new User();
 	
-	require_once ( dirname(__FILE__) . "/../../Classes/common/Validacoes.php");
+	require_once ( $local_root . $local_simbolic . "/control/ajax/Classes/common/Validacoes.php");
 	$oValiacoes = new Validacoes();
 	
 	//ERROS:
-	$cache_html = "";
-	$error = false;
+	$cache_html = "";$error = false;
 	
+	if(!$oUser->userPermission($_POST['id_usuario'],$_POST['code_user']) ) {
+		$cache_html .= "Erro de integridade. Contacte o administrador do sistema.<br>";
+		$error = true;
+	}
+	
+	if(!$oUser->userPermission($oUser->getLastId(),$_POST['code_create'] ) ) {
+		$cache_html .= "Erro de integridade. Clique no botao 'Cadastrar' novamente.<br>";
+		$error = true;
+	}
 	
 	if( !$_POST['id_usuario'] && !is_numeric($_POST['id_usuario'])) {
 		$cache_html .= $oConfigs->get('cadastro_usuario','usuario_nao_logado') . "<br>";
@@ -42,7 +60,7 @@
 		$error = true;
 	}
 
-	if($_POST['user_dt_nasc'] && !$oValiacoes->valida_dataFormato($_POST['user_dt_nasc'], $_POST['user_lang'])) {
+	if($_POST['user_dt_nasc'] && !$oValiacoes->validaDataFormato($_POST['user_dt_nasc'], $_POST['user_lang'])) {
 		$cache_html .= $oConfigs->get('cadastro_usuario','dt_nasc_invalida') . "<br>";
 		switch ($_POST['user_lang']) {
 			case "pt":
@@ -63,12 +81,12 @@
 		$error = true;
 	}
 	
-	if( $_POST['user_email'] && !$oValiacoes->valida_mail($_POST['user_email']) ) {
+	if( $_POST['user_email'] && !$oValiacoes->validaMail($_POST['user_email']) ) {
 		$cache_html .= $oConfigs->get('cadastro_usuario','email_invalido') . "<br>";
 		$error = true;
 	}
 	
-	if( $_POST['user_email'] && $oUserCreate->verifica_mail_na_base_usado($_POST['user_email']) ) {
+	if( $_POST['user_email'] && $oUser->verificaUserInDB($_POST['user_email']) ) {
 		$cache_html .= $oConfigs->get('cadastro_usuario','email_ja_existente') . "<br>";
 		$error = true;
 	}
@@ -78,7 +96,7 @@
 		$error = true;
 	}
 	
-	if( $_POST['user_senha'] && !$oValiacoes->valida_senha($_POST['user_senha']) ) {
+	if( $_POST['user_senha'] && !$oValiacoes->validaSenha($_POST['user_senha']) ) {
 		$cache_html .= $oConfigs->get('cadastro_usuario','formato_senha') . "<br>";
 		$error = true;
 	}
@@ -97,12 +115,11 @@
 		$cache_html .= $oConfigs->get('cadastro_usuario','sel_privilegios') . "<br>";
 		$error = true;		
 	}
-	
-	//TODO:COLOCAR A EMPRESA
-	//if( !$_POST['user_empresa']) {
-	//	$cache_html .= "Usuário não logado." . "<br>";
-	//	$error = true;		
-	//}
+		
+	if( $_POST['user_privilegio'] > 1 &&  !$_POST['user_empresa']) {
+		$cache_html .= "Usuário deve pertencer a uma empresa." . "<br>";
+		$error = true;		
+	}
 	
 	if($error) {
 		$cache_html = $oConfigs->get('cadastro_usuario','erros_encontrados') . "<br><br>" . $cache_html;
@@ -111,9 +128,7 @@
 		return;
 	}
 	
-	
-	
-	$code_validacao_email = md5( $oUserCreate->makePINCODEValidation(5) );
+	$code_validacao_email = md5( $oUser->getCodeSecurity($_POST['user_senha']) );
 	
 	$arr_args = array(
 			'id_usuario' => $_POST['id_usuario'],
@@ -130,28 +145,28 @@
 			'user_lang'       => $_POST['user_lang'],
 			
 			'code_validacao_email' => $code_validacao_email,
-			'code_validado' => 0,
-			'is_new' =>  1,
-			'ativo' =>  0
+			'code_validado' => 1,
+			'is_new' =>  0,
+			'ativo' =>  1
 	);
 	$cache_html = "";
 	
-	$return = $oUserCreate->createUser($arr_args);
+	$return = $oUser->create($arr_args);
 	
-	if ($return) {
+	if ($return['result_insert_user']) {
 		$cache_html .= $oConfigs->get('cadastro_usuario','criacao_sucesso') . "<br>";
 		
-		require_once ( dirname(__FILE__) . "/../../Classes/common/Emails.php");
+		require_once ( $local_root. $local_simbolic . "/control/ajax/Classes/common/Emails.php");
 		$oEmails = new Emails();
 
-		$arr_envio = $oEmails->send_email_para_validacao($_POST['user_email'],$code_validacao_email);
+		$arr_envio = $oEmails->sendEmailValidacao($_POST['user_email'],$code_validacao_email);
 		
-		if($arr_envio['transaction']) {
+		if($arr_envio['transaction'] == 'OK') {
 			
-			$cache_html .= 'URL: '.$arr_envio['url'] . "<br>";
+			$cache_html .= 'URL: '.$arr_envio['url'] . "<br>";			
 			$cache_html .= "Email enviado para ".$_POST['user_email']." para validação." . "<br>";
 			$cache_html .= $oConfigs->get('cadastro_usuario','email_envi_para_validacao') . " " . "<br>";
-			$cache_html .= $_POST['user_email'];
+			$cache_html .= $_POST['user_email'];			
 			
 			$arr = array('transaction' => 'OK', 'msg' => $cache_html );
 			

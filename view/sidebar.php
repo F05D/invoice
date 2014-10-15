@@ -9,10 +9,10 @@
 	</a>
 		<ul class="dropdown-menu">
 		
-			<li><a href="logon.php?lang=<?=$user['lingua']?>&p=<?=md5("usuarios/listar.php")?>"> <i class="icon-large icon-th"></i>
+			<li><a href="logon.php?lang=<?=$oUser->get('lingua')?>&p=<?=md5("usuarios/listar.php")?>"> <i class="icon-large icon-th"></i>
 					Lista de Usuários
 			</a></li>
-			<li><a href="logon.php?lang=<?=$user['lingua']?>&p=<?=md5("companies/listar.php")?>"> <i class="icon-large icon-th"></i>
+			<li><a href="logon.php?lang=<?=$oUser->get('lingua')?>&p=<?=md5("companies/listar.php")?>"> <i class="icon-large icon-th"></i>
 					Lista de Empresas
 			</a></li>
 

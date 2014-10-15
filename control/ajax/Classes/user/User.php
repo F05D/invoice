@@ -1,62 +1,112 @@
 <?php 
 
-require_once ( dirname(__FILE__) . "/db/UserDB.php");
+require_once ( "UserDb.php");
 
-class User extends DbUser {
+class User extends UserDb {
    	
-	//User DB	
 	private $oDbUser;
+	private $user = array();
 	
 	public function __construct()
-{
-		if(!$this->oDbUser) $this->oDbUser = new DbUser(); //User DB New
+	{
+		$this->oUserDb = new UserDb();
 	}
    
-	public function logar($arr_args) {
-		return $this->oDbUser->verificarLogin($arr_args['email'],$arr_args['senha'],$arr_args['lang']);
+	public function getById($id) {
+		$arr_result = $this->oUserDb->getByDB($id,NULL);
+		return $arr_result;
 	}
 	
-	public function reenviar_senha($arr_args, $oConfigs) {
-		
-		//TODO:ARRUMAR ISSO AQUI
-		
-		//LOCALIZACAO DE ARQUIVOS {
-		if($_SERVER['DOCUMENT_ROOT'] == "/Library/WebServer/Sites") {
-			$local_root = $_SERVER['DOCUMENT_ROOT'];
-			$local_simbolic = "/invoice";
-		} else {
-			$local_root = $_SERVER['DOCUMENT_ROOT'];
-			$local_simbolic = "";
-		}
-		//LOCALIZACAO DE ARQUIVOS }
-		
-		require_once ( $local_root. $local_simbolic . "/control/ajax/Classes/common/Emails.php");
-		$oEmails = new Emails ();		
-		
-		$error = false; $cache_html = "";
-		
-		//Email invalido
-		if( !$oEmails->valida_mail($arr_args['email']) ) {
-			$cache_html .= $oConfigs->get('login','email_invalido');
-			$error = true;
-		}
-		
-		if($error) {
-			$cache_html = $oConfigs->get('login','erros_encontrados') . $cache_html;
-			return $cache_html;
-		}
-		
-		$result = $this->oDbUser->getInfoUsuario ( $arr_args['email'] );		
-		if ($result->num_rows) {
-			while ( $obj = $result->fetch_object () ) {					
-				$cache_html = $oEmails->reenvioSenhaUsuario($obj->email, $obj->senha, $oConfigs);
-			}
-		} else {		
-			$cache_html = $oConfigs->get('login','email_nao_enviado');
-		}		
-		
-		return $cache_html;
+	public function getByEmail($email) {
+		$arr_result = $this->oUserDb->getByDB(NULL,$email);
+		return $arr_result;
 	}
+	
+	public function autenticaUsuario($pincode) {
+	 	$user = $this->oUserDb->searchUserByPincodeDB($pincode);
+	 	
+	 	if($user['id']) {
+	 		$this->user = $this->getById($user['id'],null);	
+	 		return true; 			 		
+	 	} 
+	 	
+	 	return false;
+	}
+	
+	public function get($key)
+	{
+		return $this->user[$key];
+	}
+	
+	public function getUserList()
+	{
+		return $this->oUserDb->getUserList();
+	}
+	
+	public function getCodeSecurity($id)
+	{
+		return md5( Date("d").$id."$@#");
+	}
+
+	public function getLastId()
+	{
+		return $this->oUserDb->getLastIdDB();
+	}	
+	
+	public  function userPermission($id,$code)
+	{
+		return ($code == $this->getCodeSecurity($id) ? TRUE : FALSE);
+	}	
+	
+	public function create($arr_user)
+	{
+		return $this->oUserDb->createDB($arr_user);
+	}
+	
+	public  function delete($id)
+	{
+		return $this->oUserDb->deleteDB($id);		
+	}	
+	
+	public function verificaUserInDB($email) 
+	{
+		return $this->oUserDb->verificaUserInDB($email);
+	}
+	
+	public function getListPrivilegios()
+	{
+		return $this->oUserDb->getListPrivilegiosDB();
+	}
+		
+	public function getListLinguas()
+	{
+		return $this->oUserDb->getListLinguasDB();
+	}	
+	
+	public function getBindCompany($id)
+	{
+		return $this->oUserDb->getBindCompanyDB($id);
+	}	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	//AUTENTICACAO - PINCODE - {
@@ -130,54 +180,6 @@ class User extends DbUser {
 			}
 		}
 	
-		return $arrResult;
-	}
-	
-	public function getUserById($id) {
-		$arrResult = array();
-		
-		$result = $this->oDbUser->getUserById($id);
-		
-		if( $result->num_rows ) {
-			while ( $obj = $result->fetch_object () ) {
-				array_push( $arrResult, array(
-					'id'            => $obj->id,
-					'usuario'       => $obj->usuario,
-					'senha'         => $obj->senha,
-					'privilegios'   => $obj->privilegios,
-					'dica_senha'    => $obj->dica_senha,
-					'nome'          => $obj->nome,
-					'dt_nascimento' => $obj->dt_nascimento,
-					'dica_senha'    => $obj->dica_senha,
-					'lingua'        => $obj->lingua
-				)
-				);
-			}
-		}
-		
-		return $arrResult;
-	}
-	
-	public function getUserList(){
-		$arrResult = array();
-		
-		$result = $this->oDbUser->getUserList();
-		if( $result->num_rows ) {
-			while ( $obj = $result->fetch_object () ) {
-				array_push( $arrResult, array(
-												'id'            => $obj->id,
-												'usuario'       => $obj->usuario,
-												'senha'         => $obj->senha,
-												'privilegios'   => $obj->privilegios,
-												'nome'          => $obj->nome,
-												'dt_nascimento' => $obj->dt_nascimento,
-												'dica_senha'    => $obj->dica_senha,
-												'lingua'        => $obj->lingua
-										)
-				);
-			}
-		}
-		
 		return $arrResult;
 	}
 	

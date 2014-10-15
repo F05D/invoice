@@ -3,7 +3,7 @@
 class Emails {
 	
 	//Envia Email de validacao
-	public function send_email_para_validacao($email, $code_validacao_email) {
+	public function sendEmailValidacao($email, $code_validacao_email) {
 		
 		$email_md5 = md5($email);
 
@@ -32,9 +32,9 @@ class Emails {
 
 		
 		if ($resMail) {
-			return array('transaction' => 1, 'url' => $url_validacao );			
+			return array('transaction' => 'OK', 'url' => $url_validacao );			
 		} else {
-			return array('transaction' => 0, 'url' => $url_validacao );;
+			return array('transaction' => 'NO', 'url' => $url_validacao );;
 		} 
 	}
 
@@ -69,7 +69,12 @@ class Emails {
 		return false;
 	}
 	
+	//TODO:retirar essa funcao depois - duplicada abaixo:
 	public function valida_mail($email){
+		return ereg("^([0-9,a-z,A-Z]+)([.,_,-]([0-9,a-z,A-Z]+))*[@]([0-9,a-z,A-Z]+)([.,_,-]([0-9,a-z,A-Z]+))*[.]([a-z,A-Z]){2,3}([0-9,a-z,A-Z])?$", $email);
+	}
+
+	public function validaMail($email){
 		return ereg("^([0-9,a-z,A-Z]+)([.,_,-]([0-9,a-z,A-Z]+))*[@]([0-9,a-z,A-Z]+)([.,_,-]([0-9,a-z,A-Z]+))*[.]([a-z,A-Z]){2,3}([0-9,a-z,A-Z])?$", $email);
 	}
 	
@@ -93,12 +98,9 @@ class Emails {
 		$resMail = null;
 		$resMail = mail($to, $subject, $mensagem, $headers);
 	
-		if($resMail)
-			$ret = $oConfigs->get('login','email_sucesso');//"Email enviado com sucesso,<br>Aguarde um instante para receber seu email com a senha de acesso.";
-		else
-			$ret = $oConfigs->get('login','erro_enviar_email');//"Erro ao reenviar sua senha para seu email,<br> contacte o administrador do sistema.";
-	
-		return $ret;
+		if($resMail) return true;
+		
+		return false;
 	}
 	
 }

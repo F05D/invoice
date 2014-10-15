@@ -13,7 +13,7 @@
 			require_once ($local_root. $local_simbolic . "/view/pages/usuarios/editar.php");
 			break;
 				
-		case "42249055f2c7108f44650b5a0a0c9834": //md5("usuarios/cadastrar.php")
+		case "ac26745f01ce8c8b1aa8765e307ee7bc": //md5("usuarios/cadastrar.php")
 			require_once ($local_root. $local_simbolic . "/view/pages/usuarios/cadastrar.php");
 			break;
 		

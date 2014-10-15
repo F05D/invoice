@@ -7,12 +7,12 @@
 		</a>
 		<ul class="dropdown-menu dropdown-user-account">
 			<li class="account-info">
-				<h3><?=$user['nome']?></h3>
+				<h3>-> <?=$oUser->get('nome')?></h3>
 				<p></p>
 				<p>
 				
 				<?php					
-					$edit_user = "logon.php?lang=".$user['lingua']."&p=" . md5("usuarios/editar.php") . "&i=" . $user['id'];
+					$edit_user = "logon.php?lang=".$_SESSION["lang"]."&p=" . md5("usuarios/editar.php") . "&i=" . $oUser->get('id');
 				?>
 					<a href="<?=$edit_user?>"><?=$oConfigs->get('cadastro_usuario','editar')?></a>
 				</p>

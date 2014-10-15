@@ -2,7 +2,10 @@
 session_start();
 
 if(!$_SESSION["pincode"])
-	$_SESSION["pincode"] = $_GET['code'];
+	$_SESSION["pincode"] = $_GET['pincode'];
+
+if(!$_SESSION["lang"])
+	$_SESSION["lang"]    = $_GET['lang'];
 
 if($_SERVER['DOCUMENT_ROOT'] == "/Library/WebServer/Sites") {
 	$local_root = $_SERVER['DOCUMENT_ROOT'];
@@ -11,7 +14,6 @@ if($_SERVER['DOCUMENT_ROOT'] == "/Library/WebServer/Sites") {
 	$local_root = $_SERVER['DOCUMENT_ROOT'];
 	$local_simbolic = "";
 }
-
 
 //DETECTA O DEVICE UTILIZADO
 //$mDetect->isMobile();
@@ -26,22 +28,15 @@ $mDetect = new Mobile_Detect ();
 require_once ( dirname(__FILE__) . "/control/ajax/Classes/user/User.php");
 $oUser = new User();
 
-
-
-if(!$oUser->checkPINCODE($_SESSION["pincode"])) {
-	header("Location: index.php?error=invalid%20user");
-	die();	
-} 
-
-$user = $oUser->getUser($_SESSION["pincode"]);
-
 //CONFIGURACOES E TRADUCOES
 require_once ( dirname(__FILE__) . "/control/ajax/Classes/configs/Configs.php");
 $oConfigs = new Configs();
-$oConfigs->setLanguage($user['lingua'],false);
+$oConfigs->setLanguage( $_SESSION["lang"], false);
 
-
-
+if(!$oUser->autenticaUsuario($_SESSION["pincode"])) {	
+	header("Location: index.php?error=invalid_user");
+	die();
+} 
 
 ?>
 <!DOCTYPE html>

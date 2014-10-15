@@ -11,7 +11,7 @@ switch($_GET["p"]){
 	
 		
 	case "60cc11dd4be4922a5264ef44588df210": //md5("usuarios/editar.php")
-		print '<a href="logon.php?lang='.$user['lingua'].'&p='. md5("usuarios/listar.php"). '">'.
+		print '<a href="logon.php?lang='.$oUser->get("lingua").'&p='. md5("usuarios/listar.php"). '">'.
 			$oConfigs->get('cadastro_usuario','selector_listagem').'</a>';
 		print '<span class="divider"><i class="icon-caret-right"></i></span>';
 		print '<li class="text-info">'.
@@ -19,7 +19,7 @@ switch($_GET["p"]){
 		break;
 		
 	case "42249055f2c7108f44650b5a0a0c9834": //md5("usuarios/cadastrar.php")
-		print '<a href="logon.php?lang='.$user['lingua'].'&p='. md5("usuarios/listar.php"). '">'.
+		print '<a href="logon.php?lang='.$oUser->get("lingua").'&p='. md5("usuarios/listar.php"). '">'.
 			$oConfigs->get('cadastro_usuario','selector_listagem').'</a>';
 		print '<span class="divider"><i class="icon-caret-right"></i></span>';
 		print '<li class="text-info">'.
@@ -35,7 +35,7 @@ switch($_GET["p"]){
 	
 	
 	case "468dfd162217f0899bfccd4587ec03b0": //md5("companies/editar.php")
-		print '<a href="logon.php?lang='.$user['lingua'].'&p='. md5("companies/listar.php"). '">'.
+		print '<a href="logon.php?lang='.$oUser->get("lingua").'&p='. md5("companies/listar.php"). '">'.
 			$oConfigs->get('cadastro_companies','selector_listagem').'</a>';
 		print '<span class="divider"><i class="icon-caret-right"></i></span>';
 		print '<li class="text-info">'.
@@ -43,7 +43,7 @@ switch($_GET["p"]){
 		break;
 		
 	case "5259e6e2f05ee90a878ef663ef1e8106": //md5("companies/cadastrar.php")
-		print '<a href="logon.php?lang='.$user['lingua'].'&p='. md5("companies/listar.php"). '">'.
+		print '<a href="logon.php?lang='.$oUser->get("lingua").'&p='. md5("companies/listar.php"). '">'.
 			$oConfigs->get('cadastro_companies','selector_listagem').'</a>';
 		print '<span class="divider"><i class="icon-caret-right"></i></span>';
 		print '<li class="text-info">'.

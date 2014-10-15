@@ -32,7 +32,7 @@ class Db {
 	
 	// Create a standard data format for insertion of PHP dates into MySQL
 	protected function date($php_date) {
-		return date ( 'Y-m-d H:i:s', strtotime ( $php_date ) );
+		return date( 'Y-m-d H:i:s', strtotime ( $php_date ) );
 	}
 	
 	// All text added to the DB should be cleaned with mysqli_real_escape_string
@@ -74,7 +74,7 @@ class Db {
 
 		if (!mysqli_query ( $this->oDb, $query ) ) {
 			$error_exception = "ERROR:" . mysqli_error($this->oDb);
-			print $error_exception . "<br>";
+			//print $error_exception . "<br>";
 			return false;
 		}
 		
@@ -93,5 +93,19 @@ class Db {
 		
 		return true;
 	}
+	
+	// Add a row to any table
+	protected function lastId($table,$field) {
+		$query = "SELECT $field FROM $table ORDER BY $field DESC LIMIT 1;";
+	
+		if (!mysqli_query ( $this->oDb, $query ) ) {
+			$error_exception = "ERROR:" . mysqli_error($this->oDb);
+			
+			return false;
+		}
+	
+		return true;
+	}
+	
 }
 

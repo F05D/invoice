@@ -9,6 +9,7 @@ class Comp extends CompDb {
 	public function __construct()
 	{
 		$this->oCompDb = new CompDb; //Acess to DB/Parser
+		
 	}
 	
 	public function delete($id)
@@ -26,9 +27,9 @@ class Comp extends CompDb {
 		return $this->oCompDb->createDB($arr_args);
 	}
 	
-	public function read()
+	public function read($arr_campos = null)
 	{
-		return $this->oCompDb->getList();
+		return $this->oCompDb->getList($arr_campos);
 	}
 	
 	public function get($id)

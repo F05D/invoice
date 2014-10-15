@@ -3,12 +3,8 @@
 	require_once ( $local_root. $local_simbolic . "/control/ajax/Classes/common/Validacoes.php");
 	$oValidacoes = new Validacoes();
 
-
-
 	$arr_result = array();
 	$arr_result = $oUser->getUserList();
-
-	
 
 ?>						
 
@@ -45,9 +41,11 @@
 							print " <td>" . $oUser->getAlias_privilegio($arr_result[$i]['privilegios'], $oConfigs) . "</td>";
 							print " <td>" . $oValidacoes->convertDBtoData($arr_result[$i]['dt_nascimento'], $user['lingua']) . "</td>";
 							print " <td>" .$oUser->getAlias_lingua($arr_result[$i]['lingua'], $oConfigs) . "</td>";
-							$user_code   =  md5($user['usuario'].$user['id'].$user['lingua']);
-							$delete_code = md5( $arr_result[$i]['nome'] . $arr_result[$i]['id'] . $arr_result[$i]['usuario'] . $arr_result[$i]['dt_nascimento'] . $arr_result[$i]['privilegios'] . $arr_result[$i]['lingua'] );
-							print " <td><a href='logon.php?lang=".$user['lingua']."&p=" . md5("usuarios/editar.php") . "&i=" . $arr_result[$i]['id'] . "'><span class='icon-pencil'></span></a>&nbsp;&nbsp;<a href='#' onclick=\"deletar_usuario(". $arr_result[$i]['id']. ",'".$delete_code."','" .$arr_result[$i]['usuario']. "','".$user_code."');\" ><span class='icon-remove'></span></a></td>";								
+							
+							$code_user   = $oUser->getCodeSecurity($oUser->get('id'));
+							$code_delete = $oUser->getCodeSecurity($arr_result[$i]['id']);
+							
+							print " <td><a href='logon.php?lang=".$oUser->get('lingua')."&p=" . md5("usuarios/editar.php") . "&i=" . $arr_result[$i]['id'] . "'><span class='icon-pencil'></span></a>&nbsp;&nbsp;<a href='#' onclick=\"deletar(". $arr_result[$i]['id']. ",'" .$arr_result[$i]['usuario']. "','".$code_user."','".$code_delete."');\" ><span class='icon-remove'></span></a></td>";								
 							print "</tr>";
 						}						
 					?>					
@@ -134,16 +132,14 @@
 <!-- AJAX CONTROLS -->
 <script>
 
-	function deletar_usuario(id , code , usuario , code_user)
+	function deletar(id,usuario,code_user,code_delete)
 	{
 
 		var r = confirm("Deseja deletar o usuario '"+usuario+"' ?");
 		if (r == false)  return;
 
-		var id_usuario     = "<?=$user['id']?>";     //PERMANENTE
-		var lang           = "<?=$user['lingua']?>"; //PERMANENTE
-		var code_auth      = code;
-		var code_auth_user = code_user;
+		var id_usuario     = "<?=$oUser->get('id')?>";     //PERMANENTE
+		var lang           = "<?=$oUser->get('lingua')?>"; //PERMANENTE		
 
 		//VERIFICACAO E CONTROLE
         $.ajax({
@@ -154,21 +150,28 @@
 	            'lang':lang,//PERMANENTE
 	            
 	            'id_delete':id,
-	            'code_auth':code_auth,
-	            'code_auth_user':code_auth_user
+	            'code_user':code_user,
+	            'code_delete':code_delete
 			},  
 			dataType:"html",         
 			success: function (data) {
+				console.log(data);
+				
 				var obj = JSON.parse(data);
 				if( obj.transaction == 'OK' ) {			
-					window.location.assign("logon.php?p=2288f694a0dc334479e1d95c8b762b20");							
+					window.location.assign("logon.php?p=<?=md5("usuarios/listar.php")?>");							
 				} else {
 					$("#msg").html(obj.msg);
 					$("#msg").scrollToMe();
 				}				
 	      	},
 			error: function (data) {
-				if(data) { $("#msg").html("Erro ao tentar cadastrar."); $("#msg").scrollToMe(); }
+				console.log(data);
+				var obj = JSON.parse(data);
+				if(data) { 
+					$("#msg").html(obj.msg);
+				 	$("#msg").scrollToMe(); 
+				 }
 			},
 			complete: function () {
 				//
@@ -177,7 +180,7 @@
 	}
 					
 	function add_user(){
-		window.location = "logon.php?p=<?=md5("cadastro_usuarios.php")?>";
+		window.location = "logon.php?p=<?=md5("usuarios/cadastrar.php")?>";
 	}
 
 	

@@ -2,7 +2,7 @@
 <!-- NECESSARIO ESTAR EM CONCORDANCIA COM internal.php  -->
 
 <li>
-	<a href="logon.php?lang=<?=$user['lingua']?>&p=<?=md5("logon.php")?>">Home</a>
+	<a href="logon.php?lang=<?=$oUser->get('lingua')?>&p=<?=md5("logon.php")?>">Home</a>
 	<span class="divider">
 		<i class="icon-caret-right"></i>
 	</span>

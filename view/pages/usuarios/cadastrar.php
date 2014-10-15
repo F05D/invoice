@@ -1,3 +1,12 @@
+<?php 
+
+require_once ( $local_root. $local_simbolic . "/control/ajax/Classes/companies/Comp.php");
+$oComp = new Comp();
+
+$arr_result = array();
+$arr_result = $oComp->read(array('id','nome'));
+?>
+
 <div class="well widget">
 	<div class="widget-header">
 		<h3 class="title"><?=$oConfigs->get('cadastro_usuario','lista_cadastro_tit')?></h3>
@@ -10,20 +19,23 @@
 	<input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_usuario','lista_dica_senha')?>" id="user_dica">
 	<select class="input-block-level" id="user_privilegio">
 		<option value="" selected>- <?=$oConfigs->get('cadastro_usuario','lista_priv_text')?> -</option>
-		<option value="1"><?=$oConfigs->get('cadastro_usuario','lista_priv_adm')?></option>
-		<option value="2"><?=$oConfigs->get('cadastro_usuario','lista_priv_usuario')?></option>
-		<option value="3" ><?=$oConfigs->get('cadastro_usuario','lista_priv_cliente')?></option>
+		<? foreach ( $oUser->getListPrivilegios() as $val) { ?> 
+			<option value="<?=$val['id']?>"><?=$oConfigs->get('cadastro_usuario',$val['desc'])?></option>
+		<? } ?>
 	</select>
 	
 	<select class="input-block-level" id="user_lang">
 		<option value="" selected>- <?=$oConfigs->get('cadastro_usuario','lista_lang_text')?> -</option>
-		<option value="pt"><?=$oConfigs->get('cadastro_usuario','lista_lang_pt')?></option>
-		<option value="en"><?=$oConfigs->get('cadastro_usuario','lista_lang_en')?></option>
-		<option value="sp"><?=$oConfigs->get('cadastro_usuario','lista_lang_sp')?></option>
+		<? foreach ( $oUser->getListLinguas() as $val) { ?>
+			<option value="<?=$val['lingua']?>"><?=$oConfigs->get('cadastro_usuario','desc_'.$val['lingua'])?></option>
+		<? } ?>
 	</select>
 	
 	<select class="input-block-level" id="user_empresa_associada">
 		<option value="0" selected>- <?=$oConfigs->get('cadastro_usuario','lista_empresa')?> -</option>
+		<? foreach ( $arr_result as $val) { ?> 
+			<option value="<?=$val['id']?>"><?=$val['nome']?></option>
+		<? } ?>
 	</select>	
 	
 	<div class="row-fluid">
@@ -43,8 +55,12 @@
 <!-- AJAX CONTROLS -->
 <script>
 	function ajax_control() {
-		var id_usuario = "<?=$user['id']?>"; //PERMANENTE
-		var lang       = "<?=$user['lingua']?>"; //PERMANENTE
+		var id_usuario = "<?=$oUser->get('id')?>"; //PERMANENTE
+		var lang       = "<?=$oUser->get('lingua')?>"; //PERMANENTE
+
+		var code_user   = "<?=$oUser->getCodeSecurity($oUser->get('id'))?>";
+		var code_create = "<?=$oUser->getCodeSecurity( $oUser->getLastId() )?>";
+		
 	
 		var user_nome       = $('#user_nome').val();
 		var user_dt_nasc    = $('#user_dt_nasc').val();
@@ -52,8 +68,8 @@
 		var user_senha      = $('#user_senha').val();
 		var user_senha_ver  = $('#user_senha_ver').val();
 		var user_dica       = $('#user_dica').val();		
-		var user_privilegio = $('#user_privilegio :selected').val()
-		var user_empresa    = $('#user_empresa_associada :selected').val()
+		var user_privilegio = $('#user_privilegio :selected').val();
+		var user_empresa    = $('#user_empresa_associada :selected').val();
 		var user_lang       = $('#user_lang').val();		
 		
 		//VERIFICACAO E CONTROLE
@@ -63,6 +79,8 @@
 	        data: {
 	            'id_usuario':id_usuario,//PERMANENTE
 	            'lang':lang,//PERMANENTE
+	            'code_user':code_user,//PERMANENTE
+	            'code_create':code_create,//PERMANENTE
 	            
 	            'user_nome':user_nome,
 	            'user_dt_nasc':user_dt_nasc,
