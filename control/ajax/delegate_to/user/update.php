@@ -139,6 +139,7 @@
 			'id_usuario' => $_POST['id_usuario'],
 			'lang'       => $_POST['lang'],
 			
+			'id_alter'        => $_POST['id_alter'],
 			'user_nome'       => $_POST['user_nome'],
 			'user_dt_nasc'    => $oValiacoes->convertDataToDB($_POST['user_dt_nasc'], $_POST['user_lang']),
 			'user_email'      => $_POST['user_email'],
@@ -158,37 +159,11 @@
 	
 	$return = $oUser->update($arr_args);
 	
-	if ($return['result_insert_user']) {
-		$cache_html .= $oConfigs->get('cadastro_usuario','criacao_sucesso') . "<br>";
+	if ($return['result_update_user'])
+		$arr = array('transaction' => 'OK', 'msg' => $oConfigs->get('cadastro_usuario','alter_sucesso') . "<br>" );
 		
-		require_once ( $local_root. $local_simbolic . "/control/ajax/Classes/common/Emails.php");
-		$oEmails = new Emails();
-
-		$arr_envio = $oEmails->sendEmailValidacao($_POST['user_email'],$code_validacao_email);
-		
-		if($arr_envio['transaction'] == 'OK') {
-			
-			$cache_html .= 'URL: '.$arr_envio['url'] . "<br>";			
-			$cache_html .= "Email enviado para ".$_POST['user_email']." para validação." . "<br>";
-			$cache_html .= $oConfigs->get('cadastro_usuario','email_envi_para_validacao') . " " . "<br>";
-			$cache_html .= $_POST['user_email'];			
-			
-			$arr = array('transaction' => 'OK', 'msg' => $cache_html );
-			
-		} else {
-			$cache_html .= 'URL: '.$arr_envio['url'] . "<br>";
-			$cache_html .= $oConfigs->get('cadastro_usuario','email_nao_enviado_validacao') . " '".$_POST['user_email'] . "'.<br>";			
-			$cache_html .= $oConfigs->get('cadastro_usuario','verifique_adm_do_sistema');
-			
-			$arr = array('transaction' => 'NO', 'msg' => $cache_html ); 
-		}
-		
-	} else {
-		$cache_html .= $oConfigs->get('cadastro_usuario','erro_ao_editar') . "<br>";
-		$cache_html .= $oConfigs->get('cadastro_usuario','verifique_adm_do_sistema');
-		
-		$arr = array('transaction' => 'NO', 'msg' => $cache_html );	
-	}
+	else
+		$arr = array('transaction' => 'NO', 'msg' => $oConfigs->get('cadastro_usuario','nao_foi_possivel_alterar') );	
 	
 	//USAR PRINT COMO RETORNO DE FUNCAO
 	print json_encode($arr);

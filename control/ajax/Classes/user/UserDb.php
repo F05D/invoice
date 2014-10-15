@@ -139,7 +139,6 @@ class UserDb extends Db {
 		$strNotIn = ( $id ? " AND id NOT IN($id) " : '' ); 
 		$query = "SELECT usuario FROM usuarios WHERE usuario = '$email' $strNotIn;";
 		
-		print $query . "<br>";
 		$result = $this->oDB->select ( $query );
 		return ($result->num_rows > 0 ? true : false);
 	}
@@ -164,16 +163,19 @@ class UserDb extends Db {
 		$field_values .= " ativo = " . $arr_user['ativo'] . ",";
 		$field_values .= " is_new = " . $arr_user['is_new'];
 	
-		$result_insert_user = $this->oDB->insert("usuarios", $field_values);
+		$where = " id = " . $arr_user['id_alter'];
+		
+		$result_update_user = $this->oDB->update("usuarios", $field_values, $where);
 	
-		if($result_insert_user && $arr_user['user_empresa'])
+		if($result_update_user && $arr_user['user_empresa'])
 		{
-			$lastId = $this->oDB->lastId('usuarios','id');
-			$result_insert_bind = $this->bind( array('id_usuario'=>$lastId,'id_company'=>$arr_user['user_empresa'] ),'companies_bind_usuarios');
+			$id = $arr_user['id_alter'];
+			$this->oDB->delete("companies_bind_usuarios", " id_usuario = $id ");				
+			$result_insert_bind = $this->bind( array('id_usuario'=>$id,'id_company'=>$arr_user['user_empresa'] ),'companies_bind_usuarios');
 		}
 	
 		return array(
-				'result_insert_user' => $result_insert_user,
+				'result_update_user' => $result_update_user,
 				'result_insert_bind' => $result_insert_bind
 		);
 	}
@@ -218,12 +220,13 @@ class UserDb extends Db {
 		$key01 = $bindKeys[0];$val01 = $arrBind[$key01];
 		$key02 = $bindKeys[1];$val02 = $arrBind[$key02];
 		
-		$query = "SELECT * FROM $table WHERE $key01=$val01 AND $key02=$val02;";		
+		$query = "SELECT * FROM $table WHERE $key01=$val01 AND $key02=$val02;";	
 		$result = $this->oDB->select ( $query );		
 		if (!$result->num_rows) {
 			$field_values = " $key01=$val01, $key02=$val02 ";			
 			return $this->oDB->insert($table, $field_values);
 		}
+		
 		return false;
 	}
 	
@@ -374,20 +377,6 @@ class UserDb extends Db {
 		return $this->oDB->update("usuarios", $field_values, $where);
 	}
 	
-	protected function verifica_mail_na_base( $email, $id ) {
-		$query = "SELECT usuario FROM usuarios WHERE usuario = '$email' AND id NOT IN ($id);";
-		
-		if(!$this->oDB) $this->oDB = new db();
-		
-		$result = $this->oDB->select ( $query );
-		
-		if ($result->num_rows) {
-			return true;
-		}
-		
-		return false;
-	} 
-
 	protected function ver_permissao_usuario($id_usuario,$code_auth_user){
 		$query = "SELECT * FROM usuarios WHERE id = '$id_usuario' LIMIT 1";
 		

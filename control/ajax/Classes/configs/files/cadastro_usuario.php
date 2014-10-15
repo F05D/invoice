@@ -85,7 +85,7 @@
 			"adm" => array("Administrador","x","x"),
 			"user" => array("Usuário","x","x"),
 			"erro_usuario_localizar" => array("Erro ao tentar localizar usuário.","x","x"),
-			"xxxxxxx" => array("xxxx","x","x"),
+			"nao_foi_possivel_alterar" => array("Não foi possível cadastrar email. Contacte o administrador.","x","x"),
 			"xxxxxxx" => array("xxxx","x","x"),
 			"xxxxxxx" => array("xxxx","x","x"),
 			"xxxxxxx" => array("xxxx","x","x"),

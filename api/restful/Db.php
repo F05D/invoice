@@ -60,8 +60,7 @@ class Db {
 		$query = 'INSERT INTO ' . $table . ' VALUES (' . $values . ')';
 	
 		if (!mysqli_query ( $this->oDb, $query ) ) {
-			$error_exception = "ERROR:" . mysqli_error($this->oDb);
-			//print $error_exception . "<br>";
+			$error_exception = "ERROR:" . mysqli_error($this->oDb);			
 			return false;
 		}
 	
@@ -73,8 +72,7 @@ class Db {
 		$query = 'INSERT INTO ' . $table . ' SET ' . $field_values;
 
 		if (!mysqli_query ( $this->oDb, $query ) ) {
-			$error_exception = "ERROR:" . mysqli_error($this->oDb);
-			//print $error_exception . "<br>";
+			$error_exception = "ERROR:" . mysqli_error($this->oDb);			
 			return false;
 		}
 		
@@ -86,21 +84,31 @@ class Db {
 		$query = 'UPDATE ' . $table . ' SET ' . $field_values . ' WHERE ' . $where;
 		
 		if (!mysqli_query ( $this->oDb, $query ) ) {
-			$error_exception = "ERROR:" . mysqli_error($this->oDb);
-			//print $error_exception . "<br>";
+			$error_exception = "ERROR:" . mysqli_error($this->oDb);			
 			return false;
 		}
 		
 		return true;
 	}
 	
-	// Add a row to any table
+	// Get last id from table
 	protected function lastId($table,$field) {
 		$query = "SELECT $field FROM $table ORDER BY $field DESC LIMIT 1;";
 	
 		if (!mysqli_query ( $this->oDb, $query ) ) {
-			$error_exception = "ERROR:" . mysqli_error($this->oDb);
-			
+			$error_exception = "ERROR:" . mysqli_error($this->oDb);			
+			return false;
+		}
+	
+		return true;
+	}
+	
+	// Update any row that matches a WHERE clause
+	protected function delete($table, $where) {
+		$query = 'DELETE FROM ' . $table . ' WHERE ' . $where;
+	
+		if (!mysqli_query ( $this->oDb, $query ) ) {
+			$error_exception = "ERROR:" . mysqli_error($this->oDb);			
 			return false;
 		}
 	

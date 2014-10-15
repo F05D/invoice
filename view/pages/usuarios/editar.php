@@ -137,11 +137,10 @@ $arrIdBindCompany = $oUser->getBindCompany($id);
 			},  
 			dataType:"html",         
 			success: function (data) {
-				if( data ) { 
-					$("#msg").html(data);
-					$("#msg").scrollToMe();			
-				} else { 
-					$("#msg").html("Não foi possível processar esta operação. Favor contactar o administrador.");
+				console.log(data);
+				if(data) {
+					var obj = JSON.parse(data);
+					$("#msg").html(obj.msg);
 					$("#msg").scrollToMe();
 				}
 	      	},
