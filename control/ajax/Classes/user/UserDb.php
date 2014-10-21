@@ -16,8 +16,8 @@ class UserDb extends Db {
 	private $oSupport;
 	
 	public function __construct()
-	{
-		if(!$this->oDB) $this->oDB = new Db();
+	{		
+		$this->oDB = Db::singleton();
 		
 		//TODO:Arrumar esta forma de buscar diretorio
 		if($_SERVER['DOCUMENT_ROOT'] == "/Library/WebServer/Sites") {

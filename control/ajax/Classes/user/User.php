@@ -26,7 +26,7 @@ class User extends UserDb {
 	 	$user = $this->oUserDb->searchUserByPincodeDB($pincode);
 	 	
 	 	if($user['id']) {
-	 		$this->user = $this->getById($user['id'],null);	
+	 		$this->user = $this->getById($user['id'],null);
 	 		return true; 			 		
 	 	} 
 	 	
@@ -44,7 +44,7 @@ class User extends UserDb {
 	}
 	
 	public function getCodeSecurity($id)
-	{
+	{		
 		return md5( Date("d").$id."$@#");
 	}
 
@@ -53,7 +53,7 @@ class User extends UserDb {
 		return $this->oUserDb->getLastIdDB();
 	}	
 	
-	public  function userPermission($id,$code)
+	public function userPermission($id,$code)
 	{
 		return ($code == $this->getCodeSecurity($id) ? TRUE : FALSE);
 	}	

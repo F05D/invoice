@@ -18,8 +18,7 @@ class CompDb extends Db  {
 	
 	public function __construct()
 	{
-		if(!$this->oDB) $this->oDB = new db(); //DB
-		
+		$this->oDB = Db::singleton();		
 		//TODO:Arrumar esta forma de buscar diretorio
 		if($_SERVER['DOCUMENT_ROOT'] == "/Library/WebServer/Sites") {
 			$local_root = $_SERVER['DOCUMENT_ROOT'];

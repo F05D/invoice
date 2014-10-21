@@ -1,12 +1,13 @@
 <?php
 
 class Db {
-	public $oDb;
+	
+	private static $instance;// Guarda uma instância da classe
+	public $oDb;	
 	
 	// Create a database connection for use by all functions in this class
 	public function __construct()
 {
-		
 		//require_once ( dirname(__FILE__) . "/db.config.php");
 		
 		$host = '127.0.0.1';
@@ -28,6 +29,17 @@ class Db {
 		mysqli_query ( $this->oDb, 'SET character_set_results = "utf8",' . 
 		'character_set_client = "utf8", character_set_connection = "utf8",' . 
 		'character_set_database = "utf8", character_set_server = "utf8"' );
+	}
+	
+	// O método singleton
+	public static function singleton()
+	{
+		if (!isset(self::$instance)) {
+			$c = __CLASS__;
+			self::$instance = new $c;
+		}
+	
+		return self::$instance;
 	}
 	
 	// Create a standard data format for insertion of PHP dates into MySQL

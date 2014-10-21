@@ -18,25 +18,22 @@ if($_SERVER['DOCUMENT_ROOT'] == "/Library/WebServer/Sites") {
 //DETECTA O DEVICE UTILIZADO
 //$mDetect->isMobile();
 //$mDetect->isTablet();
-require_once ( dirname(__FILE__) . "/control/ajax/Classes/common/Mobile_detect.php");
+require_once ( $local_root. $local_simbolic . "/control/ajax/Classes/common/Mobile_detect.php");
 $mDetect = new Mobile_Detect ();
 
 
-
-//VERIFICA AUTENCIDADE DO USUARIO
-//CLASSE USUARIO
-require_once ( dirname(__FILE__) . "/control/ajax/Classes/user/User.php");
-$oUser = new User();
-
 //CONFIGURACOES E TRADUCOES
-require_once ( dirname(__FILE__) . "/control/ajax/Classes/configs/Configs.php");
+require_once ( $local_root. $local_simbolic . "/control/ajax/Classes/configs/Configs.php");
 $oConfigs = new Configs();
 $oConfigs->setLanguage( $_SESSION["lang"], false);
 
+//VERIFICA AUTENCIDADE DO USUARIO
+require_once ( $local_root. $local_simbolic . "/control/ajax/Classes/user/User.php");//CLASSE USUARIO
+$oUser = new User();
 if(!$oUser->autenticaUsuario($_SESSION["pincode"])) {	
 	header("Location: index.php?error=invalid_user");
 	die();
-} 
+}
 
 ?>
 <!DOCTYPE html>
@@ -98,7 +95,7 @@ if(!$oUser->autenticaUsuario($_SESSION["pincode"])) {
 					<!-- post wrapper -->				
 					<div class="row-fluid">
 						<?php
-							require_once 'control/page_selector.php';
+							require_once( $local_root. $local_simbolic . '/control/page_selector.php');
 						?>
 					</div>
 					<!-- ./ post wrapper -->

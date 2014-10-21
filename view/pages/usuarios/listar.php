@@ -1,11 +1,7 @@
 <?php 
 
-	require_once ( $local_root. $local_simbolic . "/control/ajax/Classes/common/Validacoes.php");
-	$oValidacoes = new Validacoes();
-
-	$arr_result = array();
-	$arr_result = $oUser->getUserList();
-
+require_once ( $local_root. $local_simbolic . "/control/ajax/Classes/common/Validacoes.php");
+$oValidacoes = new Validacoes();
 ?>						
 
 	<div class="well widget">
@@ -31,9 +27,14 @@
 				</thead>
 				<tbody>					
 					<?php
-
+					
+					$arr_result = array();
+					$arr_result = $oUser->getUserList();
+					
+					
 					//if(!$mDetect->isMobile() && !$mDetect->isTablet() )
 						for($i = 0; $i < sizeof($arr_result); $i++  ) {
+							
 							print "<tr>";
 							print " <td>" . $arr_result[$i]['nome'] . "</td>";
 							print " <td>GOLDSTONE</td>";
@@ -43,7 +44,7 @@
 							print " <td>" .$oUser->getAlias_lingua($arr_result[$i]['lingua'], $oConfigs) . "</td>";
 							
 							$code_user   = $oUser->getCodeSecurity($oUser->get('id'));
-							$code_delete = $oUser->getCodeSecurity($arr_result[$i]['id']);
+							$code_delete = $oUser::getCodeSecurity($arr_result[$i]['id']);								
 							
 							print " <td><a href='logon.php?lang=".$oUser->get('lingua')."&p=" . md5("usuarios/editar.php") . "&i=" . $arr_result[$i]['id'] . "'><span class='icon-pencil'></span></a>&nbsp;&nbsp;<a href='#' onclick=\"deletar(". $arr_result[$i]['id']. ",'" .$arr_result[$i]['usuario']. "','".$code_user."','".$code_delete."');\" ><span class='icon-remove'></span></a></td>";								
 							print "</tr>";
@@ -53,64 +54,10 @@
 			</table>
 		</div>
 		<div class="widget-content ipad" id="lista_dados_i">
-			<table class="table table-striped ">
-				<thead>
-					<tr>
-						<th><?=$oConfigs->get('cadastro_usuario','listagem_nome')?></th>
-						<th><?=$oConfigs->get('cadastro_usuario','listagem_empresa')?></th>
-						<th><?=$oConfigs->get('cadastro_usuario','listagem_email')?></th>
-						<th><?=$oConfigs->get('cadastro_usuario','listagem_priv')?></th>
-						<th><?=$oConfigs->get('cadastro_usuario','listagem_dt_nasc')?></th>
-						<th><?=$oConfigs->get('cadastro_usuario','listagem_lingua')?></th>
-						<th><?=$oConfigs->get('cadastro_usuario','listagem_acoes')?></th>																
-					</tr>
-				</thead>
-				<tbody>
-					<?php 			
-					//if( $mDetect->isTablet() )
-						for($i = 0; $i < sizeof($arr_result); $i++  ) {
-							print "<tr>";
-							print " <td>" . substr($arr_result[$i]['nome'],0,10) . "...</td>";
-							print " <td>" . substr("GOLDSTONE",0,10) . "...</td>";
-							print " <td>" . substr($arr_result[$i]['usuario'],0,10) . "...</td>";
-							print " <td>" . substr($arr_result[$i]['privilegios'],0,3) . "...</td>";
-							print " <td>" . substr($arr_result[$i]['dt_nascimento'],0,5) . "</td>";
-							print " <td>" . substr($arr_result[$i]['lingua'],0,2) . "</td>";
-							$user_code   =  md5($user['usuario'].$user['id'].$user['lingua']);
-							$delete_code = md5( $arr_result[$i]['nome'] . $arr_result[$i]['id'] . $arr_result[$i]['usuario'] . $arr_result[$i]['dt_nascimento'] . $arr_result[$i]['privilegios'] . $arr_result[$i]['lingua'] );
-							print " <td><a href='logon.php?lang=".$user['lingua']."&p=" . md5("usuarios/editar.php") . "&i=" . $arr_result[$i]['id'] . "'><span class='icon-pencil'></span></a>&nbsp;&nbsp;<a href='#' onclick=\"deletar_usuario(". $arr_result[$i]['id']. ",'".$delete_code."','" .$arr_result[$i]['usuario']. "','".$user_code."');\" ><span class='icon-remove'></span></a></td>";								
-							print "</tr>";
-						}						
-					?>
-				</tbody>
-			</table>
-			</div>
-			<div class="widget-content mobile" id="lista_dados_m">
-			<table class="table table-striped ">
-				<thead>
-					<tr>
-						<th><?=$oConfigs->get('cadastro_usuario','listagem_nome')?></th>
-						<th><?=$oConfigs->get('cadastro_usuario','listagem_empresa')?></th>
-						<th><?=$oConfigs->get('cadastro_usuario','listagem_email')?></th>
-						<th><?=$oConfigs->get('cadastro_usuario','listagem_acoes')?></th>						
-					</tr>
-				</thead>
-				<tbody>
-				<?php 			
-					//if( $mDetect->isMobile() )
-						for($i = 0; $i < sizeof($arr_result); $i++ ) {
-							print "<tr>";
-							print " <td>" . substr($arr_result[$i]['nome'],0,10) . "...</td>";
-							print " <td>" . substr("GOLDSTONE",0,10) . "...</td>";
-							print " <td>" . substr($arr_result[$i]['usuario'],0,10) . "...</td>";
-							$user_code   =  md5($user['usuario'].$user['id'].$user['lingua']);
-							$delete_code = md5( $arr_result[$i]['nome'] . $arr_result[$i]['id'] . $arr_result[$i]['usuario'] . $arr_result[$i]['dt_nascimento'] . $arr_result[$i]['privilegios'] . $arr_result[$i]['lingua'] );
-							print " <td><a href='logon.php?lang=".$user['lingua']."&p=" . md5("usuarios/editar.php") . "&i=" . $arr_result[$i]['id'] . "'><span class='icon-pencil'></span></a>&nbsp;&nbsp;<a href='#' onclick=\"deletar_usuario(". $arr_result[$i]['id']. ",'".$delete_code."','" .$arr_result[$i]['usuario']. "','".$user_code."');\" ><span class='icon-remove'></span></a></td>";								
-							print "</tr>";
-						}						
-					?>
-				</tbody>
-			</table>
+			<!-- TODO:DADOS IPAD -->
+		</div>
+		<div class="widget-content mobile" id="lista_dados_m">
+			<!-- TODO:DADOS CEL -->
 		</div>
 		<!-- ./ widget content -->
 	</div>

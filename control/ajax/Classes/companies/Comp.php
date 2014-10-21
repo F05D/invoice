@@ -1,6 +1,6 @@
 <?php 
 
-require_once ( dirname(__FILE__) . "/CompDb.php");
+require_once ( "CompDb.php");
 
 class Comp extends CompDb {
    	
@@ -8,8 +8,7 @@ class Comp extends CompDb {
 	
 	public function __construct()
 	{
-		$this->oCompDb = new CompDb; //Acess to DB/Parser
-		
+		$this->oCompDb = new CompDb; //Acess to DB/Parser		
 	}
 	
 	public function delete($id)
