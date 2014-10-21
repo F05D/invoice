@@ -2,7 +2,6 @@
 
 class HtmlSuport {
 	
-
 	public function arraybi2table($arr){
 		if(sizeof($arr) < 1 ) 
 			return;
@@ -20,7 +19,6 @@ class HtmlSuport {
 		return $html_ret;		
 
 	}
-	
 }
 
 

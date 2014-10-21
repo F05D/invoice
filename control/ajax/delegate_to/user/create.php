@@ -11,6 +11,12 @@
 	}
 	//LOCALIZACAO DE ARQUIVOS }
 
+	//Corrige problemas de caracteres que quebram a inclusao no DB
+	require_once ( $local_root . $local_simbolic . "/control/ajax/Classes/common/Support.php");
+	$oSupport = new Support();
+	$_POST = $oSupport->arrAddslashes($_POST);
+	
+	
 	//TRADUCAO DOS TEXTOS:
 	require_once ( $local_root . $local_simbolic . "/control/ajax/Classes/configs/Configs.php");
 	$oConfigs = new Configs();

@@ -7,7 +7,7 @@ require_once ( $local_root. $local_simbolic . "/control/ajax/Classes/companies/C
 $oComp = new Comp();
 
 if($_GET['i']) {
-	$arr_result = $oComp->get($_GET['i']);
+	$arr_result = $oComp->get($_GET['i'])[0];
 }
 
 ?>
@@ -20,17 +20,17 @@ if($_GET['i']) {
 	<input type="hidden" id="emp_id"      value="<?=$arr_result['id']?>">
 	<input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_nome')?>"      id="emp_nome"      value="<?=$arr_result['nome']?>">
 	<input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_cnpj')?>"      id="emp_cnpj_id"   value="<?=$arr_result['cnpj_id']?>">
-	<input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_end')?>"       id="emp_end"       value="<?=$arr_result['end']?>">
+	<input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_end')?>"       id="emp_end"       value="<?=$arr_result['endereco']?>">
 	<input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_cidade')?>"    id="emp_cidade"    value="<?=$arr_result['cidade']?>">
 	<input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_estado')?>"    id="emp_estado"    value="<?=$arr_result['estado']?>">
 	<input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_pais')?>"      id="emp_pais"      value="<?=$arr_result['pais']?>">
-	<input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_tel_p')?>"     id="emp_tel_p"     value="<?=$arr_result['tel_p']?>">
-	<input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_tel_s')?>"     id="emp_tel_s"     value="<?=$arr_result['tel_s']?>">
+	<input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_tel_p')?>"     id="emp_tel_p"     value="<?=$arr_result['tel_princ']?>">
+	<input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_tel_s')?>"     id="emp_tel_s"     value="<?=$arr_result['tel_sec']?>">
 	<input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_email')?>"     id="emp_email"     value="<?=$arr_result['email']?>">
 	<input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_site')?>"      id="emp_site"      value="<?=$arr_result['site']?>">
-	<input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_maps')?>"      id="emp_link_map"  value="<?=$arr_result['map_ln']?>">
-	<input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_nome_prop')?>" id="emp_nome_prop" value="<?=$arr_result['nome_prop']?>">
-	<textarea class="input-block-level" placeholder="<?=$oConfigs->get('cadastro_companies','cad_coments')?>" rows="4"   id="emp_comentarios"><?=$arr_result['coment']?></textarea>
+	<input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_maps')?>"      id="emp_link_map"  value="<?=$arr_result['mapa_link']?>">
+	<input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_nome_prop')?>" id="emp_nome_prop" value="<?=$arr_result['nome_proprietario']?>">
+	<textarea class="input-block-level" placeholder="<?=$oConfigs->get('cadastro_companies','cad_coments')?>" rows="4"   id="emp_comentarios"><?=$arr_result['comentarios']?></textarea>
 
 	<div class="row-fluid">
 		<div class="span4">
@@ -53,9 +53,12 @@ if($_GET['i']) {
 <!-- AJAX CONTROLS -->
 <script>
 	function ajax_control() {
-		var id_usuario = "<?=$user['id']?>"; //PERMANENTE
-		var lang       = "<?=$user['lingua']?>"; //PERMANENTE
+		var id_usuario = "<?=$oUser->get('id')?>"; //PERMANENTE
+		var lang       = "<?=$oUser->get('lingua')?>"; //PERMANENTE
 
+		var code_user   = "<?=$oUser->getCodeSecurity( $oUser->get('id').'$H' )?>";
+		var code_edit   = "<?=$oUser->getCodeSecurity( $oUser->get('id').'&@' )?>";				
+		
 		var emp_id          = $("#emp_id").val();		
 		var emp_nome        = $("#emp_nome").val();
 		var emp_cnpj_id     = $("#emp_cnpj_id").val();
@@ -81,6 +84,9 @@ if($_GET['i']) {
 	            'id_usuario':id_usuario,//PERMANENTE
 	            'lang':lang,//PERMANENTE
 	            
+	            'code_user':code_user,
+	            'code_edit':code_edit,
+	            
 	            'emp_id':emp_id,
 	            'emp_nome':emp_nome,
 	            'emp_cnpj_id':emp_cnpj_id,
@@ -100,12 +106,9 @@ if($_GET['i']) {
 			success: function (data) {
 				console.log(data);
 				if(data) {
-					var obj = JSON.parse(data);
-					if(obj.transaction == 'OK') {
-						alert(obj.msg);
-						window.location.assign("logon.php?p=<?=md5('companies/listar.php')?>");
-					} else {
-						$("#msg").html(obj.msg);
+					console.log(data);
+					if(data) {
+						var obj = JSON.parse(data);
 						$("#msg").html(obj.msg);
 						$("#msg").scrollToMe();
 					}

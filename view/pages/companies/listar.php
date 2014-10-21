@@ -1,6 +1,5 @@
 <?php 
 
-
 	require_once ( $local_root. $local_simbolic . "/control/ajax/Classes/common/Validacoes.php");
 	$oValidacoes = new Validacoes();
 
@@ -45,25 +44,42 @@
 							print " <td>" . $arr_result[$i]['pais'] . "</td>";
 							print " <td>" . $arr_result[$i]['estado'] . " / " .$arr_result[$i]['cidade'] . "</td>";							
 							
-							$user_code   =  md5($user['usuario'].$user['id'].$user['lingua']);
-							$delete_code = md5( $arr_result[$i]['nome'] . $arr_result[$i]['id'] . $arr_result[$i]['estado'] . $arr_result[$i]['email'] . $arr_result[$i]['site'] . $arr_result[$i]['pais'] );
-							print " <td><a href='logon.php?lang=".$user['lingua']."&p=" . md5("companies/editar.php") . "&i=" . $arr_result[$i]['id'] . "'><span class='icon-pencil'></span></a>&nbsp;&nbsp;<a href='#' onclick=\"deletar(". $arr_result[$i]['id']. ",'".$arr_result[$i]['nome'] . "','". $delete_code."','".$user_code."');\" ><span class='icon-remove'></span></a></td>";								
+							$code_user   = $oUser->getCodeSecurity( $oUser->get('id')."$!@u*");
+							$code_delete = $oUser->getCodeSecurity( $arr_result[$i]['id']."&%h@");
+							$strArgsFunc = $arr_result[$i]['id'].",'".addslashes($arr_result[$i]['nome'])."','".$code_user."','".$code_delete."'";
+							print " <td><a href='logon.php?lang=".$oUser->get('lingua')."&p=" . md5("companies/editar.php") . "&i=" . $arr_result[$i]['id'] . "'><span class='icon-pencil'></span></a>&nbsp;&nbsp;<a href='#' onclick=\"deletar($strArgsFunc);\" ><span class='icon-remove'></span></a></td>";								
 							print "</tr>";
 														
 							$arr = array();
 							array_push($arr, array( $oConfigs->get('cadastro_companies','empresa')   ,  $arr_result[$i]['nome']        ) );
-							array_push($arr, array( $oConfigs->get('cadastro_companies','endereco')  ,  $arr_result[$i]['end']         ) );
+							array_push($arr, array( $oConfigs->get('cadastro_companies','endereco')  ,  $arr_result[$i]['endereco']         ) );
 							array_push($arr, array( $oConfigs->get('cadastro_companies','cidade')    ,  $arr_result[$i]['cidade']       ) );
 							array_push($arr, array( $oConfigs->get('cadastro_companies','estado')    ,  $arr_result[$i]['estado']       ) );
-							array_push($arr, array( $oConfigs->get('cadastro_companies','pais')      ,  $arr_result[$i]['pais']         ) );
-							array_push($arr, array( $oConfigs->get('cadastro_companies','maps_link') ,  "<a href='".$arr_result[$i]['map_ln']."' target='_blank'>". "Clique para ver o mapa" ."</a>") );
-							array_push($arr, array( $oConfigs->get('cadastro_companies','tel_princ') ,  $arr_result[$i]['tel_p']        ) );
-							array_push($arr, array( $oConfigs->get('cadastro_companies','tel_sec')   ,  $arr_result[$i]['tel_s']        ) );
+							array_push($arr, array( $oConfigs->get('cadastro_companies','pais')      ,  $arr_result[$i]['pais']         ) );							
+
+							if($arr_result[$i]['site']) $link_map = "<a href='".$arr_result[$i]['site'] . "' target='_blank'>" . $arr_result[$i]['site'] . "</a>";
+							else $link_map = "<a href='#'> ? </a>";
+							array_push($arr, array( $oConfigs->get('cadastro_companies','site'),$link_map ) );								
+							
+							if($arr_result[$i]['mapa_link']) $link_map = "<a href='".$arr_result[$i]['mapa_link']."' target='_blank'>". "Clique para ver o mapa" ."</a>";
+							else $link_map = "<a href='#'> ? </a>";
+							array_push($arr, array( $oConfigs->get('cadastro_companies','maps_link') ,  $link_map) );
+							
+							array_push($arr, array( $oConfigs->get('cadastro_companies','tel_princ') ,  $arr_result[$i]['tel_princ']        ) );
+							array_push($arr, array( $oConfigs->get('cadastro_companies','tel_sec')   ,  $arr_result[$i]['tel_sec']        ) );
 							array_push($arr, array( $oConfigs->get('cadastro_companies','cnpj_id')   ,  $arr_result[$i]['cnpj_id']      ) );
-							array_push($arr, array( $oConfigs->get('cadastro_companies','site')      ,  "<a href='".$arr_result[$i]['site'] . "' target='_blank'>" . $arr_result[$i]['site'] . "</a>" ) );
 							array_push($arr, array( $oConfigs->get('cadastro_companies','email')     ,  $arr_result[$i]['email']        ) );
-							array_push($arr, array( $oConfigs->get('cadastro_companies','nome_prop') ,  $arr_result[$i]['nome_prop']    ) );
-							array_push($arr, array( $oConfigs->get('cadastro_companies','cometarios') ,  $arr_result[$i]['coment']    ) );
+							array_push($arr, array( $oConfigs->get('cadastro_companies','nome_prop') ,  $arr_result[$i]['nome_proprietario']    ) );
+							array_push($arr, array( $oConfigs->get('cadastro_companies','cometarios') ,  $arr_result[$i]['comentarios']    ) );
+							
+							$arr_bind = array();
+							$arr_bind = $oComp->getBindUser($arr_result[$i]['id']);
+							$strUser = "";
+							foreach ($arr_bind as $val) {
+								$strUser .= $val['nome'] . " (" . $val['usuario'] . ")<br>"; 
+							}	
+							
+							array_push($arr, array( $oConfigs->get('cadastro_companies','usuarios_cadastrados') ,  $strUser    ) );
 							
 							print "<tr>"; 
 							print "   <td colspan=6>";
@@ -116,44 +132,40 @@
 <!-- AJAX CONTROLS -->
 <script>
 
-	function deletar(id,empresa,code,code_user)
+	function deletar(id,empresa,code_user,code_delete)
 	{
-
+		debugger
 		var r = confirm("<?=$oConfigs->get('cadastro_usuario','deseja_deletar_empresa')?> '"+empresa+"' ?");
 		if (r == false)  return;
-
-		var id_usuario     = "<?=$user['id']?>";     //PERMANENTE
-		var lang           = "<?=$user['lingua']?>"; //PERMANENTE
-		var code_auth      = code;
-		var code_auth_user = code_user;
 
 		//VERIFICACAO E CONTROLE
         $.ajax({
             url: 'control/ajax/delegate_to/companies/delete.php',
             type: 'POST',
             data: {
-	            'id_usuario':id_usuario,//PERMANENTE
-	            'lang':lang,//PERMANENTE
+	            'id_usuario':"<?=$oUser->get('id')?>",//PERMANENTE
+	            'lang':"<?=$oUser->get('lingua')?>",//PERMANENTE
 	            
 	            'id_delete':id,
-	            'code_auth':code_auth,
-	            'code_auth_user':code_auth_user
+	            'code_user':code_user,
+	            'code_delete':code_delete
 			},  
 			dataType:"html",         
 			success: function (data) {
-
-				console.log(data);
-				
+				console.log(data);				
 				var obj = JSON.parse(data);
 				if( obj.transaction == 'OK' ) {			
-					window.location.assign("logon.php?p=0db3a8b117580a98352b0594752b0bc5");							
+					window.location.assign("logon.php?p=<?=md5("companies/listar.php")?>");							
 				} else {
 					$("#msg").html(obj.msg);
 					$("#msg").scrollToMe();
 				}				
 	      	},
 			error: function (data) {
-				if(data) { $("#msg").html("Erro ao tentar cadastrar."); $("#msg").scrollToMe(); }
+				if(data) { 
+					$("#msg").html("Erro ao tentar cadastrar."); 
+					$("#msg").scrollToMe(); 
+				}
 			},
 			complete: function () {
 				//

@@ -33,7 +33,8 @@ class CompDb extends Db  {
 		$this->oSupport = New Support();
 	}
 	
-	protected function getDB($id){
+	protected function getDB($id)
+	{
 		$arrResult = array();
 	
 		$query = "SELECT * FROM companies WHERE ativo = true AND id = $id;";
@@ -41,7 +42,17 @@ class CompDb extends Db  {
 		return $this->oSupport->transcriberToList($result);		 
 	}
 	
-	protected function getList($arr_campos=null){
+	protected function getBindUserDB($id)
+	{
+		$query = "select u.id,u.nome,u.usuario FROM companies_bind_usuarios bind ".
+				 "INNER JOIN usuarios u ON bind.id_usuario = u.id ".
+				 "INNER JOIN companies c ON bind.id_company = c.id WHERE c.id = $id";
+		$result = $this->oDB->select ( $query );
+		return $this->oSupport->transcriberToList($result);
+	}
+	
+	protected function getList($arr_campos=null)
+	{
 		$arrResult = array();
 		
 		$fields = ($arr_campos ? $this->oSupport->arrToText($arr_campos) : '*');
@@ -50,7 +61,8 @@ class CompDb extends Db  {
 		return $this->oSupport->transcriberToList($result);		
 	}
 	
-	protected function createDB($arr_args){
+	protected function createDB($arr_args)
+	{
 	
 		//TODO: SERAH USADO PARA REGISTRO LOG
 		//$arr_args['id_usuario']
@@ -76,7 +88,8 @@ class CompDb extends Db  {
 	
 	}
 	
-	protected function updateDB($arr_args){
+	protected function updateDB($arr_args)
+	{
 		
 		//TODO: SERAH USADO PARA REGISTRO LOG
 		//$arr_args['id_usuario']
@@ -104,7 +117,8 @@ class CompDb extends Db  {
 		
 	}
 	
-	protected function verPermissaoUsuarioDB($id_usuario,$code_auth_user){
+	protected function verPermissaoUsuarioDB($id_usuario,$code_auth_user)
+	{
 		$query = "SELECT * FROM usuarios WHERE id = '$id_usuario' LIMIT 1";
 	
 		$result = $this->oDB->select ( $query );

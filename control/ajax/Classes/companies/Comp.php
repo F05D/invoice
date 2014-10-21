@@ -37,6 +37,11 @@ class Comp extends CompDb {
 		return $this->oCompDb->getDB($id);
 	}
 	
+	public function getBindUser($id)
+	{
+		return $this->oCompDb->getBindUserDB($id);
+	}
+	
 }
 
 

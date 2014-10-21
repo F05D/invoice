@@ -33,6 +33,7 @@ class Support {
 	 */	
 	public function arrToText($arr)
 	{
+		if(count($arr) <= 0) return;
 		$str = "";
 		foreach ($arr as $val) 
 		{
@@ -40,6 +41,14 @@ class Support {
 		}		
 		return substr($str, 0,-1);
 	}
+	
+	public function arrAddslashes($arr)
+	{
+		if(count($arr) <= 0) return;
+		foreach ($arr as $key => $val) $arr[$key] = addslashes($val);		
+		return $arr;
+	}
+	
 }
 
 

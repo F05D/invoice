@@ -37,46 +37,27 @@
 <!-- AJAX CONTROLS -->
 <script>
 	function ajax_control() {
-		var id_usuario = "<?=$user['id']?>"; //PERMANENTE
-		var lang       = "<?=$user['lingua']?>"; //PERMANENTE
-
-		var emp_nome        = $("#emp_nome").val();
-		var emp_cnpj_id     = $("#emp_cnpj_id").val();
-		var emp_end         = $("#emp_end").val();
-		var emp_cidade      = $("#emp_cidade").val();
-		var emp_estado      = $("#emp_estado").val();
-		var emp_pais        = $("#emp_pais").val();
-		var emp_tel_p       = $("#emp_tel_p").val();
-		var emp_tel_s       = $("#emp_tel_s").val();
-		var emp_email       = $("#emp_email").val();
-		var emp_site        = $("#emp_site").val();
-		var emp_link_map    = $("#emp_link_map").val();
-		var emp_nome_prop   = $("#emp_nome_prop").val();	
-		var emp_comentarios = $("#emp_comentarios").val();
-
-		//var user_privilegio = $('#user_privilegio :selected').val()
-		
-		//VERIFICACAO E CONTROLE
 	    $.ajax({
 	        url: 'control/ajax/delegate_to/companies/create.php',
 	        type: 'POST',
 	        data: {
-	            'id_usuario':id_usuario,//PERMANENTE
-	            'lang':lang,//PERMANENTE
-	            
-	            'emp_nome':emp_nome,
-	            'emp_cnpj_id':emp_cnpj_id,
-	            'emp_end':emp_end,
-	            'emp_cidade':emp_cidade,
-	            'emp_estado':emp_estado,
-	            'emp_pais':emp_pais,
-	            'emp_tel_p':emp_tel_p,
-	            'emp_tel_s':emp_tel_s,
-	            'emp_email':emp_email,
-	            'emp_site':emp_site,
-	            'emp_link_map':emp_link_map,
-	            'emp_nome_prop':emp_nome_prop,
-	            'emp_comentarios':emp_comentarios
+	            'id_usuario':'<?=$oUser->get('id')?>', //PERMANENTE
+	            'lang':'<?=$oUser->get('lingua')?>',   //PERMANENTE
+	            'code_user':'<?=$oUser->getCodeSecurity( $oUser->get('id')."$%F*")?>', //PERMANENTE
+	            'code_create':'<?=$oUser->getCodeSecurity( $oUser->getLastId()."&%d@")?>', //PERMANENTE	            
+	            'emp_nome':$("#emp_nome").val(),
+	            'emp_cnpj_id':$("#emp_cnpj_id").val(),
+	            'emp_end':$("#emp_end").val(),
+	            'emp_cidade':$("#emp_cidade").val(),
+	            'emp_estado':$("#emp_estado").val(),
+	            'emp_pais':$("#emp_pais").val(),
+	            'emp_tel_p':$("#emp_tel_p").val(),
+	            'emp_tel_s':$("#emp_tel_s").val(),
+	            'emp_email':$("#emp_email").val(),
+	            'emp_site':$("#emp_site").val(),
+	            'emp_link_map':$("#emp_link_map").val(),
+	            'emp_nome_prop':$("#emp_nome_prop").val(),
+	            'emp_comentarios':$("#emp_comentarios").val()
 			},
 			dataType:"html",         
 			success: function (data) {

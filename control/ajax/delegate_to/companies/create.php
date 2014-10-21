@@ -1,22 +1,50 @@
 <?php
 	
+	//LOCALIZACAO DE ARQUIVOS {
+	if($_SERVER['DOCUMENT_ROOT'] == "/Library/WebServer/Sites") {
+		$local_root = $_SERVER['DOCUMENT_ROOT'];
+		$local_simbolic = "/invoice";
+	} else {
+		$local_root = $_SERVER['DOCUMENT_ROOT'];
+		$local_simbolic = "";
+	}
+	//LOCALIZACAO DE ARQUIVOS }
+
+	//Corrige problemas de caracteres que quebram a inclusao no DB
+	require_once ( $local_root . $local_simbolic . "/control/ajax/Classes/common/Support.php");
+	$oSupport = new Support();
+	$_POST = $oSupport->arrAddslashes($_POST);
+	
 	//TRADUCAO DOS TEXTOS:
-	require_once ( dirname(__FILE__) . "/../../Classes/configs/Configs.php");
+	require_once ( $local_root . $local_simbolic . "/control/ajax/Classes/configs/Configs.php");
 	$oConfigs = new Configs();
 	$oConfigs->setLanguage($_POST['lang'], false);
 	
-	require_once ( dirname(__FILE__) . "/../../Classes/companies/Comp.php");
+	require_once ( $local_root . $local_simbolic . "/control/ajax/Classes/companies/Comp.php");
 	$oComp = new Comp();
 	
-	require_once ( dirname(__FILE__) . "/../../Classes/common/Validacoes.php");
+	require_once ( $local_root . $local_simbolic . "/control/ajax/Classes/common/Validacoes.php");
 	$oValiacoes = new Validacoes();
+	
+	require_once ( $local_root . $local_simbolic . "/control/ajax/Classes/user/User.php");
+	$oUser = new User();
 	
 	//ERROS:
 	$cache_html = "";
 	$error = false;
 	
 	
-	if( !$_POST['id_usuario'] && !is_numeric($_POST['id_usuario'])) {
+	if(!$oUser->userPermission( $_POST['id_usuario']."$%F*",$_POST['code_user']) ) {
+		$cache_html .= "Erro de integridade. Contacte o administrador do sistema.<br>";
+		$error = true;
+	}
+	
+	if(!$oUser->userPermission( $oUser->getLastId() . "&%d@" ,$_POST['code_create'] ) ) {
+		$cache_html .= "Erro de integridade. Clique no botao 'Cadastrar' novamente.<br>";
+		$error = true;
+	}
+	
+	if( !$_POST['id_usuario'] || !is_numeric($_POST['id_usuario'])) {
 		$cache_html .= $oConfigs->get('cadastro_companies','usuario_nao_logado') . "<br>";
 		$error = true;
 	}
@@ -50,7 +78,6 @@
 		$cache_html .= $oConfigs->get('cadastro_companies','dig_pais') . "<br>";
 		$error = true;
 	}
-	
 
 	if( !$_POST['emp_tel_p']) {
 		$cache_html .= $oConfigs->get('cadastro_companies','dig_tel_p') . "<br>";
@@ -62,7 +89,7 @@
 		$error = true;
 	}
 
-	if( $_POST['emp_email'] && !$oValiacoes->valida_mail($_POST['emp_email']) ) {
+	if( $_POST['emp_email'] && !$oValiacoes->validaMail($_POST['emp_email']) ) {
 		$cache_html .= $oConfigs->get('cadastro_companies','email_invalido') . "<br>";
 		$error = true;
 	}	
@@ -86,12 +113,12 @@
 		$cache_html = $oConfigs->get('cadastro_companies','erros_encontrados') . "<br><br>" . $cache_html;
 		$arr = array('transaction' => 'NO', 'msg' => $cache_html );
 		print json_encode($arr);
-		return;
+		die();
 	}
 		
 	$arr_args = array(
-			'id_usuario'       => $_POST['id_usuario'],
-			'lang'             => $_POST['lang'],
+			'id_usuario'      => $_POST['id_usuario'],
+			'lang'            => $_POST['lang'],
 			
 			'emp_nome'        => $_POST['emp_nome'],
 			'emp_cnpj_id'     => $_POST['emp_cnpj_id'],
