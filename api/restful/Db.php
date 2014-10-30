@@ -84,7 +84,8 @@ class Db {
 		$query = 'INSERT INTO ' . $table . ' SET ' . $field_values;
 
 		if (!mysqli_query ( $this->oDb, $query ) ) {
-			$error_exception = "ERROR:" . mysqli_error($this->oDb);			
+			$error_exception = "ERROR:" . mysqli_error($this->oDb);
+			//print $query . " - " . $error_exception;			
 			return false;
 		}
 		
@@ -106,13 +107,8 @@ class Db {
 	// Get last id from table
 	protected function lastId($table,$field) {
 		$query = "SELECT $field FROM $table ORDER BY $field DESC LIMIT 1;";
-	
-		if (!mysqli_query ( $this->oDb, $query ) ) {
-			$error_exception = "ERROR:" . mysqli_error($this->oDb);			
-			return false;
-		}
-	
-		return true;
+		$result = mysqli_query ( $this->oDb, $query );
+		return $result;
 	}
 	
 	// Update any row that matches a WHERE clause

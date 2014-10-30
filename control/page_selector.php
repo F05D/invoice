@@ -3,6 +3,22 @@
 		case "7a141f837aa0edf25f68220d86787640": //md5("logon.php")
 			require_once ($local_root. $local_simbolic . "/view/pages/home.php");
 			break;
+
+		//INVOICES {
+		case "b5415e05223570d577345d8d9fc10756": //md5("invoices/listar.php")
+			require_once ($local_root. $local_simbolic . "/view/pages/invoices/listar.php");
+			break;
+		
+		case "f6d875d5d83a9d10b68255a0e63aa26d": //md5("invoices/editar.php")
+			require_once ($local_root. $local_simbolic . "/view/pages/invoices/editar.php");
+			break;
+		
+		case "132907420a3a75b520ddd95d8b0f2bf0": //md5("invoices/cadastrar.php")
+			require_once ($local_root. $local_simbolic . "/view/pages/invoices/cadastrar.php");
+			break;
+		
+		//INVOICES }
+			
 			
 		//USUARIOS {
 		case "2288f694a0dc334479e1d95c8b762b20": //md5("usuarios/listar.php")

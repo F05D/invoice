@@ -9,6 +9,9 @@
 	</a>
 		<ul class="dropdown-menu">
 		
+			<li><a href="logon.php?lang=<?=$oUser->get('lingua')?>&p=<?=md5("invoices/listar.php")?>"> <i class="icon-large icon-th"></i>
+					Lista de Invoices
+			</a></li>
 			<li><a href="logon.php?lang=<?=$oUser->get('lingua')?>&p=<?=md5("usuarios/listar.php")?>"> <i class="icon-large icon-th"></i>
 					Lista de Usuários
 			</a></li>

@@ -2,6 +2,20 @@
 	background-color: #E9E9E9;
 }
 
+.invoice_cadastro{
+	width: 150px;
+	text-align: right;
+}
+
+.invoice_progress{
+	width:300px;
+}
+
+.invoice_btn{
+	width:10px;
+}
+
+
 /* RESPONSIVE  */
 /* USADO PELO SISTEMA  */
 @media (min-width: 980px) {
@@ -45,5 +59,19 @@
   .mobile {  	
   	display:block;
   }
-	
 }
+
+.remove_text{
+	cursor:pointer;
+	text-decoration:underline;
+}
+
+.input_file{
+    background-color: transparent;
+    border: 0px solid;
+    color: transparent;
+}
+
+
+
+

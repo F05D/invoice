@@ -1,15 +1,39 @@
 <?php 
-
 switch($_GET["p"]){
 	case "7a141f837aa0edf25f68220d86787640": //md5("logon.php")
 		break;
 		
+		
+		
+	//INVOICES {
+	case "b5415e05223570d577345d8d9fc10756": //md5("invoices/listar.php")
+		print '<li class="text-info">'.$oConfigs->get('cadastro_invoice','selector_listagem').'</li>';
+		break;
+	
+	case "f6d875d5d83a9d10b68255a0e63aa26d": //md5("invoices/editar.php")
+		print '<a href="logon.php?lang='.$oUser->get("lingua").'&p='. md5("invoices/listar.php"). '">'.
+		$oConfigs->get('cadastro_invoice','selector_listagem').'</a>';
+		print '<span class="divider"><i class="icon-caret-right"></i></span>';
+		print '<li class="text-info">'.
+				$oConfigs->get('cadastro_invoice','selector_editar').'</li>';
+		break;
+	
+	case "132907420a3a75b520ddd95d8b0f2bf0": //md5("invoices/cadastrar.php")
+		print '<a href="logon.php?lang='.$oUser->get("lingua").'&p='. md5("invoices/listar.php"). '">'.
+		$oConfigs->get('cadastro_invoice','selector_listagem').'</a>';
+		print '<span class="divider"><i class="icon-caret-right"></i></span>';
+		print '<li class="text-info">'.
+				$oConfigs->get('cadastro_invoice','selector_cadastrar').'</li>';
+		break;
+	//INVOICES }
+		
+		
+
 	//USUARIOS {
 	case "2288f694a0dc334479e1d95c8b762b20": //md5("usuarios/listar.php")
 		print '<li class="text-info">'.$oConfigs->get('cadastro_usuario','selector_listagem').'</li>';
 		break;
 	
-		
 	case "60cc11dd4be4922a5264ef44588df210": //md5("usuarios/editar.php")
 		print '<a href="logon.php?lang='.$oUser->get("lingua").'&p='. md5("usuarios/listar.php"). '">'.
 			$oConfigs->get('cadastro_usuario','selector_listagem').'</a>';
@@ -26,6 +50,8 @@ switch($_GET["p"]){
 			$oConfigs->get('cadastro_usuario','selector_cadastrar').'</li>';
 		break;
 	//USUARIOS }				
+		
+		
 		
 		
 	//EMPRESAS {
@@ -49,7 +75,9 @@ switch($_GET["p"]){
 		print '<li class="text-info">'.
 			$oConfigs->get('cadastro_companies','selector_cadastrar').'</li>';
 		break;
-		//EMPRESAS }
+	//EMPRESAS }
+		
+		
 		
 		
 		
