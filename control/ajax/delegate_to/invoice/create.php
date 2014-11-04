@@ -227,8 +227,17 @@
 			$error = true;
 		}		
 		
-		
-		
+		if( 
+			!$oValiacoes->isNum($_POST['docs_packinglist_lock_status']) ||
+			!$oValiacoes->isNum($_POST['docs_formei_lock_status']) ||
+			!$oValiacoes->isNum($_POST['docs_fumigacao_lock_status']) ||
+			!$oValiacoes->isNum($_POST['docs_bl_lock_status']) ||
+			!$oValiacoes->isNum($_POST['docs_invoice_lock_status']) ||
+			!$oValiacoes->isNum($_POST['docs_ISF_lock_status'])
+		) {
+			$cache_html .= $oConfigs->get('cadastro_invoice','erro_integridade_lock') . "<br>";
+			$error = true;
+		}
 		
 		
 		if($error) {
@@ -247,47 +256,47 @@
 	$uploaddir = $local_root . $local_simbolic . '/uploads/';	
 	$arrDocs = array();
 	
-	if($_FILES['docs_packinglist']['name'])
-		$arrDocs['docs_packinglist'] = $oInvoice->copyDoc( 
-				$arrDocs['docs_packinglist'], 
-				$_FILES['docs_packinglist'], 
-				$uploaddir
-		);
+	$arrDocs['docs_packinglist'] = $oInvoice->copyDoc( 
+			$arrDocs['docs_packinglist'], 
+			$_FILES['docs_packinglist'],
+			$_POST['docs_packinglist_lock_status'],
+			$uploaddir
+	);
 	
-	if($_FILES['docs_formei']['name'])
-		$arrDocs['docs_formei'] = $oInvoice->copyDoc( 
-				$arrDocs['docs_formei'], 
-				$_FILES['docs_formei'], 
-				$uploaddir
-		);
+	$arrDocs['docs_formei'] = $oInvoice->copyDoc( 
+			$arrDocs['docs_formei'], 
+			$_FILES['docs_formei'], 
+			$_POST['docs_formei_lock_status'],
+			$uploaddir
+	);
 	
-	if($_FILES['docs_fumigacao']['name'])
-		$arrDocs['docs_fumigacao'] = $oInvoice->copyDoc(
-				$arrDocs['docs_fumigacao'], 
-				$_FILES['docs_fumigacao'], 
-				$uploaddir
-		);
+	$arrDocs['docs_fumigacao'] = $oInvoice->copyDoc(
+			$arrDocs['docs_fumigacao'], 
+			$_FILES['docs_fumigacao'], 
+			$_POST['docs_fumigacao_lock_status'],
+			$uploaddir
+	);
 	
-	if($_FILES['docs_bl']['name'])
-		$arrDocs['docs_bl'] = $oInvoice->copyDoc( 
-				$arrDocs['docs_bl'], 
-				$_FILES['docs_bl'], 
-				$uploaddir
-		);
+	$arrDocs['docs_bl'] = $oInvoice->copyDoc( 
+			$arrDocs['docs_bl'], 
+			$_FILES['docs_bl'], 
+			$_POST['docs_bl_lock_status'],
+			$uploaddir
+	);
 	
-	if($_FILES['docs_invoice']['name'])
-		$arrDocs['docs_invoice'] = $oInvoice->copyDoc( 
-				$arrDocs['docs_invoice'], 
-				$_FILES['docs_invoice'], 
-				$uploaddir
-		);
+	$arrDocs['docs_invoice'] = $oInvoice->copyDoc( 
+			$arrDocs['docs_invoice'], 
+			$_FILES['docs_invoice'], 
+			$_POST['docs_invoice_lock_status'],
+			$uploaddir
+	);
 
-	if($_FILES['docs_ISF']['name'])
-		$arrDocs['docs_ISF'] = $oInvoice->copyDoc( 
-				$arrDocs['docs_ISF'], 
-				$_FILES['docs_ISF'], 
-				$uploaddir
-		);
+	$arrDocs['docs_ISF'] = $oInvoice->copyDoc( 
+			$arrDocs['docs_ISF'], 
+			$_FILES['docs_ISF'], 
+			$_POST['docs_ISF_lock_status'],
+			$uploaddir
+	);
 		
 	$arr_args = array(
 			'id_usuario'      => $_POST['id_usuario'],

@@ -81,27 +81,31 @@
 	</div>
 	<form enctype="multipart/form-data">	
 		<table class="table table-hover">
-			<tr>
+			<tr>				
 				<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','docs_packinglist')?></td>
-			    <td>			    
+			    <td>
+			    	<span class="lock" id="docs_packinglist_lock" onclick="toggleLock('docs_packinglist_lock','docs_packinglist_lock_status')"><img src="library/images/icons/unlock.png" height="25" width="25"></span><input type="hidden" id="docs_packinglist_lock_status" value="0">			    
 			    	<span onclick="clearInput('docs_packinglist','docs_packinglist_info')" class="remove_text"><?=$oConfigs->get('cadastro_invoice','remover')?></span>
 			    	<input class="input_file" onchange="change('docs_packinglist','docs_packinglist_info')" type="file" placeholder="<?=$oConfigs->get('cadastro_invoice','docs_packinglist')?>" id="docs_packinglist">
 			    	<br>
 			    	<span id="docs_packinglist_info"></span>
-			    </td>		   
+			    </td>							    		  
 			</tr>		 
 			<tr>
 				<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','docs_formei')?></td>
 				<td>
+					<span class="lock" id="docs_formei_lock" onclick="toggleLock('docs_formei_lock','docs_formei_lock_status')"><img src="library/images/icons/unlock.png" height="25" width="25"></span><input type="hidden" id="docs_formei_lock_status" value="0">
 					<span onclick="clearInput('docs_formei','docs_formei_info')" class="remove_text"><?=$oConfigs->get('cadastro_invoice','remover')?></span>
 					<input class="input_file" onchange="change('docs_formei','docs_formei_info')" type="file" placeholder="<?=$oConfigs->get('cadastro_invoice','docs_formei')?>" id="docs_formei">
 					<br>
 					<span id="docs_formei_info"></span>
 				</td>
+				
 			</tr>
 			<tr>
 				<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','docs_fumigacao')?></td>
 				<td>
+					<span class="lock" id="docs_fumigacao_lock" onclick="toggleLock('docs_fumigacao_lock','docs_fumigacao_lock_status')"><img src="library/images/icons/unlock.png" height="25" width="25"></span><input type="hidden" id="docs_fumigacao_lock_status" value="0">
 					<span onclick="clearInput('docs_fumigacao','docs_fumigacao_info')" class="remove_text"><?=$oConfigs->get('cadastro_invoice','remover')?></span>
 					<input class="input_file" onchange="change('docs_fumigacao','docs_fumigacao_info')" type="file" placeholder="<?=$oConfigs->get('cadastro_invoice','docs_formei')?>" id="docs_fumigacao">
 					<br>
@@ -111,6 +115,7 @@
 			<tr>
 				<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','docs_bl')?></td>
 				<td>
+					<span class="lock" id="docs_bl_lock" onclick="toggleLock('docs_bl_lock','docs_bl_lock_status')"><img src="library/images/icons/lock.png" height="25" width="25"></span><input type="hidden" id="docs_bl_lock_status" value="1">
 					<span onclick="clearInput('docs_bl','docs_bl_info')" class="remove_text"><?=$oConfigs->get('cadastro_invoice','remover')?></span>
 					<input class="input_file" onchange="change('docs_bl','docs_bl_info')" type="file" placeholder="<?=$oConfigs->get('cadastro_invoice','docs_formei')?>" id="docs_bl">
 					<br>
@@ -120,6 +125,7 @@
 			<tr>
 				<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','docs_invoice')?></td>
 				<td>
+					<span class="lock" id="docs_invoice_lock" onclick="toggleLock('docs_invoice_lock','docs_invoice_lock_status')"><img src="library/images/icons/unlock.png" height="25" width="25"></span><input type="hidden" id="docs_invoice_lock_status" value="0">
 					<span onclick="clearInput('docs_invoice','docs_invoice_info')" class="remove_text"><?=$oConfigs->get('cadastro_invoice','remover')?></span>
 					<input class="input_file" onchange="change('docs_invoice','docs_invoice_info')" type="file" placeholder="<?=$oConfigs->get('cadastro_invoice','docs_formei')?>" id="docs_invoice">
 					<br>
@@ -129,7 +135,8 @@
 			<tr>
 				<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','docs_ISF')?></td>
 				<td>
-					<span onclick="clearInput('#ocs_ISF','docs_ISF_info')" class="remove_text"><?=$oConfigs->get('cadastro_invoice','remover')?></span>
+					<span class="lock" id="docs_ISF_lock" onclick="toggleLock('docs_ISF_lock','docs_ISF_lock_status')"><img src="library/images/icons/unlock.png" height="25" width="25"></span><input type="hidden" id="docs_ISF_lock_status" value="0">
+					<span onclick="clearInput('docs_ISF','docs_ISF_info')" class="remove_text"><?=$oConfigs->get('cadastro_invoice','remover')?></span>
 					<input class="input_file" onchange="change('docs_ISF','docs_ISF_info')" type="file" class="span12"   id="docs_ISF">
 					<br>
 					<span id="docs_ISF_info"></span>
@@ -180,7 +187,18 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script lang="javascript">
 
-	
+	function toggleLock(idImg,idLock){		
+		if( $('#'+idLock).val() == 0 ) { 
+			$('#'+idLock).val(1);
+			
+			$('#'+idImg).html('<img src="library/images/icons/lock.png" height="25" width="25">');
+		} else {
+			$('#'+idLock).val(0);
+			$('#'+idImg).html('<img src="library/images/icons/unlock.png" height="25" width="25">');
+		}
+		console.log($('#'+idLock).val());
+		
+	}
 
 	function getReadableFileSizeString(fileSizeInBytes) {
 	
@@ -200,8 +218,8 @@
 		 sumSizers();
 	}
 	
-	 function change(file,span) {			 
-	    var file = $('#'+file).get(0).files[0];
+	 function change(fileStr,span) {			 
+	    var file = $('#'+fileStr).get(0).files[0];
 	    var size = file.size;
 	    var name = file.name;
 	    var type = file.type;
@@ -209,7 +227,7 @@
 	    if(!type) 
 		{
 		    alert("<?=$oConfigs->get('cadastro_invoice','formato_invalido')?>");
-		    clearInput(file,span)
+		    clearInput(fileStr,span)
 	    } else {
 	    	$('#'+span).html( getReadableFileSizeString(size) + " -> " + type + "<br>" + name );
 	    }
@@ -233,9 +251,6 @@
 
 	 
 	function ajax_control() {
-
-
-		
 	    $.ajax({
 	        url: 'control/ajax/delegate_to/invoice/create.php',
 	        type: 'POST',	       
@@ -346,6 +361,13 @@
                 data.append('docs_bl',$('#docs_bl').get(0).files[0]);
                 data.append('docs_invoice',$('#docs_invoice').get(0).files[0]);
                 data.append('docs_ISF',$('#docs_ISF').get(0).files[0]);
+
+                data.append('docs_packinglist_lock_status',$('#docs_packinglist_lock_status').val());
+                data.append('docs_formei_lock_status',$('#docs_formei_lock_status').val());
+                data.append('docs_fumigacao_lock_status',$('#docs_fumigacao_lock_status').val());
+                data.append('docs_bl_lock_status',$('#docs_bl_lock_status').val());
+                data.append('docs_invoice_lock_status',$('#docs_invoice_lock_status').val());
+                data.append('docs_ISF_lock_status',$('#docs_ISF_lock_status').val());
 
                 data.append('invoice_nr', $('#invoice_nr').val());
                 data.append('invoice_fatura_n', $('#invoice_fatura_n').val());

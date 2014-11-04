@@ -6,7 +6,7 @@ class Db {
 	public $oDb;	
 	
 	// Create a database connection for use by all functions in this class
-	public function __construct()
+	protected function __construct()
 {
 		//require_once ( dirname(__FILE__) . "/db.config.php");
 		
@@ -85,7 +85,7 @@ class Db {
 
 		if (!mysqli_query ( $this->oDb, $query ) ) {
 			$error_exception = "ERROR:" . mysqli_error($this->oDb);
-			//print $query . " - " . $error_exception;			
+			//print $query . "\n" . $error_exception . "\n";			
 			return false;
 		}
 		
@@ -97,12 +97,34 @@ class Db {
 		$query = 'UPDATE ' . $table . ' SET ' . $field_values . ' WHERE ' . $where;
 		
 		if (!mysqli_query ( $this->oDb, $query ) ) {
-			$error_exception = "ERROR:" . mysqli_error($this->oDb);			
+			$error_exception = "ERROR:" . mysqli_error($this->oDb);
+			print $query . "\n";
+			print $error_exception;			
 			return false;
 		}
 		
 		return true;
 	}
+	
+	// Update any row that matches a WHERE clause
+	protected function insertOrUpdate($table, $field_values, $where) {
+		
+		if($this->in_table($table,$where)) 
+			$query = 'UPDATE ' . $table . ' SET ' . $field_values . ' WHERE ' . $where;
+		else
+			$query = 'INSERT INTO ' . $table . ' SET ' . $field_values;
+				
+		if (!mysqli_query ( $this->oDb, $query ) ) {
+			$error_exception = "ERROR:" . mysqli_error($this->oDb);
+			print $query . "\n";
+			print $error_exception;
+			return false;
+		}
+	
+		return true;
+	}
+	
+	
 	
 	// Get last id from table
 	protected function lastId($table,$field) {
@@ -114,7 +136,7 @@ class Db {
 	// Update any row that matches a WHERE clause
 	protected function delete($table, $where) {
 		$query = 'DELETE FROM ' . $table . ' WHERE ' . $where;
-	
+		
 		if (!mysqli_query ( $this->oDb, $query ) ) {
 			$error_exception = "ERROR:" . mysqli_error($this->oDb);			
 			return false;

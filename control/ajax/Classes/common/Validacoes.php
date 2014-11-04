@@ -63,6 +63,33 @@ class Validacoes {
 		return $dt_aux;
 	}
 	
+	//Formato da data
+	public function convertDBtoDataHr($dt,$lang_code) {
+	
+		$dtArr = explode(" ",$dt);
+		$dt_arr = explode("-",$dtArr[0]);
+		
+		switch ($lang_code) {
+			case "en"://03/13/1980
+				$dt_aux = $dt_arr[1] ."/". $dt_arr[2] ."/". $dt_arr[0];
+				break;
+	
+			case "pt":
+			case "sp"://13/03/1980
+			default:
+				$dt_aux = $dt_arr[2] ."/". $dt_arr[1] ."/". $dt_arr[0];
+				break;
+		}
+	
+		return $dt_aux." ".$dtArr[1];
+	}
+
+	public function isNum($val)
+	{	
+		$testVal = (int)$val;
+		return (is_numeric( $testVal ) ? true : false);	
+	}
+	
 	public function validaSenha($senh){
 		
 		if (

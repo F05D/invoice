@@ -72,6 +72,16 @@
     color: transparent;
 }
 
+.lock{
+	cursor:pointer;
+}
 
+.pointer{
+	cursor:pointer;
+}
+
+.center{
+	text-align:center;
+}
 
 
