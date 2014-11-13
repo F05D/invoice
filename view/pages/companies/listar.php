@@ -39,7 +39,7 @@
 
 					//if(!$mDetect->isMobile() && !$mDetect->isTablet() )
 						for ( $i = 0; $i < sizeof($arr_result); $i++ ) {
-							print "<tr>";
+							print "<tr class='pointer'>";
 							print " <td><span onclick=\"togleTable('table_".$arr_result[$i]['id']."')\">" . $arr_result[$i]['nome'] . "</span></td>";														
 							print " <td>" . $arr_result[$i]['pais'] . "</td>";
 							print " <td>" . $arr_result[$i]['estado'] . " / " .$arr_result[$i]['cidade'] . "</td>";							

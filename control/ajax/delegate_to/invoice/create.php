@@ -62,8 +62,8 @@
 			$error = true;
 		} 
 			
-		if( !$_POST['invoice_fatura_n'] ) {
-			$cache_html .= $oConfigs->get('cadastro_invoice','dig_nu_fatura') . "<br>";
+		if( !$_POST['invoice_po'] ) {
+			$cache_html .= $oConfigs->get('cadastro_invoice','dig_nu_po') . "<br>";
 			$error = true;
 		}
 		
@@ -303,7 +303,7 @@
 			'lang'            => $_POST['lang'],
 			
 			'invoice_nr'                   => $_POST['invoice_nr'],
-			'invoice_fatura_n'             => $_POST['invoice_fatura_n'],
+			'invoice_po'                   => $_POST['invoice_po'],
 			'invoice_fatura_valor'         => $_POST['invoice_fatura_valor'],
 			'invoice_data_vencimento'      => $_POST['invoice_data_vencimento'],
 			'invoice_empresa'              => $_POST['invoice_empresa'],

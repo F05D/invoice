@@ -2,36 +2,74 @@
 
 	require_once ( $local_root. $local_simbolic . "/control/ajax/Classes/common/Validacoes.php");
 	$oValidacoes = new Validacoes();
-
-	require_once ( $local_root. $local_simbolic . "/control/ajax/Classes/invoice/Invoice.php");
-	$oInvoice = new Invoice();
 	
-	require_once ( $local_root. $local_simbolic . "/control/ajax/Classes/common/HtmlSuport.php");
-	$oHtmlSuport = new HtmlSuport();
+	//ORDER BY - INI
+	$o_by  = $_GET['o_by'];
+	$o_tg  = $_GET['o_tg'];
+	$orderBy = array(
+		'o_by' => $o_by,
+		'o_tg' => $o_tg	
+	);
 	
-	//Paginacao
-	$num_rows = $oInvoice->NumRows();
-	$page = 0;
-	$pageNow = ( $_GET['page_n'] ? $_GET['page_n'] : 0);
+	//ORDER BY - FIM
+	
+	//SEARCH - INI
+	
+	$search = array(
+			's_in' => ($_GET['s_in'] ? $_GET['s_in'] : ''),
+			's_po' => ($_GET['s_po'] ? $_GET['s_po'] : ''),
+			's_co' => ($_GET['s_co'] ? $_GET['s_co'] : ''),
+			's_special' => ($_GET['s_special'] ? $_GET['s_special'] : '')			
+	);
+	
+	//SEARCH - FIM
 	$max  = 10;
-	$n_atual  = $_GET['n'];
-	
+	$pageNow = ( $_GET['page_n'] ? $_GET['page_n'] : 0);
 	$limit = " LIMIT $pageNow,$max ";
 	
 	$arr_result = array();
-	$arr_result = $oInvoice->read(null,$limit);
+	$arr_result = $oInvoice->read(null,$limit,$search,$orderBy);
+	$num_rows   = $oInvoice->numRows($search);
+	
+	$urlStr = $oHtmlSuport->serializeGET(
+		array(
+			a_page => $_GET['a_page'],
+			o_by => $_GET['o_by'],
+			o_tg => $_GET['o_tg'],
+			s_in => $_GET['s_in'],
+			s_po => $_GET['s_po'],
+			s_co => $_GET['s_co'],
+			s_special => $_GET['s_special'],
+			n => $_GET['n'],
+			page_n => $_GET['page_n'],
+		)
+	);
+	
+	$urlStrPagination = $oHtmlSuport->serializeGET(
+			array(
+					a_page => $_GET['a_page'],
+					o_by => $_GET['o_by'],
+					o_tg => $_GET['o_tg'],
+					s_in => $_GET['s_in'],
+					s_po => $_GET['s_po'],
+					s_co => $_GET['s_co'],
+					s_special => $_GET['s_special'],
+			)
+	);
+	
 ?>						
-	<div class="pagination pagination-primary pagination-mini"><center>
-		<ul>				
-			<?=$oHtmlSuport->pagination($num_rows,$max,$n_atual,$oUser->get('lingua'))?>				
-		</ul>
-		</center>
-	</div>
-	<div class="well widget">
+	<div class="well widget">	
 		<!-- widget header -->
 		<div class="widget-header">
 			<h3 class="title"><?=$oConfigs->get('cadastro_invoice','selector_listagem')?></h3>
 		</div>
+		
+		<!-- //TODO: Paginacao: perguntar se eh necessario 
+		<div class="pagination pagination-primary pagination-mini">
+			<center><ul><?=$oHtmlSuport->pagination($num_rows,$max,$_GET['n'],$oUser->get('lingua'),$urlStrPagination)?></ul></center>
+		</div>
+		 -->
+		
 		<!-- ./ widget header -->
 		
 		<!-- widget content -->
@@ -39,13 +77,15 @@
 			<table class="table table-striped">
 				<thead>
 					<tr>
-						<th><?=$oConfigs->get('cadastro_invoice','list_invoice')?></th>												
-						<th><?=$oConfigs->get('cadastro_invoice','list_empresa')?></th>						
-						<th class=center><center><?=$oConfigs->get('cadastro_invoice','list_dt_vencimento')?></center></th>
-						<th class=center><center><?=$oConfigs->get('cadastro_invoice','list_enviado_notificacao_pgto')?></center></th>
-						<th class=center><center><?=$oConfigs->get('cadastro_invoice','list_visualizado')?></center></th>
-						<th class=center><center><?=$oConfigs->get('cadastro_invoice','list_status')?></center></th>
-						<th class=center><center><?=$oConfigs->get('cadastro_invoice','list_acoes')?></center></th>												
+						<th><span onclick="orderBy('in');" class="pointer"><?=$oConfigs->get('cadastro_invoice','list_invoice')?></span> <?=$oHtmlSuport->orderIcon('in',$o_by,$o_tg)?></th>
+						<th><span onclick="orderBy('po');" class="pointer"><?=$oConfigs->get('cadastro_invoice','list_po')?> </span> <?=$oHtmlSuport->orderIcon('po',$o_by,$o_tg)?></th>
+						<th><span onclick="orderBy('co');" class="pointer"><?=$oConfigs->get('cadastro_invoice','list_container')?> </span> <?=$oHtmlSuport->orderIcon('co',$o_by,$o_tg)?></th>																		
+						<th><span onclick="orderBy('em');" class="pointer"><?=$oConfigs->get('cadastro_invoice','list_empresa')?> </span> <?=$oHtmlSuport->orderIcon('em',$o_by,$o_tg)?></th>			
+						<th><span onclick="orderBy('ve');" class="pointer center"><?=$oConfigs->get('cadastro_invoice','list_dt_vencimento')?> </span> <?=$oHtmlSuport->orderIcon('ve',$o_by,$o_tg)?></th>
+						<th><span onclick="orderBy('nt');" class="pointer center"><?=$oConfigs->get('cadastro_invoice','list_enviado_notificacao_pgto')?> </span> <?=$oHtmlSuport->orderIcon('nt',$o_by,$o_tg)?></th>
+						<th><span onclick="orderBy('vi');" class="pointer center"><?=$oConfigs->get('cadastro_invoice','list_visualizado')?> </span> <?=$oHtmlSuport->orderIcon('vi',$o_by,$o_tg)?></th>
+						<th><span onclick="orderBy('st');" class="pointer center"><?=$oConfigs->get('cadastro_invoice','list_status')?></span> <?=$oHtmlSuport->orderIcon('st',$o_by,$o_tg)?></th>
+						<th><?=$oConfigs->get('cadastro_invoice','list_acoes')?></th>									
 					</tr>
 				</thead>
 				<tbody>					
@@ -61,12 +101,14 @@
 							
 							print "<tr>";
 							print " <td>" . $val['invoice_nr'] . "</td>";
+							print " <td>" . $val['po'] . "</td>";
+							print " <td>" . $val['container'] . "</td>";
 							print " <td>" . $val['nome'] . "</td>";
 							print " <td class=center><center>" . $oValidacoes->convertDBtoData($val['data_vencimento'], $oUser->get('lingua')) . "</center></td>";
 							print " <td class=center><center><img src='library/images/icons/notification_". ($val['notificado'] == 1 ? "ok" : 'no' ).".png' ".($val['status_id'] == 1 ? "" : " class='pointer' onclick=\"sendNot($strArgsFunc)\" " ).">".($val['notificado'] == 1 ? '<br>'.$oValidacoes->convertDBtoDataHr($val['notificado_dt'], $oUser->get('lingua')) : '' ) . "</center></td>";
 							print " <td class=center><center><img src='library/images/icons/view_". ($val['visualizado'] == 1 ? "ok" : 'no' ).".png' >".($val['visualizado'] == 1 ? '<br>'.$oValidacoes->convertDBtoDataHr($val['visualizado_dt'], $oUser->get('lingua')) : '') . "</center></td>";
 							print " <td class=center><center><img src='library/images/icons/pago_". ($val['status_id'] == 1 ? "ok" : 'no' ).".png' ></center></td>";							
-							print " <td class=center><center><a href='logon.php?n=".$n_atual."&page_n=".$pageNow."&lang=".$oUser->get('lingua')."&p=" . md5("invoices/editar.php") . "&i=" . $val['id'] . "'><span class='icon-pencil'></span></a>&nbsp;&nbsp;<a href='#' onclick=\"deletar($strArgsFunc);\" ><span class='icon-remove'></span></a></center></td>";								
+							print " <td class=center><center><a href='logon.php?lang=".$oUser->get('lingua')."&p=" . md5("invoices/editar.php") . "&i=" . $val['id'] . $urlStr . "'><span class='icon-pencil'></span></a>&nbsp;&nbsp;<a href='#' onclick=\"deletar($strArgsFunc);\" ><span class='icon-remove'></span></a></center></td>";								
 							print "</tr>";
 						}						
 					?>					
@@ -77,7 +119,7 @@
 	</div>
 	<div class="pagination pagination-primary pagination-mini"><center>
 		<ul>				
-			<?=$oHtmlSuport->pagination($num_rows,$max,$n_atual,$oUser->get('lingua'))?>				
+			<?=$oHtmlSuport->pagination($num_rows,$max,$_GET['n'],$oUser->get('lingua'),$urlStrPagination)?>				
 		</ul>
 		</center>
 	</div>
@@ -104,6 +146,26 @@
 
 <!-- AJAX CONTROLS -->
 <script>
+	
+	function orderBy(order_field) {
+		<?php
+			$urlStrGET = $oHtmlSuport->serializeGET(
+					array(
+							a_page => $_GET['a_page'],
+							o_tg => ( $_GET['o_tg'] == 'asc' ? 'desc' : 'asc'),
+							s_in => $_GET['s_in'],
+							s_po => $_GET['s_po'],
+							s_co => $_GET['s_co'],
+							s_special => $_GET['s_special'],
+							n => $_GET['n'],
+							page_n => $_GET['page_n'],
+					)
+			);
+		?>
+		var order = "&o_by=" + order_field + "<?=$urlStrGET?>";
+		window.location.assign("logon.php?p=<?=md5("invoices/listar.php")?>" + order);
+	}
+					
 
 	function deletar(id,invoice,code_user,code_delete)
 	{
@@ -127,7 +189,7 @@
 				console.log(data);				
 				var obj = JSON.parse(data);
 				if( obj.transaction == 'OK' ) {			
-					window.location.assign("logon.php?p=<?=md5("invoices/listar.php")?>");							
+					window.location.assign("logon.php?p=<?=md5("invoices/listar.php")?><?=$urlStr?>");							
 				} else {
 					$("#msg").html(obj.msg);
 					$("#msg").scrollToMe();
@@ -146,7 +208,7 @@
 	}
 					
 	function add(){
-		window.location = "logon.php?p=<?=md5("invoices/cadastrar.php")?>";
+		window.location = "logon.php?p=<?=md5("invoices/cadastrar.php")?><?=$urlStr?>";
 	}
 
 	function sendNot(id,invoice,code_user,code_delete)
@@ -169,7 +231,7 @@
 				console.log(data);				
 				var obj = JSON.parse(data);
 				if( obj.transaction == 'OK' ) {			
-					window.location.assign("logon.php?p=<?=md5("invoices/listar.php")?>");							
+					window.location.assign("logon.php?p=<?=md5("invoices/listar.php")?><?=$urlStr?>");							
 				} else {
 					$("#msg").html(obj.msg);
 					$("#msg").scrollToMe();

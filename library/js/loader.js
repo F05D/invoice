@@ -328,9 +328,35 @@ function initFormAddOns(){
 	
 	$( ".datePicker" ).each(function(){
 		$(this).datepicker({
-			format: 'mm-dd-yyyy'
+			format: 'mm/dd/yyyy'
 		});
 	});
+	
+	$( ".datePicker_" ).each(function(){
+		$(this).datepicker({
+			format: 'mm/dd/yyyy'
+		});
+	});
+	
+	$( ".datePicker_pt" ).each(function(){
+		$(this).datepicker({
+			format: 'dd/mm/yyyy'
+		});
+	});
+	
+	$( ".datePicker_en" ).each(function(){
+		$(this).datepicker({
+			format: 'mm/dd/yyyy'
+		});
+	});
+	
+	$( ".datePicker_sp" ).each(function(){
+		$(this).datepicker({
+			format: 'mm/dd/yyyy'
+		});
+	});
+
+	
 	$('.timePicker').each(function(){
 		$(this).timePicker({
 		show24Hours: false,

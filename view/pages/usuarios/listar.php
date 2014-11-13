@@ -37,7 +37,7 @@ $oValidacoes = new Validacoes();
 							
 							print "<tr>";
 							print " <td>" . $arr_result[$i]['nome'] . "</td>";
-							print " <td>GOLDSTONE</td>";
+							print " <td>" . $arr_result[$i]['empresa_nome'] . "</td>";
 							print " <td>" . $arr_result[$i]['usuario'] . "</td>";
 							print " <td>" . $oUser->getAlias_privilegio($arr_result[$i]['privilegios'], $oConfigs) . "</td>";
 							print " <td>" . $oValidacoes->convertDBtoData($arr_result[$i]['dt_nascimento'], $user['lingua']) . "</td>";

@@ -32,8 +32,12 @@
 	$arrDocs = array();
 	$arrDocs = $oInvoice->getDocs($_GET['i']);
 	
-	$urlPagination = "page_n=".$_GET['page_n']."&n=".$_GET['n'];
-
+	$urlPagination = 
+					"page_n=".$_GET['page_n']. 
+					"&n=".$_GET['n'] . 
+					"&o_by=" . $_GET['o_by'] . 
+					"&o_tg=" . $_GET['o_tg']  . 
+					"&a_page=" . $_GET['a_page'];
 ?>
 
 
@@ -54,10 +58,18 @@
 			</td>
 		</tr>
 		<tr><td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_nr')?></td>                      <td><input class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_nr')?>"                   id="invoice_nr"              value="<?=$arr_result['invoice_nr']?>"></td></tr>
-		<tr><td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_fatura_n')?></td>                <td><input class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_fatura_n')?>"             id="invoice_fatura_n"        value="<?=$arr_result['fatura_n']?>"></td></tr>
+		<tr><td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_po')?></td>                <td><input class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_po')?>"             id="invoice_po"        value="<?=$arr_result['po']?>"></td></tr>
 		<tr><td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_fatura_valor')?></td>            <td><input class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_fatura_valor')?>"         id="invoice_fatura_valor"    value="<?=$arr_result['fatura_valor']?>"></td></tr>
 		
-		<tr><td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_data_vencimento')?></td>         <td><input class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_data_vencimento')?>"      id="invoice_data_vencimento" value="<? print $oValidacoes->convertDBtoData( $arr_result['data_vencimento'], $oUser->get('lingua'));?>"></td></tr>		
+		<tr>
+			<td class="invoice_cadastro">
+				<?=$oConfigs->get('cadastro_invoice','cad_invoice_data_vencimento')?></td>
+			<td>
+			<input type="text" readonly id="invoice_data_vencimento" value="<?=$oValidacoes->convertDBtoData( $arr_result['data_vencimento'], $oUser->get('lingua'));?>" class="datePicker_<?=$oUser->get('lingua')?>" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_data_vencimento')?>">
+			
+			</td>
+		</tr>
+				
 		<tr>
 			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_banco')?></td>                         
 			<td>
@@ -93,7 +105,6 @@
 	</table>
 </div>
 
-
 <div class="well widget">
 	<div class="widget-header">
 		<h3 class="title">Dados do Container:</h3>
@@ -108,7 +119,12 @@
 		<tr><td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_qnt')?></td>                     <td><input class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_qnt')?>"                  id="invoice_qnt"           value="<?=$arr_result['qnt']?>"></td></tr>
 		<tr><td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_nota_fiscal')?></td>             <td><input class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_nota_fiscal')?>"          id="invoice_nota_fiscal"   value="<?=$arr_result['nota_fiscal']?>"></td></tr>
 		<tr><td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_lacres')?></td>                  <td><input class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_lacres')?>"               id="invoice_lacres"        value="<?=$arr_result['lacres']?>"></td></tr>
-		<tr><td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_embarque_data')?></td>           <td><input class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_embarque_data')?>"        id="invoice_embarque_data" value="<? print $oValidacoes->convertDBtoData( $arr_result['embarque_data'], $oUser->get('lingua'));?>" ></td></tr>
+		<tr><td class="invoice_cadastro">
+			<?=$oConfigs->get('cadastro_invoice','cad_invoice_embarque_data')?></td>           
+			<td>
+				<input type="text" readonly  id="invoice_embarque_data" value="<?=$oValidacoes->convertDBtoData( $arr_result['embarque_data'], $oUser->get('lingua'));?>" class="datePicker_<?=$oUser->get('lingua')?>" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_embarque_data')?>">
+			</td>
+		</tr>
 		<tr>
 			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_embarque_confirmacao')?></td>    
 			<td>
@@ -157,10 +173,10 @@
 			    </td>
 			    <td><? print ($arrDocs[$docType]['visualizado'] == 1 ? $oValidacoes->convertDBtoDataHr( $arrDocs[$docType]['visualizado_dt'],$oUser->get('lingua') ) : $oConfigs->get('cadastro_invoice','nao') )?></td>
 				
-				<?php 				
-				$code_user     = $oUser->getCodeSecurity( $oUser->get('id') . '%34DsX9' );
-				$code_download = $oUser->getCodeSecurity( '%34DsX9'.$arrDocs[$docType]['local_name_md5'] );				
-				if($arrDocs[$docType]['local_name_md5']) { ?> 
+								
+				<?php $code_user     = $oUser->getCodeSecurity( $oUser->get('id') . '%34DsX9' ); ?>
+				<?php $code_download = $oUser->getCodeSecurity('%34DsX9'.$arrDocs[$docType]['local_name_md5']); ?>
+				<?php if ($arrDocs[$docType]['local_name_md5'] ) { ?>
 					<td><span class="icon-download-alt lock" onclick="download('<?=$arrDocs[$docType]['local_name_md5']?>','<?=$docType?>','<?=$code_user?>','<?=$code_download?>');"></span></td>
 				<?php } else { ?>
 					<td><span class="micon-blocked"></span></td>
@@ -188,10 +204,9 @@
 				</td>
 				<td><? print ($arrDocs[$docType]['visualizado'] == 1 ? $oValidacoes->convertDBtoDataHr( $arrDocs[$docType]['visualizado_dt'],$oUser->get('lingua') ) : $oConfigs->get('cadastro_invoice','nao') )?></td>
 				
-				<?php 				
-				$code_user     = $oUser->getCodeSecurity( $oUser->get('id') . '%34DsX9' );
-				$code_download = $oUser->getCodeSecurity( '%34DsX9'.$arrDocs[$docType]['local_name_md5'] );				
-				if($arrDocs[$docType]['local_name_md5']) { ?> 
+				<?php $code_user     = $oUser->getCodeSecurity( $oUser->get('id') . '%34DsX9' ); ?>
+				<?php $code_download = $oUser->getCodeSecurity('%34DsX9'.$arrDocs[$docType]['local_name_md5']); ?>
+				<?php if ($arrDocs[$docType]['local_name_md5'] ) { ?>				 
 					<td><span class="icon-download-alt lock" onclick="download('<?=$arrDocs[$docType]['local_name_md5']?>','<?=$docType?>','<?=$code_user?>','<?=$code_download?>');"></span></td>
 				<?php } else { ?>
 					<td><span class="micon-blocked"></span></td>
@@ -219,10 +234,9 @@
 				</td>
 				<td><? print ($arrDocs[$docType]['visualizado'] == 1 ? $oValidacoes->convertDBtoDataHr( $arrDocs[$docType]['visualizado_dt'],$oUser->get('lingua') ) : $oConfigs->get('cadastro_invoice','nao') )?></td>
 				
-				<?php 				
-				$code_user     = $oUser->getCodeSecurity( $oUser->get('id') . '%34DsX9' );
-				$code_download = $oUser->getCodeSecurity( '%34DsX9'.$arrDocs[$docType]['local_name_md5'] );				
-				if($arrDocs[$docType]['local_name_md5']) { ?> 
+				<?php $code_user     = $oUser->getCodeSecurity( $oUser->get('id') . '%34DsX9' ); ?>
+				<?php $code_download = $oUser->getCodeSecurity('%34DsX9'.$arrDocs[$docType]['local_name_md5']); ?>
+				<?php if ($arrDocs[$docType]['local_name_md5'] ) { ?>				 				
 					<td><span class="icon-download-alt lock" onclick="download('<?=$arrDocs[$docType]['local_name_md5']?>','<?=$docType?>','<?=$code_user?>','<?=$code_download?>');"></span></td>
 				<?php } else { ?>
 					<td><span class="micon-blocked"></span></td>
@@ -250,10 +264,9 @@
 				</td>
 				<td><? print ($arrDocs[$docType]['visualizado'] == 1 ? $oValidacoes->convertDBtoDataHr( $arrDocs[$docType]['visualizado_dt'],$oUser->get('lingua') ) : $oConfigs->get('cadastro_invoice','nao') )?></td>
 				
-				<?php 				
-				$code_user     = $oUser->getCodeSecurity( $oUser->get('id') . '%34DsX9' );
-				$code_download = $oUser->getCodeSecurity( '%34DsX9'.$arrDocs[$docType]['local_name_md5'] );				
-				if($arrDocs[$docType]['local_name_md5']) { ?> 
+				<?php $code_user     = $oUser->getCodeSecurity( $oUser->get('id') . '%34DsX9' ); ?>
+				<?php $code_download = $oUser->getCodeSecurity('%34DsX9'.$arrDocs[$docType]['local_name_md5']); ?>
+				<?php if ($arrDocs[$docType]['local_name_md5'] ) { ?>				 				
 					<td><span class="icon-download-alt lock" onclick="download('<?=$arrDocs[$docType]['local_name_md5']?>','<?=$docType?>','<?=$code_user?>','<?=$code_download?>');"></span></td>
 				<?php } else { ?>
 					<td><span class="micon-blocked"></span></td>
@@ -280,10 +293,9 @@
 				</td>
 				<td><? print ($arrDocs[$docType]['visualizado'] == 1 ? $oValidacoes->convertDBtoDataHr( $arrDocs[$docType]['visualizado_dt'],$oUser->get('lingua') ) : $oConfigs->get('cadastro_invoice','nao') )?></td>
 				
-				<?php 				
-				$code_user     = $oUser->getCodeSecurity( $oUser->get('id') . '%34DsX9' );
-				$code_download = $oUser->getCodeSecurity( '%34DsX9'.$arrDocs[$docType]['local_name_md5'] );				
-				if($arrDocs[$docType]['local_name_md5']) { ?> 
+				<?php $code_user     = $oUser->getCodeSecurity( $oUser->get('id') . '%34DsX9' ); ?>
+				<?php $code_download = $oUser->getCodeSecurity('%34DsX9'.$arrDocs[$docType]['local_name_md5']); ?>
+				<?php if ($arrDocs[$docType]['local_name_md5'] ) { ?>				 
 					<td><span class="icon-download-alt lock" onclick="download('<?=$arrDocs[$docType]['local_name_md5']?>','<?=$docType?>','<?=$code_user?>','<?=$code_download?>');"></span></td>
 				<?php } else { ?>
 					<td><span class="micon-blocked"></span></td>
@@ -310,10 +322,10 @@
 				</td>
 				<td><? print ($arrDocs[$docType]['visualizado'] == 1 ? $oValidacoes->convertDBtoDataHr( $arrDocs[$docType]['visualizado_dt'],$oUser->get('lingua') ) : $oConfigs->get('cadastro_invoice','nao') )?></td>
 				
-				<?php 				
-				$code_user     = $oUser->getCodeSecurity( $oUser->get('id') . '%34DsX9' );
-				$code_download = $oUser->getCodeSecurity( '%34DsX9'.$arrDocs[$docType]['local_name_md5'] );				
-				if($arrDocs[$docType]['local_name_md5']) { ?> 
+				 				
+				<?php $code_user     = $oUser->getCodeSecurity( $oUser->get('id') . '%34DsX9' ); ?>
+				<?php $code_download = $oUser->getCodeSecurity( '%34DsX9'.$arrDocs[$docType]['local_name_md5'] );?>				
+				<?php  if($arrDocs[$docType]['local_name_md5']) { ?>
 					<td><span class="icon-download-alt lock" onclick="download('<?=$arrDocs[$docType]['local_name_md5']?>','<?=$docType?>','<?=$code_user?>','<?=$code_download?>');"></span></td>
 				<?php } else { ?>
 					<td><span class="micon-blocked"></span></td>
@@ -481,7 +493,7 @@
                 
                 data.append('id_invoice', '<?=$_GET['i']?>');
                 data.append('invoice_nr', $('#invoice_nr').val());
-                data.append('invoice_fatura_n', $('#invoice_fatura_n').val());
+                data.append('invoice_po', $('#invoice_po').val());
                 data.append('invoice_fatura_valor', $('#invoice_fatura_valor').val());
                 data.append('invoice_data_vencimento', $('#invoice_data_vencimento').val());
                 data.append('invoice_empresa', $('#invoice_empresa').val());
@@ -638,7 +650,7 @@
 
                 data.append('id_invoice', '<?=$_GET['i']?>');
                 data.append('invoice_nr', $('#invoice_nr').val());
-                data.append('invoice_fatura_n', $('#invoice_fatura_n').val());
+                data.append('invoice_po', $('#invoice_po').val());
                 data.append('invoice_fatura_valor', $('#invoice_fatura_valor').val());
                 data.append('invoice_data_vencimento', $('#invoice_data_vencimento').val());
                 data.append('invoice_empresa', $('#invoice_empresa').val());

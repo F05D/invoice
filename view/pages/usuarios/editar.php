@@ -30,7 +30,7 @@ $arrIdBindCompany = $oUser->getBindCompany($id);
 		<h3 class="title">Cadastro de Empresas:</h3>
 	</div>		
 	<input class="input-block-level" type="text"     placeholder="<?=$oConfigs->get('cadastro_usuario','lista_nome_comp')?>"     id="user_nome"       value="<?=$arr_result['nome']?>">
-	<input class="input-block-level" type="text"     placeholder="<?=$oConfigs->get('cadastro_usuario','lista_dt_nasc')?>"       id="user_dt_nasc"    value="<?=$dt_format?>" >
+	<input class="datePicker_<?=$oUser->get('lingua')?>" type="text" placeholder="<?=$oConfigs->get('cadastro_usuario','lista_dt_nasc')?>" id="user_dt_nasc" readonly value="<?=$dt_format?>">
 	<input class="input-block-level" type="text"     placeholder="<?=$oConfigs->get('cadastro_usuario','lista_email')?>"         id="user_email"      value="<?=$arr_result['usuario']?>"    readonly onclick="alterar_email();">
 	<input class="input-block-level" type="password" placeholder="<?=$oConfigs->get('cadastro_usuario','lista_senha')?>"         id="user_senha"      value="<?=$arr_result['senha']?>"      readonly onclick="alert_troca_senha()">
 	<input class="input-block-level" type="password" placeholder="<?=$oConfigs->get('cadastro_usuario','lista_senha_rep')?>"     id="user_senha_ver"  value="<?=$arr_result['senha']?>"      readonly onclick="alert_troca_senha()">

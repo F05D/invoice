@@ -1,5 +1,8 @@
 <?php 
 
+require_once ( $local_root. $local_simbolic . "/control/ajax/Classes/common/Validacoes.php");
+$oValidacoes = new Validacoes();
+
 require_once ( $local_root. $local_simbolic . "/control/ajax/Classes/companies/Comp.php");
 $oComp = new Comp();
 
@@ -12,7 +15,7 @@ $arr_result = $oComp->read(array('id','nome'));
 		<h3 class="title"><?=$oConfigs->get('cadastro_usuario','lista_cadastro_tit')?></h3>
 	</div>	
 	<input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_usuario','lista_nome_comp')?>" id="user_nome">
-	<input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_usuario','lista_dt_nasc')?>" id="user_dt_nasc">
+	<input class="datePicker_<?=$oUser->get('lingua')?>" type="text" placeholder="<?=$oConfigs->get('cadastro_usuario','lista_dt_nasc')?>" id="user_dt_nasc" readonly value="<?=$oValidacoes->dataNowLang($oUser->get('lingua'))?>">
 	<input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_usuario','lista_email')?>" id="user_email">
 	<input class="input-block-level" type="password" placeholder="<?=$oConfigs->get('cadastro_usuario','lista_senha')?>" id="user_senha">
 	<input class="input-block-level" type="password" placeholder="<?=$oConfigs->get('cadastro_usuario','lista_senha_rep')?>" id="user_senha_ver">

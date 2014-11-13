@@ -81,14 +81,42 @@ class InvoiceDb extends Db {
 		return $this->oSupport->transcriberToList($result);
 	}
 	
-	protected function getList($arr_campos=null, $limit = null)
+	protected function getList($arr_campos=null, $limit = null, $search = null, $orderBy = null)
 	{
 		$arrResult = array();
+		
+		$orderStr = ' ORDER BY i.id ';
+		if($orderBy['o_by'] == 'in') $orderStr = ' ORDER BY i.invoice_nr ';
+		if($orderBy['o_by'] == 'po') $orderStr = ' ORDER BY i.po ';
+		if($orderBy['o_by'] == 'co') $orderStr = ' ORDER BY i.container ';
+		if($orderBy['o_by'] == 'em') $orderStr = ' ORDER BY c.nome ';
+		if($orderBy['o_by'] == 've') $orderStr = ' ORDER BY i.data_vencimento ';
+		if($orderBy['o_by'] == 'nt') $orderStr = ' ORDER BY i.notificado ';
+		if($orderBy['o_by'] == 'vi') $orderStr = ' ORDER BY i.visualizado ';
+		if($orderBy['o_by'] == 'st') $orderStr = ' ORDER BY i.status_id ';
+
+		if($orderBy['o_tg'] == 'asc') $orderStr .= ' ASC '; else $orderStr .= ' DESC ';
+		
+		//ORDER ESPECIAL DE CABECALHO
+		if($orderBy['o_by'] == 'pg_ok') $orderStr = ' ORDER BY i.status_id ';
+		if($orderBy['o_by'] == 'pg_no') $orderStr = ' ORDER BY i.status_id ';
+		if($orderBy['o_by'] == 'pg_ve') $orderStr = ' ORDER BY i.status_id ';
+
+		
+		$searchStr = '';
+		if($search['s_in']) $searchStr = " WHERE invoice_nr LIKE '%".$search['s_in']."%'";
+		if($search['s_po']) $searchStr = " WHERE po         LIKE '%".$search['s_po']."%'";
+		if($search['s_co']) $searchStr = " WHERE container  LIKE '%".$search['s_co']."%'";
+		
+		if($search['s_special'] == 'pg_ok') $searchStr = " WHERE i.status_id = 1 ";
+		if($search['s_special'] == 'pg_no') $searchStr = " WHERE i.status_id = 2 ";
+		if($search['s_special'] == 'pg_ve') $searchStr = " WHERE i.status_id = 2 AND i.data_vencimento < '".date("Y-m-d")."'";
+		if($search['s_special'] == 'pg_tt') $searchStr = " ";
 		
 		$fields = ($arr_campos ? $this->oSupport->arrToText($arr_campos) : '*');
 		$query = "SELECT i.*, c.nome FROM invoices i " . 
 				 "INNER JOIN invoices_bind bind ON bind.invoice_id = i.id ". 
-				 "INNER JOIN companies c ON bind.company_id = c.id ORDER BY i.id ASC ";
+				 "INNER JOIN companies c ON bind.company_id = c.id $searchStr $orderStr ";
 		
 		$query .= ($limit != null ? $limit : '');
 		
@@ -96,12 +124,23 @@ class InvoiceDb extends Db {
 		return $this->oSupport->transcriberToList($result);		
 	}
 	
-	protected function NumRowsDB()
+	protected function numRowsDB($search = null)
 	{
+		
+		$searchStr = '';
+		if($search['s_in']) $searchStr = " WHERE invoice_nr LIKE '%".$search['s_in']."%'";
+		if($search['s_po']) $searchStr = " WHERE po         LIKE '%".$search['s_po']."%'";
+		if($search['s_co']) $searchStr = " WHERE container  LIKE '%".$search['s_co']."%'";
+		
+		if($search['s_special'] == 'pg_ok') $searchStr = " WHERE i.status_id = 1 ";
+		if($search['s_special'] == 'pg_no') $searchStr = " WHERE i.status_id = 2 ";
+		if($search['s_special'] == 'pg_ve') $searchStr = " WHERE i.status_id = 2 AND i.data_vencimento < '".date("Y-m-d")."'";
+		if($search['s_special'] == 'pg_tt') $searchStr = " ";
+		
+		$fields = ($arr_campos ? $this->oSupport->arrToText($arr_campos) : '*');
 		$query = "SELECT i.id FROM invoices i " .
 				"INNER JOIN invoices_bind bind ON bind.invoice_id = i.id ".
-				"INNER JOIN companies c ON bind.company_id = c.id ".
-				" WHERE deletada = 0 ORDER BY i.id ASC ";
+				"INNER JOIN companies c ON bind.company_id = c.id $searchStr ";
 		
 		$result = $this->oDB->select ( $query );
 		return $result->num_rows;
@@ -110,18 +149,13 @@ class InvoiceDb extends Db {
 	protected function createDB($arr_args)
 	{
 	
-		$invoice_lastId = $this->InvoiceInsert($arr_args);
-		
+		$invoice_lastId = $this->InvoiceInsert($arr_args);		
 		if($invoice_lastId)
 		{
-			$this->RegisterDocs($arr_args, $invoice_lastId);
-		
-			if( $this->BindInvoice($arr_args, $invoice_lastId) ) 
-			{
-				return array('transaction' => 'OK', 'step' => 'bind' );
-				
-			} else {
-				
+			$this->RegisterDocs($arr_args, $invoice_lastId);		
+			if( $this->BindInvoice($arr_args, $invoice_lastId) ) {
+				return array('transaction' => 'OK', 'step' => 'bind' );				
+			} else {				
 				return array('transaction' => 'NO', 'step' => 'bind' );
 			}
 		} else {
@@ -150,7 +184,7 @@ class InvoiceDb extends Db {
 		$field_values .= " qnt                   =  ". $arr_args['invoice_qnt']                  ." ,";
 		$field_values .= " nota_fiscal           = '". $arr_args['invoice_nota_fiscal']          ."',";
 		$field_values .= " lacres                = '". $arr_args['invoice_lacres']               ."',";
-		$field_values .= " fatura_n              = '". $arr_args['invoice_fatura_n']             ."',";
+		$field_values .= " po                    = '". $arr_args['invoice_po']                   ."',";
 		$field_values .= " fatura_valor          =  ". $arr_args['invoice_fatura_valor']         ." ,";
 		$field_values .= " data_vencimento       = '". $dt_venc                                  ."',";
 		$field_values .= " embarque_data         = '". $dt_emba                                  ."',";
@@ -249,13 +283,13 @@ class InvoiceDb extends Db {
 		$field_values .= " qnt                   =  ". $arr_args['invoice_qnt']                  ." ,";
 		$field_values .= " nota_fiscal           = '". $arr_args['invoice_nota_fiscal']          ."',";
 		$field_values .= " lacres                = '". $arr_args['invoice_lacres']               ."',";
-		$field_values .= " fatura_n              = '". $arr_args['invoice_fatura_n']             ."',";
+		$field_values .= " po                    = '". $arr_args['invoice_po']                   ."',";
 		$field_values .= " fatura_valor          =  ". $arr_args['invoice_fatura_valor']         ." ,";
 		$field_values .= " data_vencimento       = '". $dt_venc                                  ."',";
 		$field_values .= " embarque_data         = '". $dt_emba                                  ."',";
 		$field_values .= " embarque_confirmacao  = '". $arr_args['invoice_embarque_confirmacao'] ."',";
-		$field_values .= " status_id             = '". $arr_args['invoice_status']               ."' ";		
-	
+		$field_values .= " status_id             = '". $arr_args['invoice_status']               ."' ";
+
 		$where = " id = " . $arr_args['id_invoice'];
 		
 		if( $this->oDB->update("invoices", $field_values, $where) ) {
@@ -357,6 +391,33 @@ class InvoiceDb extends Db {
 		$result = $this->oDB->select($query);
 		return $this->oSupport->transcriberToList($result);
 	}
+	
+	protected function getScoresDB($field)
+	{
+		switch ($field)
+		{
+			case 'total':
+				$query = "SELECT id FROM invoices WHERE deletada = 0";
+				break;
+			case 'pagas_ok':
+				$query = "SELECT * FROM invoices WHERE deletada = 0 AND status_id = 1;";
+				break;
+			case 'pagas_no':
+				$query = "SELECT * FROM invoices WHERE deletada = 0 AND status_id = 2;";
+				break;
+			case 'a_vencer':
+				date_default_timezone_set("America/Sao_Paulo");
+				$dataNow = date("Y-m-d");
+				
+				$query = "SELECT * FROM invoices WHERE deletada = 0 AND status_id = 2 AND data_vencimento < '$dataNow';";
+				break;
+		}		
+		
+		$result = $this->oDB->select($query);
+		return $result->num_rows;
+	}
+	
+	
 	
 	
 }

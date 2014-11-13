@@ -90,7 +90,7 @@ class UserDb extends Db {
 	}
 	
 	protected function getUserList() {
-		$query = "SELECT * FROM usuarios WHERE ativo = true;";
+		$query = "SELECT u.*,c.nome as empresa_nome FROM usuarios u RIGHT JOIN companies_bind_usuarios bind ON bind.id_usuario = u.id RIGHT JOIN companies c ON c.id = bind.id_company WHERE u.ativo = true;";
 		$result = $this->oDB->select ( $query );
 		return $this->oSupport->transcriberToList($result);
 	}

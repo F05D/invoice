@@ -7,6 +7,22 @@ class Validacoes {
 		return ereg ( "^([0-9,a-z,A-Z]+)([.,_,-]([0-9,a-z,A-Z]+))*[@]([0-9,a-z,A-Z]+)([.,_,-]([0-9,a-z,A-Z]+))*[.]([a-z,A-Z]){2,3}([0-9,a-z,A-Z])?$", $email );
 	}
 
+	//Retorna a data confrome a lingua
+	public function dataNowLang($lang) {
+	
+		switch ($lang) {
+			case "en"://03/13/1980
+				return date('m/d/Y');
+				break;
+	
+			case "pt":
+			case "sp"://13/03/1980
+			default:
+				return date('d/m/Y');
+				break;
+		}
+	}
+	
 	//Formato da data
 	public function validaDataFormato($dt,$lang) {
 	

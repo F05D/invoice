@@ -8,8 +8,14 @@
 	require_once ( $local_root. $local_simbolic . "/control/ajax/Classes/banks/Bank.php");
 	$oBank = new Bank();
 	
+	require_once ( $local_root. $local_simbolic . "/control/ajax/Classes/common/Validacoes.php");
+	$oValidacoes = new Validacoes();
+	
 	$arr_result_bancarios = array();
 	$arr_result_bancarios = $oBank->read(array('id','banco_nome','swift_code'));
+	
+	//ACTIVE PAGE:
+	$a_page = "&a_page=".$_GET['a_page'];
 ?>
 
 
@@ -30,9 +36,14 @@
 			</td>
 		</tr>
 		<tr><td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_nr')?></td>                      <td><input class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_nr')?>"                   id="invoice_nr"></td></tr>
-		<tr><td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_fatura_n')?></td>                <td><input class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_fatura_n')?>"             id="invoice_fatura_n"></td></tr>
+		<tr><td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_po')?></td>                <td><input class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_po')?>"             id="invoice_po"></td></tr>
 		<tr><td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_fatura_valor')?></td>            <td><input class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_fatura_valor')?>"         id="invoice_fatura_valor"></td></tr>
-		<tr><td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_data_vencimento')?></td>         <td><input class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_data_vencimento')?>"      id="invoice_data_vencimento"></td></tr>		
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_data_vencimento')?></td>
+		    <td>
+		    	<input type="text" readonly id="invoice_data_vencimento" value="<?=$oValidacoes->dataNowLang($oUser->get('lingua'))?>" class="datePicker_<?=$oUser->get('lingua')?>" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_data_vencimento')?>">
+		    </td>
+		</tr>		
 		<tr>
 			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_banco')?></td>                         
 			<td>
@@ -61,7 +72,12 @@
 		<tr><td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_qnt')?></td>                     <td><input class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_qnt')?>"                  id="invoice_qnt"></td></tr>
 		<tr><td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_nota_fiscal')?></td>             <td><input class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_nota_fiscal')?>"          id="invoice_nota_fiscal"></td></tr>
 		<tr><td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_lacres')?></td>                  <td><input class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_lacres')?>"               id="invoice_lacres"></td></tr>
-		<tr><td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_embarque_data')?></td>           <td><input class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_embarque_data')?>"        id="invoice_embarque_data"></td></tr>
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_embarque_data')?></td>           
+			<td>
+				<input type="text" readonly id="invoice_embarque_data" value="<?=$oValidacoes->dataNowLang($oUser->get('lingua'))?>" class="datePicker_<?=$oUser->get('lingua')?>" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_embarque_data')?>">				
+			</td>
+		</tr>
 		<tr>
 			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_embarque_confirmacao')?></td>    
 			<td>
@@ -266,7 +282,7 @@
                 data.append('code_create', '<?=$oUser->getCodeSecurity( $oUser->getLastId()."g$@)")?>' );
                 
                 data.append('invoice_nr', $('#invoice_nr').val());
-                data.append('invoice_fatura_n', $('#invoice_fatura_n').val());
+                data.append('invoice_po', $('#invoice_po').val());
                 data.append('invoice_fatura_valor', $('#invoice_fatura_valor').val());
                 data.append('invoice_data_vencimento', $('#invoice_data_vencimento').val());
                 data.append('invoice_empresa', $('#invoice_empresa').val());
@@ -370,7 +386,7 @@
                 data.append('docs_ISF_lock_status',$('#docs_ISF_lock_status').val());
 
                 data.append('invoice_nr', $('#invoice_nr').val());
-                data.append('invoice_fatura_n', $('#invoice_fatura_n').val());
+                data.append('invoice_po', $('#invoice_po').val());
                 data.append('invoice_fatura_valor', $('#invoice_fatura_valor').val());
                 data.append('invoice_data_vencimento', $('#invoice_data_vencimento').val());
                 data.append('invoice_empresa', $('#invoice_empresa').val());
@@ -395,7 +411,7 @@
 					var obj = JSON.parse(data);
 					if(obj.transaction == 'OK') {
 						alert(obj.msg);
-						window.location.assign("logon.php?p=<?=md5('invoices/listar.php')?>");
+						window.location.assign("logon.php?p=<?=md5('invoices/listar.php')?><?=$a_page?>");
 					} else {
 						$("#msg").html(obj.msg);
 						$("#msg").html(obj.msg);

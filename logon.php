@@ -15,6 +15,9 @@ if($_SERVER['DOCUMENT_ROOT'] == "/Library/WebServer/Sites") {
 	$local_simbolic = "";
 }
 
+require_once ( $local_root. $local_simbolic . "/control/ajax/Classes/common/HtmlSuport.php");
+$oHtmlSuport = new HtmlSuport();
+
 //DETECTA O DEVICE UTILIZADO
 //$mDetect->isMobile();
 //$mDetect->isTablet();

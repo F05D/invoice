@@ -26,16 +26,15 @@ class Invoice extends InvoiceDb {
 		return $this->oInvoiceDb->createDB($arr_args);
 	}
 	
-	public function read($arr_campos = null,$limit = null)
+	public function read($arr_campos = null,$limit = null, $search = null, $orderBy = null)
 	{
-		return $this->oInvoiceDb->getList($arr_campos,$limit);
+		return $this->oInvoiceDb->getList($arr_campos, $limit, $search, $orderBy);
 	}
 	
-	public function NumRows()
+	public function numRows($search = null)
 	{
-		return $this->oInvoiceDb->NumRowsDB();
+		return $this->oInvoiceDb->numRowsDB($search);
 	}
-	
 	
 	public function get($id)
 	{
@@ -102,6 +101,11 @@ class Invoice extends InvoiceDb {
 	public function downloadFile($arr_args) 
 	{
 		return $this->oInvoiceDb->getFileDocsDB($arr_args);
+	}
+	
+	public function getScores($field)
+	{
+		return $this->oInvoiceDb->getScoresDB($field);
 	}
 	
 }

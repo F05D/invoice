@@ -132,6 +132,11 @@ class Configs extends Enigma {
 			case "cadastro_material";
 				require 'files/cadastro_material.php';
 				break;
+
+			case "sidebar_barra";
+				require 'files/sidebar_barra.php';
+				break;
+			
 				
 			case "general";
 				require 'files/general.php';

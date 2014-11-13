@@ -1,26 +1,31 @@
 <!-- sidebar -->
 <ul id="sidebar" class="nav nav-pills nav-stacked">
-	<li class="active"><a href="index.html"> <i class="micon-screen"></i> <span
-			class="hidden-phone">INVOICES</span>
+	
+	<li class="<?=($_GET['a_page'] == 'in' ? 'active' : '')?>"><a href="logon.php?a_page=in&lang=<?=$oUser->get('lingua')?>&p=<?=md5("invoices/listar.php")?>"> <i class="micon-screen"></i> <span
+			class="hidden-phone"><?=$oConfigs->get('sidebar_barra','tit_invoices')?></span>
 	</a></li>
+	
+	<li class="<?=($_GET['a_page'] == 'us' ? 'active' : '')?>"><a href="logon.php?a_page=us&lang=<?=$oUser->get('lingua')?>&p=<?=md5("usuarios/listar.php")?>"> 
+		<i class="micon-screen"></i><span class="hidden-phone"><?=$oConfigs->get('sidebar_barra','tit_usuarios')?></span>
+	</a></li>
+	
+	<li class="<?=($_GET['a_page'] == 'em' ? 'active' : '')?>"><a href="logon.php?a_page=em&lang=<?=$oUser->get('lingua')?>&p=<?=md5("companies/listar.php")?>"> 
+		<i class="micon-screen"></i><span class="hidden-phone"><?=$oConfigs->get('sidebar_barra','tit_empresas')?></span>
+	</a></li>
+	
+	<!-- 
 	<li class="dropdown"><a href="#" class="dropdown-toggle"
 		data-toggle="dropdown"> <i class="micon-gift"></i> <span
 			class="hidden-phone">Cadastros</span>
 	</a>
 		<ul class="dropdown-menu">
-		
 			<li><a href="logon.php?lang=<?=$oUser->get('lingua')?>&p=<?=md5("invoices/listar.php")?>"> <i class="icon-large icon-th"></i>
 					Lista de Invoices
 			</a></li>
-			<li><a href="logon.php?lang=<?=$oUser->get('lingua')?>&p=<?=md5("usuarios/listar.php")?>"> <i class="icon-large icon-th"></i>
-					Lista de Usuários
-			</a></li>
-			<li><a href="logon.php?lang=<?=$oUser->get('lingua')?>&p=<?=md5("companies/listar.php")?>"> <i class="icon-large icon-th"></i>
-					Lista de Empresas
-			</a></li>
-
-			
 		</ul></li>
+	 -->
+	
+	<!--   
 	<li><a href="charts.html"> <i class="micon-stats-up"></i> <span
 			class="hidden-phone">Charts</span>
 	</a></li>
@@ -48,5 +53,8 @@
 	<li><a href="widgets.html"> <i class="micon-lab"></i> <span
 			class="hidden-phone">Widgets</span>
 	</a></li>
+	 -->
+	
+	
 </ul>
 <!-- end sidebar -->
