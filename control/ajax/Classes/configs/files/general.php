@@ -2,8 +2,8 @@
 
 	$arr_translate =  array(						
 			"page_not_found" => array("404 - Página não encontrada","x","x"),
-			"xxxxxxx" => array("xxxx","x","x"),
-			"xxxxxxx" => array("xxxx","x","x"),
+			"home" => array("HOME","x","x"),
+			"inicial" => array("BEM VINDO AO INVOICE-PRO","x","x"),
 			"xxxxxxx" => array("xxxx","x","x"),
 			"xxxxxxx" => array("xxxx","x","x"),
 			"xxxxxxx" => array("xxxx","x","x"),

@@ -47,7 +47,7 @@
 							$code_user   = $oUser->getCodeSecurity( $oUser->get('id')."$!@u*");
 							$code_delete = $oUser->getCodeSecurity( $arr_result[$i]['id']."&%h@");
 							$strArgsFunc = $arr_result[$i]['id'].",'".addslashes($arr_result[$i]['nome'])."','".$code_user."','".$code_delete."'";
-							print " <td><a href='logon.php?lang=".$oUser->get('lingua')."&p=" . md5("companies/editar.php") . "&i=" . $arr_result[$i]['id'] . "'><span class='icon-pencil'></span></a>&nbsp;&nbsp;<a href='#' onclick=\"deletar($strArgsFunc);\" ><span class='icon-remove'></span></a></td>";								
+							print " <td><a href='logon.php?lang=".$oUser->get('lingua')."&p=" . md5("companies/editar.php") . "&i=" . $arr_result[$i]['id'] . $urlStrSelector . "'><span class='icon-pencil'></span></a>&nbsp;&nbsp;<a href='#' onclick=\"deletar($strArgsFunc);\" ><span class='icon-remove'></span></a></td>";								
 							print "</tr>";
 														
 							$arr = array();
@@ -155,7 +155,7 @@
 				console.log(data);				
 				var obj = JSON.parse(data);
 				if( obj.transaction == 'OK' ) {			
-					window.location.assign("logon.php?p=<?=md5("companies/listar.php")?>");							
+					window.location.assign("logon.php?p=<?=md5("companies/listar.php")?><?=$urlStrSelector?>");							
 				} else {
 					$("#msg").html(obj.msg);
 					$("#msg").scrollToMe();
@@ -174,7 +174,7 @@
 	}
 					
 	function add(){
-		window.location = "logon.php?p=<?=md5("companies/cadastrar.php")?>";
+		window.location = "logon.php?p=<?=md5("companies/cadastrar.php")?><?=$urlStrSelector?>";
 	}
 
 	

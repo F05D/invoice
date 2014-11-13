@@ -38,6 +38,22 @@ if(!$oUser->autenticaUsuario($_SESSION["pincode"])) {
 	die();
 }
 
+$urlStrSelector = $oHtmlSuport->serializeGET(
+		array(
+				a_page => $_GET['a_page'],
+				o_by => $_GET['o_by'],
+				o_tg => $_GET['o_tg'],
+				s_in => $_GET['s_in'],
+				s_po => $_GET['s_po'],
+				s_co => $_GET['s_co'],
+				s_special => $_GET['s_special'],
+				n => $_GET['n'],
+				page_n => $_GET['page_n'],
+		)
+);
+
+
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -57,8 +73,9 @@ if(!$oUser->autenticaUsuario($_SESSION["pincode"])) {
 		<!-- header -->
 		<div id="header" class="navbar">
 			<div class="navbar-inner">
+			
 				<!-- company or app name -->
-				<a class="brand hidden-phone" href="index.html"><?=$oConfigs->get('index','titulo')?></a>
+				<a class="brand hidden-phone" href="logon.php?p=7a141f837aa0edf25f68220d86787640&a_page=&o_by=&o_tg=&s_in=&s_po=&s_co=&s_special=&n=&page_n="><?=$oConfigs->get('index','titulo')?></a>
 				
 				<!-- NOTIFICACOES DA BARRA SUPERIOR  -->
 				<?php require_once 'view/notifications.php';?>
@@ -80,8 +97,9 @@ if(!$oUser->autenticaUsuario($_SESSION["pincode"])) {
 				<!-- page heading -->
 				<div class="page-heading">				
 					<h2 class="page-title muted">
-						<i class="icon-dashboard"></i> Dashboard
+						<i class="icon-dashboard"></i> <?=$oConfigs->get('index','dashboard')?> 
 					</h2>	
+					EM LOGON: <?=$urlStrSelector?>
 					<!-- INFO DA PAGINA -->				
 					<div class="page-info hidden-phone">
 						<?php require_once 'view/infopage.php';?>

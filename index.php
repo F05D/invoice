@@ -97,7 +97,6 @@ $active_men ['invoices'] = "";
 				
 				var obj = JSON.parse(data);
 				if( obj.transaction == 'OK' ) {
-					debugger					
 					window.location.assign("logon.php?lang=<?=$_GET['lang']?>&pincode="+ obj.pincode);
 				} else {
 					$("#msg").html( obj.msg );

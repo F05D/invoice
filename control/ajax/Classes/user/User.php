@@ -113,7 +113,6 @@ class User extends UserDb {
 	
 	
 	
-	
 	//AUTENTICACAO - PINCODE - {
 	public function checkPINCODE($md5Pincode) {
 		$ip = $_SERVER['REMOTE_ADDR'];

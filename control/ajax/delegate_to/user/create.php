@@ -31,13 +31,13 @@
 	//ERROS:
 	$cache_html = "";$error = false;
 	
-	if(!$oUser->userPermission($_POST['id_usuario'],$_POST['code_user']) ) {
-		$cache_html .= "Erro de integridade. Contacte o administrador do sistema.<br>";
+	if(!$oUser->userPermission( $_POST['id_usuario'] , $_POST['code_user']) ) {
+		$cache_html .= "Erro de integridade 1. Contacte o administrador do sistema.<br>";
 		$error = true;
 	}
 	
-	if(!$oUser->userPermission($oUser->getLastId(),$_POST['code_create'] ) ) {
-		$cache_html .= "Erro de integridade. Clique no botao 'Cadastrar' novamente.<br>";
+	if(!$oUser->userPermission( $oUser->getLastId() , $_POST['code_create'] ) ) {
+		$cache_html .= "Erro de integridade 2. Clique no botao 'Cadastrar' novamente.<br>";
 		$error = true;
 	}
 	

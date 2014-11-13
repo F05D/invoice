@@ -43,7 +43,7 @@ class CompDb extends Db  {
 	
 	protected function getBindUserDB($id)
 	{
-		$query = "select u.id,u.nome,u.usuario FROM companies_bind_usuarios bind ".
+		$query = "select u.id,u.nome,u.usuario,u.lingua FROM companies_bind_usuarios bind ".
 				 "INNER JOIN usuarios u ON bind.id_usuario = u.id ".
 				 "INNER JOIN companies c ON bind.id_company = c.id WHERE c.id = $id";
 		$result = $this->oDB->select ( $query );

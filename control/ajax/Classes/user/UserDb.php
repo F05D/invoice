@@ -204,8 +204,8 @@ class UserDb extends Db {
 		
 		if($result_insert_user && $arr_user['user_empresa'])
 		{
-			$lastId = $this->oDB->lastId('usuarios','id');
-			$result_insert_bind = $this->bind( array('id_usuario'=>$lastId,'id_company'=>$arr_user['user_empresa'] ),'companies_bind_usuarios');						
+			$lastId = $this->oSupport->transcriberToList($this->oDB->lastId('usuarios','id'))[0];
+			$result_insert_bind = $this->bind( array('id_usuario'=>$lastId['id'],'id_company'=>$arr_user['user_empresa'] ),'companies_bind_usuarios');						
 		}
 		
 		return array( 
@@ -216,11 +216,13 @@ class UserDb extends Db {
 	
 	protected function bind($arrBind,$table)
 	{		
+		
 		$bindKeys = array_keys($arrBind);
 		$key01 = $bindKeys[0];$val01 = $arrBind[$key01];
 		$key02 = $bindKeys[1];$val02 = $arrBind[$key02];
 		
-		$query = "SELECT * FROM $table WHERE $key01=$val01 AND $key02=$val02;";	
+		$query = "SELECT * FROM $table WHERE $key01 = $val01 AND $key02 = $val02;";
+
 		$result = $this->oDB->select ( $query );		
 		if (!$result->num_rows) {
 			$field_values = " $key01=$val01, $key02=$val02 ";			

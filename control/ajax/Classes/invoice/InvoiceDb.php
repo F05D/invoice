@@ -417,8 +417,5 @@ class InvoiceDb extends Db {
 		return $result->num_rows;
 	}
 	
-	
-	
-	
 }
 ?>

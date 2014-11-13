@@ -2,8 +2,8 @@
 
 require_once ( $local_root. $local_simbolic . "/control/ajax/Classes/common/Validacoes.php");
 $oValidacoes = new Validacoes();
-?>						
 
+?>						
 	<div class="well widget">
 		<!-- widget header -->
 		<div class="widget-header">
@@ -46,7 +46,7 @@ $oValidacoes = new Validacoes();
 							$code_user   = $oUser->getCodeSecurity($oUser->get('id'));
 							$code_delete = $oUser::getCodeSecurity($arr_result[$i]['id']);								
 							
-							print " <td><a href='logon.php?lang=".$oUser->get('lingua')."&p=" . md5("usuarios/editar.php") . "&i=" . $arr_result[$i]['id'] . "'><span class='icon-pencil'></span></a>&nbsp;&nbsp;<a href='#' onclick=\"deletar(". $arr_result[$i]['id']. ",'" .$arr_result[$i]['usuario']. "','".$code_user."','".$code_delete."');\" ><span class='icon-remove'></span></a></td>";								
+							print " <td><a href='logon.php?lang=".$oUser->get('lingua')."&p=" . md5("usuarios/editar.php") . "&i=" . $arr_result[$i]['id'] . $urlStrSelector . "'><span class='icon-pencil'></span></a>&nbsp;&nbsp;<a href='#' onclick=\"deletar(". $arr_result[$i]['id']. ",'" .$arr_result[$i]['usuario']. "','".$code_user."','".$code_delete."');\" ><span class='icon-remove'></span></a></td>";								
 							print "</tr>";
 						}						
 					?>					
@@ -106,7 +106,7 @@ $oValidacoes = new Validacoes();
 				
 				var obj = JSON.parse(data);
 				if( obj.transaction == 'OK' ) {			
-					window.location.assign("logon.php?p=<?=md5("usuarios/listar.php")?>");							
+					window.location.assign("logon.php?p=<?=md5("usuarios/listar.php?")?><?=$urlStrSelector?>");							
 				} else {
 					$("#msg").html(obj.msg);
 					$("#msg").scrollToMe();
@@ -127,7 +127,7 @@ $oValidacoes = new Validacoes();
 	}
 					
 	function add_user(){
-		window.location = "logon.php?p=<?=md5("usuarios/cadastrar.php")?>";
+		window.location = "logon.php?p=<?=md5("usuarios/cadastrar.php")?><?=$urlStrSelector?>";
 	}
 
 	

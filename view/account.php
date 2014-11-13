@@ -1,4 +1,19 @@
-
+<?
+//REMOUNT
+$urlStrSelector = $oHtmlSuport->serializeGET(
+		array(
+				a_page => 'us',
+				o_by => $_GET['o_by'],
+				o_tg => $_GET['o_tg'],
+				s_in => $_GET['s_in'],
+				s_po => $_GET['s_po'],
+				s_co => $_GET['s_co'],
+				s_special => $_GET['s_special'],
+				n => $_GET['n'],
+				page_n => $_GET['page_n'],
+		)
+);
+?>
 <!-- dropdown user account -->
 <ul class="nav pull-right">
 	<li class="dropdown">
@@ -12,7 +27,7 @@
 				<p>
 				
 				<?php					
-					$edit_user = "logon.php?lang=".$_SESSION["lang"]."&p=" . md5("usuarios/editar.php") . "&i=" . $oUser->get('id');
+					$edit_user = "logon.php?lang=".$_SESSION["lang"]."&p=" . md5("usuarios/editar.php") . "&i=" . $oUser->get('id') . $urlStrSelector;
 				?>
 					<a href="<?=$edit_user?>"><?=$oConfigs->get('cadastro_usuario','editar')?></a>
 				</p>

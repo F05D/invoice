@@ -29,6 +29,12 @@
 	require_once ( $local_root . $local_simbolic . "/control/ajax/Classes/user/User.php");
 	$oUser = new User();
 	
+	require_once ( $local_root . $local_simbolic . "/control/ajax/Classes/companies/Comp.php");
+	$oComp = new Comp();
+	
+	require_once ( $local_root . $local_simbolic . "/control/ajax/Classes/common/Emails.php");
+	$oEmails = new Emails();
+	
 	//ERROS:
 	$cache_html = "";
 	$error = false;
@@ -320,14 +326,16 @@
 			'invoice_embarque_confirmacao' => $_POST['invoice_embarque_confirmacao'],
 			'invoice_banco'                => $_POST['invoice_banco'],
 			'arrDocs'                      => $arrDocs
-			
-
 	);
 	
 	$cache_html = "";	
 	$return = $oInvoice->create($arr_args);
 	
 	if ($return['transaction'] == 'OK') {
+		
+		$emailResult = $oEmails->notificacaoInvoice('create', $oUser, $oComp, $oConfigs, $arr_args);
+		
+		$cache_html .= $oConfigs->get('cadastro_invoice','email_enviado') .": ". $emailResult . "<br>";
 		$cache_html .= $oConfigs->get('cadastro_invoice','cadastro_sucesso');
 		$arr = array('transaction' => 'OK', 'msg' => $cache_html );
 		

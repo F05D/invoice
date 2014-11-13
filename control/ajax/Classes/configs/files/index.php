@@ -8,6 +8,21 @@
 		"key_keywords" => array( "world gym,brasil,academia,florianopolis,franquia,academias,melhor academia,qualidade,ginastica,zumba,grade de horarios","",""),
 		"key_description" => array("World Gym Fitness Center - A melhor academia de Floriaopolis, Santa Catarina.","",""),
 		"key_author"=> array("PAINELX.COM","PAINELX.COM","PAINELX.COM"),
+		"dashboard" => array("DASHBOARD","x","x"),
+		"xxxxxxx" => array("xxxx","x","x"),
+		"xxxxxxx" => array("xxxx","x","x"),
+		"xxxxxxx" => array("xxxx","x","x"),
+		"xxxxxxx" => array("xxxx","x","x"),
+		"xxxxxxx" => array("xxxx","x","x"),
+		"xxxxxxx" => array("xxxx","x","x"),
+		"xxxxxxx" => array("xxxx","x","x"),
+		"xxxxxxx" => array("xxxx","x","x"),
+		"xxxxxxx" => array("xxxx","x","x"),
+		"xxxxxxx" => array("xxxx","x","x"),
+		"xxxxxxx" => array("xxxx","x","x"),
+		"xxxxxxx" => array("xxxx","x","x"),
+		"xxxxxxx" => array("xxxx","x","x"),
+		"xxxxxxx" => array("xxxx","x","x"),
 			
 	);
 
