@@ -39,20 +39,18 @@ if(!$oUser->autenticaUsuario($_SESSION["pincode"])) {
 }
 
 $urlStrSelector = $oHtmlSuport->serializeGET(
-		array(
-				a_page => $_GET['a_page'],
-				o_by => $_GET['o_by'],
-				o_tg => $_GET['o_tg'],
-				s_in => $_GET['s_in'],
-				s_po => $_GET['s_po'],
-				s_co => $_GET['s_co'],
-				s_special => $_GET['s_special'],
-				n => $_GET['n'],
-				page_n => $_GET['page_n'],
-		)
+	array(
+			a_page => $_GET['a_page'],
+			o_by => $_GET['o_by'],
+			o_tg => $_GET['o_tg'],
+			s_in => $_GET['s_in'],
+			s_po => $_GET['s_po'],
+			s_co => $_GET['s_co'],
+			s_special => $_GET['s_special'],
+			n => $_GET['n'],
+			page_n => $_GET['page_n'],
+	)
 );
-
-
 
 ?>
 <!DOCTYPE html>
@@ -116,7 +114,7 @@ $urlStrSelector = $oHtmlSuport->serializeGET(
 					<!-- post wrapper -->				
 					<div class="row-fluid">
 						<?php
-							require_once( $local_root. $local_simbolic . '/control/page_selector.php');
+							require_once( 'control/page_selector.php');
 						?>
 					</div>
 					<!-- ./ post wrapper -->

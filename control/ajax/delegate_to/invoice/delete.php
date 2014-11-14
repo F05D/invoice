@@ -21,41 +21,38 @@
 	require_once ( $local_root. $local_simbolic . "/control/ajax/Classes/common/Validacoes.php");
 	$oValiacoes = new Validacoes();
 	
+	require_once ( $local_root . $local_simbolic . "/control/ajax/Classes/common/Emails.php");
+	$oEmails = new Emails();
+	
+	require_once ( $local_root . $local_simbolic . "/control/ajax/Classes/user/User.php");
+	$oUser = new User();
+	
+	require_once ( $local_root . $local_simbolic . "/control/ajax/Classes/invoice/Invoice.php");
+	$oInvoice = new Invoice();
+	
 	//ERROS:
 	$cache_html = "";
 	$error = false;
-	
-	
-// 	if(!$oUserDelete->ver_permissao_usuario($_POST['id_usuario'],$_POST['code_auth_user'] ) ) {
-// 		$cache_html .= "Erro de integridade. Contacte o administrador do sistema.<br>";
-// 		$error = true;
-// 	}
-	
-// 	if($oUserDelete->ver_permissao_usuario($_POST['id_usuario'],$_POST['code_auth_user']) != 1 ) {
-// 		$cache_html .= "Usuário do sistema não possui permissão para esta operação.<br>";
-// 		$error = true;
-// 	}
-	
-	if($_POST['id_delete'] == $_POST['id_usuario']) {
-		$cache_html .= "Não é possível deletar seu próprio usuário.<br>";
+		
+	if(!$oUser->getCodeSecurity( $_POST['id_usuario'] . "%#!@X*" , $_POST['code_user'] ) ) {
+		$cache_html .= $oConfigs->get('cadastro_usuario','erro_integridade').".<br>";
 		$error = true;
 	}
 	
-	if(!$_POST['id_delete']) {
-		$cache_html .= "Impossível deletar usuário inesistente.<br>";
+	if(!$oUser->getCodeSecurity( $_POST['id_delete'] . "&OX%h$" , $_POST['code_delete']) ) {
+		$cache_html .= $oConfigs->get('cadastro_usuario','erro_integridade').".<br>";
+		$error = true;
+	}
+	
+	if(!$_POST['id_delete']) {		
+		$cache_html .=  $oConfigs->get('cadastro_invoice','del_inv_inesitente') . ".<br>";
 		$error = true;
 	}
 	
 	if($_POST['id_delete'] && !is_numeric($_POST['id_delete'])) {
-		$cache_html .= "Usuário não consta na base de dados.<br>";
+		$cache_html .=  $oConfigs->get('cadastro_invoice','del_inv_inesitente') . ".<br>";
 		$error = true;
 	}
-	
-// 	if($code_auth && !$oUserDelete->validar_delete_usuario($_POST['id_delete'], $_POST['code_auth'])) {
-// 		$cache_html .= "Problemas de autenticacao, favor contactar seu administrador.<br>";
-// 		$error = true;
-// 	}
-	
 	
 	if( !$_POST['id_usuario'] && !is_numeric($_POST['id_usuario'])) {
 		$cache_html .= $oConfigs->get('cadastro_usuario','usuario_nao_logado') . "<br>";
@@ -74,12 +71,18 @@
 		return;
 	}
 	
-
-	
-	$result = $oComp->delete($_POST['id_delete']);
+	$result = $oInvoice->delete($_POST['id_delete']);
 	
 	if ($result) {
-		$arr = array('transaction' => 'OK', 'msg' => $oConfigs->get('cadastro_usuario','delete_usuario_sucesso') );			
+		
+		$arr_args = $oInvoice->get($_POST['id_delete'])[0];
+		$arr_args['id_usuario'] = $_POST['id_usuario'];
+		$emailResult = $oEmails->notificacaoInvoice('delete', $oUser, $oComp, $oConfigs, $arr_args);
+				
+		$cache_html .= $oConfigs->get('cadastro_invoice','email_enviado') .": ". $emailResult . "\n";
+		$cache_html .= $oConfigs->get('cadastro_usuario','delete_usuario_sucesso');
+		$arr = array('transaction' => 'OK', 'msg' => $cache_html );		
+			
 	} else {
 		$arr = array('transaction' => 'NO', 'msg' => $oConfigs->get('cadastro_usuario','erro_delete_usuario') );		
 	}

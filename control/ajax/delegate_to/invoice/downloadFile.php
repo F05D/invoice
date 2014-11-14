@@ -35,12 +35,12 @@
 	
 	
 	if(!$oUser->userPermission( $_GET['id_usuario'] . "%34DsX9" , $_GET['code_user']) ) {
-		$cache_html .= "Erro de integridade. Contacte o administrador do sistema.<br>";
+		$cache_html .= $oConfigs->get('cadastro_usuario','erro_integridade').".<br>";
 		$error = true;
 	}
 	
 	if(!$oUser->userPermission( '%34DsX9' . $_GET['code']  ,$_GET['code_download'] ) ) {
-		$cache_html .= "Erro de integridade. Clique no botao 'Cadastrar' novamente.<br>";
+		$cache_html .= $oConfigs->get('cadastro_usuario','erro_integridade').".<br>";
 		$error = true;
 	}
 	

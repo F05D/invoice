@@ -27,22 +27,21 @@
 <script>
 	function searchSpecial(codeStr)
 	{
-		<?php 
-				$urlStrSearchSpecial = $oHtmlSuport->serializeGET(
-					array(
+		<? 
+			$urlStrAlter = $oHtmlSuport->serializeGET(
+				array(
 						a_page => $_GET['a_page'],
 						o_by => $_GET['o_by'],
 						o_tg => $_GET['o_tg'],
 						s_in => $_GET['s_in'],
 						s_po => $_GET['s_po'],
-						s_co => $_GET['s_co'],
+						s_co => $_GET['s_co'],						
 						n => $_GET['n'],
-						page_n => $_GET['page_n'],							
-					)
-				);
-			?>
-		
-	     var search = 's_special='+codeStr + '<?=$urlStrSearchSpecial?>';			     
+						page_n => $_GET['page_n'],
+				)
+			);
+		?>		
+	     var search = 's_special='+codeStr + '<?=$urlStrAlter?>';			     
 	     window.location.assign("logon.php?lang=<?=$oUser->get('lingua')?>&p=<?=md5("invoices/listar.php")?>&"+search);
 	}
 </script>

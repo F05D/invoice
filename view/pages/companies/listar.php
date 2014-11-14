@@ -47,6 +47,7 @@
 							$code_user   = $oUser->getCodeSecurity( $oUser->get('id')."$!@u*");
 							$code_delete = $oUser->getCodeSecurity( $arr_result[$i]['id']."&%h@");
 							$strArgsFunc = $arr_result[$i]['id'].",'".addslashes($arr_result[$i]['nome'])."','".$code_user."','".$code_delete."'";
+							
 							print " <td><a href='logon.php?lang=".$oUser->get('lingua')."&p=" . md5("companies/editar.php") . "&i=" . $arr_result[$i]['id'] . $urlStrSelector . "'><span class='icon-pencil'></span></a>&nbsp;&nbsp;<a href='#' onclick=\"deletar($strArgsFunc);\" ><span class='icon-remove'></span></a></td>";								
 							print "</tr>";
 														
@@ -133,8 +134,7 @@
 <script>
 
 	function deletar(id,empresa,code_user,code_delete)
-	{
-		debugger
+	{		
 		var r = confirm("<?=$oConfigs->get('cadastro_usuario','deseja_deletar_empresa')?> '"+empresa+"' ?");
 		if (r == false)  return;
 

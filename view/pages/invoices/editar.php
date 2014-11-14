@@ -32,12 +32,23 @@
 	$arrDocs = array();
 	$arrDocs = $oInvoice->getDocs($_GET['i']);
 	
-	$urlPagination = 
-					"page_n=".$_GET['page_n']. 
-					"&n=".$_GET['n'] . 
-					"&o_by=" . $_GET['o_by'] . 
-					"&o_tg=" . $_GET['o_tg']  . 
-					"&a_page=" . $_GET['a_page'];
+	require_once ( $local_root. $local_simbolic . "/control/ajax/Classes/common/HtmlSuport.php");
+	$oHtmlSuport = new HtmlSuport();
+	
+	$urlStrSelector = $oHtmlSuport->serializeGET(
+			array(
+					a_page => $_GET['a_page'],
+					o_by => $_GET['o_by'],
+					o_tg => $_GET['o_tg'],
+					s_in => $_GET['s_in'],
+					s_po => $_GET['s_po'],
+					s_co => $_GET['s_co'],
+					s_special => $_GET['s_special'],
+					n => $_GET['n'],
+					page_n => $_GET['page_n'],
+			)
+	);
+	
 ?>
 
 
@@ -676,7 +687,7 @@
 					var obj = JSON.parse(data);
 					if(obj.transaction == 'OK') {
 						alert(obj.msg);
-						window.location.assign("logon.php?<?=$urlPagination?>&p=<?=md5('invoices/listar.php')?>");
+						window.location.assign("logon.php?<?=$urlStrSelector?>&p=<?=md5('invoices/listar.php')?>");
 					} else {
 						$("#msg").html(obj.msg);
 						$("#msg").html(obj.msg);

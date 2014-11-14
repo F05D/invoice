@@ -66,7 +66,7 @@
 					var obj = JSON.parse(data);
 					if(obj.transaction == 'OK') {
 						alert(obj.msg);
-						window.location.assign("logon.php?p=<?=md5('companies/listar.php')?>");
+						window.location.assign("logon.php?p=<?=md5('companies/listar.php')?><?=$urlStrSelector?>");
 					} else {
 						$("#msg").html(obj.msg);
 						$("#msg").html(obj.msg);

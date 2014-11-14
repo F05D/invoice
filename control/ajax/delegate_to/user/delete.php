@@ -20,38 +20,38 @@
 	
 	require_once ( $local_root. $local_simbolic . "/control/ajax/Classes/common/Validacoes.php");
 	$oValiacoes = new Validacoes();
-	
-	
+		
 	//ERROS:
 	$cache_html = ""; $error = false;
-	
-	
-	if(!$oUser->userPermission($_POST['id_usuario'],$_POST['code_user']) ) {
-		$cache_html .= "Erro de integridade. Contacte o administrador do sistema.<br>";
+		
+	if(!$oUser->userPermission($_POST['id_usuario'] . "Fd8*70(" ,$_POST['code_user']) ) {
+		$cache_html .= $oConfigs->get('cadastro_usuario','erro_integridade').".<br>";
 		$error = true;
 	}
 	
-	if(!$oUser->userPermission($_POST['id_delete'],$_POST['code_delete'] ) ) {
-		$cache_html .= "Erro de integridade. Contacte o administrador do sistema.<br>";
+	if(!$oUser->userPermission($_POST['id_delete'] . "%dS2@3W#" ,$_POST['code_delete'] ) ) {
+		$cache_html .= $oConfigs->get('cadastro_usuario','erro_integridade').".<br>";
 		$error = true;
 	}
 	
-	if($_POST['id_delete'] == $_POST['id_usuario']) {
-		$cache_html .= "Não é possível deletar seu próprio usuário.<br>";
+	if($_POST['id_delete'] == $_POST['id_usuario']) {		
+		$cache_html .= $oConfigs->get('cadastro_usuario','del_not_poss_proprio_user').".<br>";
 		$error = true;
 	}
 	
 	if(!$_POST['id_delete']) {
-		$cache_html .= "Impossível deletar usuário inesistente.<br>";
+		$cache_html .= $oConfigs->get('cadastro_usuario','del_not_poss_user_nao_existe') . ".<br>";
 		$error = true;
 	}
 	
 	if( !$_POST['lang'] ) {
+		$oConfigs->get('cadastro_usuario','lista_lang_text');
 		$cache_html .= $oConfigs->get('cadastro_usuario','lingua_usu_indefinida') . "<br>";
 		$error = true;		
 	}
 
 	if($error) {
+		$oConfigs->get('cadastro_usuario','lista_lang_text');
 		$cache_html = $oConfigs->get('cadastro_usuario','erros_encontrados') . "<br>" . $cache_html;
 		$arr = array('transaction' => 0, 'msg' => $cache_html );
 		print json_encode($arr);

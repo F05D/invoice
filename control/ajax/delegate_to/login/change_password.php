@@ -116,35 +116,33 @@
 					'transaction' => 'OK', 
 					'msg' => $url_code,
 					'email_status' => 'OK',
-					'email_msg' => "Email enviado com sucesso."
-				);
-				
-				
+					'email_msg' => $oConfigs->get('login','email_envi_suc')
+				);				
 
 			} else {
 				$arr = array(
 					'transaction' => 'OK',
 					'msg' => $url_code,
 					'email_status' => 'NO',
-					'email_msg' => "Problemas ao enviar o email."						
+					'email_msg' => $oConfigs->get('login','email_prob_enviar')						
 				);
 			}
 			
 		} else {
 			$arr = array(
 				'transaction' => 'NO',
-				'msg' => "Erro ao tentar logar. Contacte seu administrador.",
+				'msg' => $oConfigs->get('login','erro_tentar_logar'),
 				'email_status' => 'NO',
-				'email_msg' => "Problemas ao enviar o email."					
+				'email_msg' => $oConfigs->get('login','email_prob_enviar')					
 			);
 		}
 	
 	} else {
 		$arr = array(
 			'transaction' => 'NO', 
-			'msg' => "Impossivel trocar a senha. Contacte um administrador do sistema.",
+			'msg' => $oConfigs->get('login','email_imposs_enviar'),
 			'email_status' => 'NO',
-			'email_msg' => "Problemas ao enviar o email."
+			'email_msg' => $oConfigs->get('login','email_prob_enviar')
 		);
 	}
 	

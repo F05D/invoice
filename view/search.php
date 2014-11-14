@@ -20,25 +20,22 @@
 	function search(idStr,lookinfor)
 	{
 
-		<?php 
-			$urlStrSearch = $oHtmlSuport->serializeGET(
-				array(
+		<? 
+		$urlStrAlter = $oHtmlSuport->serializeGET(
+			array(
 					a_page => $_GET['a_page'],
 					o_by => $_GET['o_by'],
 					o_tg => $_GET['o_tg'],
-					s_in => $_GET['s_in'],
-					s_po => $_GET['s_po'],
-					s_co => $_GET['s_co'],
 					n => $_GET['n'],
-					page_n => $_GET['page_n'],
 					s_special => $_GET['s_special'],
-				)
-			);
-		?>
+					page_n => $_GET['page_n'],
+			)
+		);
+		?>	
 		
 		$( "#"+idStr ).keypress(function( event ) {
 			  if ( event.which == 13 ) {
-			     var search = lookinfor +"="+$('#'+idStr).val() + '<?=$urlStrSearch?>';			     
+			     var search = lookinfor +"="+$('#'+idStr).val() + '<?=$urlStrAlter?>';			     
 			     window.location.assign("logon.php?lang=<?=$oUser->get('lingua')?>&p=<?=md5("invoices/listar.php")?>&"+search);
 			  }
 		});

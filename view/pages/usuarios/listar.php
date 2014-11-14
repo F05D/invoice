@@ -43,8 +43,8 @@ $oValidacoes = new Validacoes();
 							print " <td>" . $oValidacoes->convertDBtoData($arr_result[$i]['dt_nascimento'], $user['lingua']) . "</td>";
 							print " <td>" .$oUser->getAlias_lingua($arr_result[$i]['lingua'], $oConfigs) . "</td>";
 							
-							$code_user   = $oUser->getCodeSecurity($oUser->get('id'));
-							$code_delete = $oUser::getCodeSecurity($arr_result[$i]['id']);								
+							$code_user   = $oUser->getCodeSecurity($oUser->get('id') . "Fd8*70(" );
+							$code_delete = $oUser::getCodeSecurity($arr_result[$i]['id'] . "%dS2@3W#" );								
 							
 							print " <td><a href='logon.php?lang=".$oUser->get('lingua')."&p=" . md5("usuarios/editar.php") . "&i=" . $arr_result[$i]['id'] . $urlStrSelector . "'><span class='icon-pencil'></span></a>&nbsp;&nbsp;<a href='#' onclick=\"deletar(". $arr_result[$i]['id']. ",'" .$arr_result[$i]['usuario']. "','".$code_user."','".$code_delete."');\" ><span class='icon-remove'></span></a></td>";								
 							print "</tr>";

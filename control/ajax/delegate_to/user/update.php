@@ -31,12 +31,12 @@
 	$cache_html = "";$error = false;
 	
 	if(!$oUser->userPermission($_POST['id_usuario'].'*%',$_POST['code_user']) ) {
-		$cache_html .= "Usuario: Erro de integridade. Contacte o administrador do sistema.<br>";
+		$cache_html .= $oConfigs->get('cadastro_usuario','erro_integridade') . "<br>";
 		$error = true;
 	}
 	
 	if(!$oUser->userPermission($_POST['id_alter'].'#!',$_POST['code_edit'] ) ) {
-		$cache_html .= "Permissao: Erro de integridade. Contacte o administrador do sistema.<br>";
+		$cache_html .= $oConfigs->get('cadastro_usuario','erro_integridade') . "<br>";
 		$error = true;
 	}
 	
@@ -127,7 +127,7 @@
 	}
 		
 	if( $_POST['user_privilegio'] > 1 && !$_POST['user_empresa']) {
-		$cache_html .= "Usuário deve pertencer a uma empresa." . "<br>";
+		$cache_html .= $oConfigs->get('cadastro_usuario','user_pert_empresa') . "<br>";	
 		$error = true;		
 	}
 	

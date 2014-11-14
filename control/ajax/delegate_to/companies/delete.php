@@ -21,44 +21,36 @@
 	require_once ( $local_root. $local_simbolic . "/control/ajax/Classes/common/Validacoes.php");
 	$oValiacoes = new Validacoes();
 	
+	require_once ( $local_root . $local_simbolic . "/control/ajax/Classes/user/User.php");
+	$oUser = new User();
+	
 	//ERROS:
 	$cache_html = "";
 	$error = false;
 	
 	
-// 	if(!$oUserDelete->ver_permissao_usuario($_POST['id_usuario'],$_POST['code_auth_user'] ) ) {
-// 		$cache_html .= "Erro de integridade. Contacte o administrador do sistema.<br>";
-// 		$error = true;
-// 	}
+	if(!$oUser->getCodeSecurity( $_POST['id_usuario'] . "$!@u*" , $_POST['code_user'] ) ) {
+		$cache_html .= $oConfigs->get('cadastro_usuario','erro_integridade').".<br>";
+		$error = true;
+	}
 	
-// 	if($oUserDelete->ver_permissao_usuario($_POST['id_usuario'],$_POST['code_auth_user']) != 1 ) {
-// 		$cache_html .= "Usuário do sistema não possui permissão para esta operação.<br>";
-// 		$error = true;
-// 	}
-	
-	if($_POST['id_delete'] == $_POST['id_usuario']) {
-		$cache_html .= "Não é possível deletar seu próprio usuário.<br>";
+	if(!$oUser->getCodeSecurity( $_POST['id_delete'] . "&%h@" , $_POST['code_delete']) ) {
+		$cache_html .= $oConfigs->get('cadastro_usuario','erro_integridade').".<br>";
 		$error = true;
 	}
 	
 	if(!$_POST['id_delete']) {
-		$cache_html .= "Impossível deletar usuário inesistente.<br>";
+		$cache_html .= $oConfigs->get('cadastro_companies','erro_id_inesistente').".<br>";
 		$error = true;
 	}
 	
 	if($_POST['id_delete'] && !is_numeric($_POST['id_delete'])) {
-		$cache_html .= "Usuário não consta na base de dados.<br>";
+		$cache_html .= $oConfigs->get('cadastro_companies','erro_id_inesistente').".<br>";
 		$error = true;
 	}
 	
-// 	if($code_auth && !$oUserDelete->validar_delete_usuario($_POST['id_delete'], $_POST['code_auth'])) {
-// 		$cache_html .= "Problemas de autenticacao, favor contactar seu administrador.<br>";
-// 		$error = true;
-// 	}
-	
-	
 	if( !$_POST['id_usuario'] && !is_numeric($_POST['id_usuario'])) {
-		$cache_html .= $oConfigs->get('cadastro_usuario','usuario_nao_logado') . "<br>";
+		$cache_html .= $oConfigs->get('cadastro_usuario','erro_integridade').".<br>";
 		$error = true;
 	}
 		
@@ -73,8 +65,6 @@
 		print json_encode($arr);
 		return;
 	}
-	
-
 	
 	$result = $oComp->delete($_POST['id_delete']);
 	

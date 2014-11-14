@@ -14,8 +14,23 @@
 	$arr_result_bancarios = array();
 	$arr_result_bancarios = $oBank->read(array('id','banco_nome','swift_code'));
 	
-	//ACTIVE PAGE:
-	$a_page = "&a_page=".$_GET['a_page'];
+	require_once ( $local_root. $local_simbolic . "/control/ajax/Classes/common/HtmlSuport.php");
+	$oHtmlSuport = new HtmlSuport();
+	
+	$urlStrSelector = $oHtmlSuport->serializeGET(
+			array(
+					a_page => $_GET['a_page'],
+					o_by => $_GET['o_by'],
+					o_tg => $_GET['o_tg'],
+					s_in => $_GET['s_in'],
+					s_po => $_GET['s_po'],
+					s_co => $_GET['s_co'],
+					s_special => $_GET['s_special'],
+					n => $_GET['n'],
+					page_n => $_GET['page_n'],
+			)
+	);	
+	
 ?>
 
 
@@ -411,7 +426,7 @@
 					var obj = JSON.parse(data);
 					if(obj.transaction == 'OK') {
 						alert(obj.msg);
-						window.location.assign("logon.php?p=<?=md5('invoices/listar.php')?><?=$a_page?>");
+						window.location.assign("logon.php?p=<?=md5('invoices/listar.php')?><?=$urlStrSelector?>");
 					} else {
 						$("#msg").html(obj.msg);
 						$("#msg").html(obj.msg);

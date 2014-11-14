@@ -31,21 +31,8 @@
 	$arr_result = $oInvoice->read(null,$limit,$search,$orderBy);
 	$num_rows   = $oInvoice->numRows($search);
 	
-	$urlStr = $oHtmlSuport->serializeGET(
-		array(
-			a_page => $_GET['a_page'],
-			o_by => $_GET['o_by'],
-			o_tg => $_GET['o_tg'],
-			s_in => $_GET['s_in'],
-			s_po => $_GET['s_po'],
-			s_co => $_GET['s_co'],
-			s_special => $_GET['s_special'],
-			n => $_GET['n'],
-			page_n => $_GET['page_n'],
-		)
-	);
-	
-	$urlStrPagination = $oHtmlSuport->serializeGET(
+	//FOR PAGINATION
+	$urlStrAlter = $oHtmlSuport->serializeGET(
 			array(
 					a_page => $_GET['a_page'],
 					o_by => $_GET['o_by'],
@@ -55,7 +42,7 @@
 					s_co => $_GET['s_co'],
 					s_special => $_GET['s_special'],
 			)
-	);
+	);	
 	
 ?>						
 	<div class="well widget">	
@@ -66,7 +53,8 @@
 		
 		<!-- //TODO: Paginacao: perguntar se eh necessario 
 		<div class="pagination pagination-primary pagination-mini">
-			<center><ul><?=$oHtmlSuport->pagination($num_rows,$max,$_GET['n'],$oUser->get('lingua'),$urlStrPagination)?></ul></center>
+			
+			<center><ul><?=$oHtmlSuport->pagination($num_rows,$max,$_GET['n'],$oUser->get('lingua'),$urlStrAlter)?></ul></center>
 		</div>
 		 -->
 		
@@ -94,10 +82,9 @@
 					//if(!$mDetect->isMobile() && !$mDetect->isTablet() )
 						foreach ( $arr_result as $val ) {
 							
-							$code_user   = $oUser->getCodeSecurity( $oUser->get('id')."%#!@X*");
-							$code_delete = $oUser->getCodeSecurity( $arr_result[$i]['id']."&OX%h$");
+							$code_user   = $oUser->getCodeSecurity( $oUser->get('id') . "%#!@X*");
+							$code_delete = $oUser->getCodeSecurity( $val['id'] . "&OX%h$");
 							$strArgsFunc = $val['id'].",'".addslashes($val['invoice_nr'])."','".$code_user."','".$code_delete."'";
-								
 							
 							print "<tr>";
 							print " <td>" . $val['invoice_nr'] . "</td>";
@@ -108,7 +95,7 @@
 							print " <td class=center><center><img src='library/images/icons/notification_". ($val['notificado'] == 1 ? "ok" : 'no' ).".png' ".($val['status_id'] == 1 ? "" : " class='pointer' onclick=\"sendNot($strArgsFunc)\" " ).">".($val['notificado'] == 1 ? '<br>'.$oValidacoes->convertDBtoDataHr($val['notificado_dt'], $oUser->get('lingua')) : '' ) . "</center></td>";
 							print " <td class=center><center><img src='library/images/icons/view_". ($val['visualizado'] == 1 ? "ok" : 'no' ).".png' >".($val['visualizado'] == 1 ? '<br>'.$oValidacoes->convertDBtoDataHr($val['visualizado_dt'], $oUser->get('lingua')) : '') . "</center></td>";
 							print " <td class=center><center><img src='library/images/icons/pago_". ($val['status_id'] == 1 ? "ok" : 'no' ).".png' ></center></td>";							
-							print " <td class=center><center><a href='logon.php?lang=".$oUser->get('lingua')."&p=" . md5("invoices/editar.php") . "&i=" . $val['id'] . $urlStr . "'><span class='icon-pencil'></span></a>&nbsp;&nbsp;<a href='#' onclick=\"deletar($strArgsFunc);\" ><span class='icon-remove'></span></a></center></td>";								
+							print " <td class=center><center><a href='logon.php?lang=".$oUser->get('lingua')."&p=" . md5("invoices/editar.php") . "&i=" . $val['id'] . $urlStrSelector . "'><span class='icon-pencil'></span></a>&nbsp;&nbsp;<span onclick=\"deletar($strArgsFunc);\" class='icon-remove pointer'></span></center></td>";								
 							print "</tr>";
 						}						
 					?>					
@@ -119,7 +106,7 @@
 	</div>
 	<div class="pagination pagination-primary pagination-mini"><center>
 		<ul>				
-			<?=$oHtmlSuport->pagination($num_rows,$max,$_GET['n'],$oUser->get('lingua'),$urlStrPagination)?>				
+			<?=$oHtmlSuport->pagination($num_rows,$max,$_GET['n'],$oUser->get('lingua'),$urlStrAlter)?>				
 		</ul>
 		</center>
 	</div>
@@ -149,7 +136,7 @@
 	
 	function orderBy(order_field) {
 		<?php
-			$urlStrGET = $oHtmlSuport->serializeGET(
+			$urlStrAlter = $oHtmlSuport->serializeGET(
 					array(
 							a_page => $_GET['a_page'],
 							o_tg => ( $_GET['o_tg'] == 'asc' ? 'desc' : 'asc'),
@@ -162,19 +149,20 @@
 					)
 			);
 		?>
-		var order = "&o_by=" + order_field + "<?=$urlStrGET?>";
+		var order = "&o_by=" + order_field + "<?=$urlStrAlter?>";
 		window.location.assign("logon.php?p=<?=md5("invoices/listar.php")?>" + order);
 	}
 					
 
 	function deletar(id,invoice,code_user,code_delete)
 	{
+	
 		var r = confirm("<?=$oConfigs->get('cadastro_invoice','deseja_deletar_invoice')?> '"+invoice+"' ?");
 		if (r == false)  return;
 
 		//VERIFICACAO E CONTROLE
         $.ajax({
-            url: 'control/ajax/delegate_to/invoices/delete.php',
+            url: 'control/ajax/delegate_to/invoice/delete.php',
             type: 'POST',
             data: {
 	            'id_usuario':"<?=$oUser->get('id')?>",//PERMANENTE
@@ -189,7 +177,7 @@
 				console.log(data);				
 				var obj = JSON.parse(data);
 				if( obj.transaction == 'OK' ) {			
-					window.location.assign("logon.php?p=<?=md5("invoices/listar.php")?><?=$urlStr?>");							
+					window.location.assign("logon.php?p=<?=md5("invoices/listar.php")?><?=$urlStrSelector?>");							
 				} else {
 					$("#msg").html(obj.msg);
 					$("#msg").scrollToMe();
@@ -208,11 +196,12 @@
 	}
 					
 	function add(){
-		window.location = "logon.php?p=<?=md5("invoices/cadastrar.php")?><?=$urlStr?>";
+		window.location = "logon.php?p=<?=md5("invoices/cadastrar.php")?><?=$urlStrSelector?>";
 	}
 
 	function sendNot(id,invoice,code_user,code_delete)
 	{
+		
 		var r = confirm("<?=$oConfigs->get('cadastro_invoice','deseja_enviar_notificacao')?> '"+invoice+"' ?");
 		if (r == false)  return;
 		
@@ -231,7 +220,7 @@
 				console.log(data);				
 				var obj = JSON.parse(data);
 				if( obj.transaction == 'OK' ) {			
-					window.location.assign("logon.php?p=<?=md5("invoices/listar.php")?><?=$urlStr?>");							
+					window.location.assign("logon.php?p=<?=md5("invoices/listar.php")?><?=$urlStrSelector?>");							
 				} else {
 					$("#msg").html(obj.msg);
 					$("#msg").scrollToMe();

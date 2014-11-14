@@ -58,15 +58,13 @@
 			"lista_btn_inserir" => array("INSERIR","x","x"),
 			"erro_ao_cadastrar_usua" => array("Erro ao cadastrar usuário. Contacte seu administrador.","x","x"),
 			
-			"erro_integridade" => array("Erro na integridade dos dados. Contacte o administrador.","x","x"),
 			"dica_senha" => array("Dica de senha","x","x"),
 			"criacao_sucesso" => array("Usuário criado com sucesso!","x","x"),
 			
 			"administrador" => array("ADM","x","x"),
 			"usuario" => array("USUARIO","x","x"),
 			"cliente" => array("CLIENTE","x","x"),
-			"indefinido" => array("???","x","x"),
-			
+			"indefinido" => array("???","x","x"),			
 			
 			"lingua_pt" => array("POR.","x","x"),
 			"lingua_en" => array("ENG.","x","x"),
@@ -86,9 +84,11 @@
 			"user" => array("Usuário","x","x"),
 			"erro_usuario_localizar" => array("Erro ao tentar localizar usuário.","x","x"),
 			"nao_foi_possivel_alterar" => array("Não foi possível cadastrar email. Contacte o administrador.","x","x"),
-			"xxxxxxx" => array("xxxx","x","x"),
-			"xxxxxxx" => array("xxxx","x","x"),
-			"xxxxxxx" => array("xxxx","x","x"),
+			
+			"erro_integridade" => array("Erro na integridade dos dados. Contacte o administrador.","x","x"),				
+			"del_not_poss_proprio_user" => array("Não é possível deletar seu próprio usuário","x","x"),
+			"del_not_poss_user_nao_existe" => array("Impossível deletar usuário inesistente","x","x"),
+			"user_pert_empresa" => array("Usuário deve pertencer a uma empresa","x","x"),
 			"xxxxxxx" => array("xxxx","x","x"),
 			"xxxxxxx" => array("xxxx","x","x"),
 			"xxxxxxx" => array("xxxx","x","x"),

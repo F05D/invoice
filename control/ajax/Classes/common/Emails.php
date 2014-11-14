@@ -105,6 +105,17 @@ class Emails {
 	
 	public function notificacaoInvoice($action, $oUser, $oComp, $oConfigs, $arr_data )
 	{
+		switch ($action) {
+			case 'create': $r = $this->notInCreate($oUser, $oComp, $oConfigs, $arr_data ); break;
+			case 'update': $r = $this->notInUpdate($oUser, $oComp, $oConfigs, $arr_data ); break;
+			case 'delete': $r = $this->notInDelete($oUser, $oComp, $oConfigs, $arr_data ); break;				
+		}
+		
+		return $r;
+	}
+	
+	public function notInCreate($oUser, $oComp, $oConfigs, $arr_data )
+	{
 		
 		//USUARIO REMETENTE		
 		$user  = $oUser->getById($arr_data['id_usuario']);		
@@ -121,7 +132,7 @@ class Emails {
 		$headers .= "Content-type:text/html; charset=UTF-8\n";
 		$headers .= "From:$email";
 		
-		$subject = "ARTSUL INVOICE-PRO [" . $oConfigs->get('cadastro_invoice','email_'.$action) . "]";
+		$subject = "ARTSUL INVOICE-PRO [" . $oConfigs->get('cadastro_invoice','email_create') . "]";
 		
 		$mensagem   = $oConfigs->get('cadastro_invoice','email_create_01') ." ".$nome."\n";
 		$mensagem  .= "\n";
@@ -160,6 +171,118 @@ class Emails {
 		$resMail = null;
 		$resMail = mail($to, $subject, $mensagem, $headers);
 		
+		return ($resMail ? 'OK' : 'NO');
+	}
+	
+	public function notInUpdate($oUser, $oComp, $oConfigs, $arr_data )
+	{
+	
+		//USUARIO REMETENTE
+		$user  = $oUser->getById($arr_data['id_usuario']);
+		$email = $user['nome']."<".$user['usuario'].">";
+	
+		//USUARIO DESTINO
+		$arr_user = $oComp->getBindUser($arr_data['invoice_empresa'])[0];
+		$to    = $arr_user['usuario'];
+		$nome  = $arr_user['nome'];
+	
+		$oConfigs->setLanguage($user['lingua'], false);
+	
+		$headers  = "MIME-Version:1.0\n";
+		$headers .= "Content-type:text/html; charset=UTF-8\n";
+		$headers .= "From:$email";
+	
+		$subject = "ARTSUL INVOICE-PRO [" . $oConfigs->get('cadastro_invoice','email_create') . "]";
+	
+		$mensagem   = $oConfigs->get('cadastro_invoice','email_update_01') ." ".$nome."\n";
+		$mensagem  .= "\n";
+		$mensagem  .= $oConfigs->get('cadastro_invoice','email_update_02') . " '". $arr_data['invoice_nr'] ."' ";
+		$mensagem  .= $oConfigs->get('cadastro_invoice','email_update_03');
+		$mensagem  .= "\n";
+		$mensagem  .= $oConfigs->get('cadastro_invoice','email_update_04').":";
+		$mensagem  .= "\n";
+	
+		$mensagem  .= $oConfigs->get('cadastro_invoice','cad_invoice_nr')                   .":". $arr_data['invoice_nr'] . "\n";
+		$mensagem  .= $oConfigs->get('cadastro_invoice','cad_invoice_fatura_valor')         .":". $arr_data['invoice_fatura_valor'] . "\n";
+		$mensagem  .= $oConfigs->get('cadastro_invoice','cad_invoice_data_vencimento')      .":". $arr_data['invoice_data_vencimento'] . "\n";
+		$mensagem  .= $oConfigs->get('cadastro_invoice','cad_invoice_container')            .":". $arr_data['invoice_container'] . "\n";
+		$mensagem  .= $oConfigs->get('cadastro_invoice','cad_invoice_booking')              .":". $arr_data['invoice_booking'] . "\n";
+		$mensagem  .= $oConfigs->get('cadastro_invoice','cad_invoice_tipo')                 .":". $arr_data['invoice_tipo'] . "\n";
+		$mensagem  .= $oConfigs->get('cadastro_invoice','cad_invoice_tara')                 .":". $arr_data['invoice_tara'] . "\n";
+		$mensagem  .= $oConfigs->get('cadastro_invoice','cad_invoice_peso_bruto')           .":". $arr_data['invoice_peso_bruto'] . "\n";
+		$mensagem  .= $oConfigs->get('cadastro_invoice','cad_invoice_peso_liquido')         .":". $arr_data['invoice_peso_liquido'] . "\n";
+		$mensagem  .= $oConfigs->get('cadastro_invoice','cad_invoice_qnt')                  .":". $arr_data['invoice_qnt'] . "\n";
+		$mensagem  .= $oConfigs->get('cadastro_invoice','cad_invoice_nota_fiscal')          .":". $arr_data['invoice_nota_fiscal'] . "\n";
+		$mensagem  .= $oConfigs->get('cadastro_invoice','cad_invoice_lacres')               .":". $arr_data['invoice_lacres'] . "\n";
+		$mensagem  .= "\n\n";
+		$mensagem  .= $oConfigs->get('cadastro_invoice','email_create_05').":";
+		$mensagem  .= "\n";
+	
+		foreach ($arr_data['arrDocs'] as $key => $arr) {
+			$mensagem  .= (!$arr['lock'] ? '[+]': '[-]').$oConfigs->get('cadastro_invoice',$key) .": ".  $arr['name'] .  "\n";
+		}
+	
+		$mensagem  .= "\n";
+		$mensagem  .= $oConfigs->get('cadastro_invoice','email_update_06').": http://www.invoice.artsulgranitos.com.br";
+		$mensagem  .= "\n";
+		$mensagem  .= $oConfigs->get('cadastro_invoice','email_update_07') . "\n";
+		$mensagem  .= $oConfigs->get('cadastro_invoice','email_update_08');
+	
+		$resMail = null;
+		$resMail = mail($to, $subject, $mensagem, $headers);
+	
+		return ($resMail ? 'OK' : 'NO');
+	}
+	
+	public function notInDelete($oUser, $oComp, $oConfigs, $arr_data )
+	{
+		//USUARIO REMETENTE
+		$user  = $oUser->getById($arr_data['id_usuario']);
+		$email = $user['nome']."<".$user['usuario'].">";
+		
+		//USUARIO DESTINO
+		$arr_user = $oComp->getBindUser($arr_data['company_id'])[0];
+		
+		$to    = $arr_user['usuario'];
+		$nome  = $arr_user['nome'];
+	
+		$oConfigs->setLanguage($user['lingua'], false);
+	
+		$headers  = "MIME-Version:1.0\n";
+		$headers .= "Content-type:text/html; charset=UTF-8\n";
+		$headers .= "From:$email";
+	
+		$subject = "ARTSUL INVOICE-PRO [" . $oConfigs->get('cadastro_invoice','email_delete') . "]";
+	
+		$mensagem   = $oConfigs->get('cadastro_invoice','email_delete_01') ." ".$nome."\n";
+		$mensagem  .= "\n";
+		$mensagem  .= $oConfigs->get('cadastro_invoice','email_delete_02') . " '". $arr_data['invoice_nr'] ."' ";
+		$mensagem  .= $oConfigs->get('cadastro_invoice','email_delete_03');
+		$mensagem  .= "\n";
+		$mensagem  .= $oConfigs->get('cadastro_invoice','email_delete_04').":";
+		$mensagem  .= "\n";
+	
+		$mensagem  .= $oConfigs->get('cadastro_invoice','cad_invoice_nr')                   .":". $arr_data['invoice_nr'] . "\n";
+		$mensagem  .= $oConfigs->get('cadastro_invoice','cad_invoice_fatura_valor')         .":". $arr_data['fatura_valor'] . "\n";
+		$mensagem  .= $oConfigs->get('cadastro_invoice','cad_invoice_data_vencimento')      .":". $arr_data['data_vencimento'] . "\n";
+		$mensagem  .= $oConfigs->get('cadastro_invoice','cad_invoice_container')            .":". $arr_data['container'] . "\n";
+		$mensagem  .= $oConfigs->get('cadastro_invoice','cad_invoice_booking')              .":". $arr_data['booking'] . "\n";
+		$mensagem  .= $oConfigs->get('cadastro_invoice','cad_invoice_tipo')                 .":". $arr_data['tipo'] . "\n";
+		$mensagem  .= $oConfigs->get('cadastro_invoice','cad_invoice_tara')                 .":". $arr_data['tara'] . "\n";
+		$mensagem  .= $oConfigs->get('cadastro_invoice','cad_invoice_peso_bruto')           .":". $arr_data['peso_bruto'] . "\n";
+		$mensagem  .= $oConfigs->get('cadastro_invoice','cad_invoice_peso_liquido')         .":". $arr_data['peso_liquido'] . "\n";
+		$mensagem  .= $oConfigs->get('cadastro_invoice','cad_invoice_qnt')                  .":". $arr_data['qnt'] . "\n";
+		$mensagem  .= $oConfigs->get('cadastro_invoice','cad_invoice_nota_fiscal')          .":". $arr_data['nota_fiscal'] . "\n";
+		$mensagem  .= $oConfigs->get('cadastro_invoice','cad_invoice_lacres')               .":". $arr_data['lacres'] . "\n";
+		$mensagem  .= "\n\n";
+		$mensagem  .= $oConfigs->get('cadastro_invoice','email_delete_06').".";
+		$mensagem  .= "\n";
+		$mensagem  .= $oConfigs->get('cadastro_invoice','email_delete_07') . "\n";
+		$mensagem  .= $oConfigs->get('cadastro_invoice','email_delete_08');		
+		
+		$resMail = null;
+		$resMail = mail($to, $subject, $mensagem, $headers);
+	
 		return ($resMail ? 'OK' : 'NO');
 	}
 	

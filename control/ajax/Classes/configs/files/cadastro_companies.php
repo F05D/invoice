@@ -65,6 +65,10 @@
 			"usuarios_cadastrados" => array("Usuários cadastrados","x","x"),
 			"alteracao_sucesso" => array("Alteração efetuada com sucesso.","x","x"),
 			"erro_ao_alterar" => array("Não foi possível alterar os dados da empresa. Contacte o administrador do sistema.","x","x"),
+						
+			"erro_integridade" => array("Erro na integridade dos dados. Contacte o administrador.","x","x"),
+			"erro_id_inesistente" => array("Companhia inesistente. Contacte o administrador.","x","x"),
+				
 			"xxxxxxx" => array("xxxx","x","x"),
 			"xxxxxxx" => array("xxxx","x","x"),
 			"xxxxxxx" => array("xxxx","x","x"),

@@ -16,7 +16,7 @@
 	$oConfigs->setLanguage($_POST['lang'], FALSE);
 	
 	if( !$_POST['lang'] || !$_POST['email'] ) {
-		print json_encode( array('transaction' => 'NO', 'msg' => 'Digite o email no campo acima.' ) );
+		print json_encode( array('transaction' => 'NO', 'msg' => $oConfigs->get('login','dig_email') ) );
 		die();
 	}
 	

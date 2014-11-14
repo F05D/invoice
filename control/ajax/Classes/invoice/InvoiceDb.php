@@ -39,7 +39,7 @@ class InvoiceDb extends Db {
 	{
 		$arrResult = array();
 	
-		$query = "SELECT * FROM invoices inv INNER JOIN invoices_bind b ON b.invoice_id = inv.id WHERE inv.deletada = false AND inv.id = $id;";
+		$query = "SELECT * FROM invoices inv INNER JOIN invoices_bind b ON b.invoice_id = inv.id WHERE inv.deletada = 0 AND inv.id = $id;";
 		$result = $this->oDB->select ( $query );	
 		return $this->oSupport->transcriberToList($result);		 
 	}
@@ -374,10 +374,10 @@ class InvoiceDb extends Db {
 	
 	protected function deleteDB($id)
 	{		
-		$field_values = " ativo = '0' ";
+		$field_values = " deletada = 1 ";
 		$where = " id = $id";
 	
-		return $this->oDB->update("companies", $field_values, $where);
+		return $this->oDB->update("invoices", $field_values, $where);
 	}	
 	
 	protected function getFileDocsDB($arr_args){

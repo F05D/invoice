@@ -41,12 +41,12 @@
 	
 
 	if(!$oUser->userPermission( $_POST['id_usuario']."_D%F%",$_POST['code_user']) ) {
-		$cache_html .= "Erro de integridade. Contacte o administrador do sistema.<br>";
+		$cache_html .= $oConfigs->get('cadastro_usuario','erro_integridade').".<br>";
 		$error = true;
 	}
 	
 	if(!$oUser->userPermission( $oUser->getLastId() . "g$@)" ,$_POST['code_create'] ) ) {
-		$cache_html .= "Erro de integridade. Clique no botao 'Cadastrar' novamente.<br>";
+		$cache_html .= $oConfigs->get('cadastro_usuario','erro_integridade').".<br>";
 		$error = true;
 	}
 	
@@ -335,7 +335,7 @@
 		
 		$emailResult = $oEmails->notificacaoInvoice('create', $oUser, $oComp, $oConfigs, $arr_args);
 		
-		$cache_html .= $oConfigs->get('cadastro_invoice','email_enviado') .": ". $emailResult . "<br>";
+		$cache_html .= $oConfigs->get('cadastro_invoice','email_enviado') .": ". $emailResult . "\n";
 		$cache_html .= $oConfigs->get('cadastro_invoice','cadastro_sucesso');
 		$arr = array('transaction' => 'OK', 'msg' => $cache_html );
 		

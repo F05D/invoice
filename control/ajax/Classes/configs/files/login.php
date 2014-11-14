@@ -35,7 +35,12 @@
 			"autenticacao_usuario" => array("AUTENTICAÇÃO DE USUÁRIO<br> - Troca de senha padrão -","",""),
 			"usuario_ja_atenticado" => array("Usuário já autenticado no sistema.<br> Favor entrar com seu login e senha.","",""),
 			
+			"dig_email" => array("Digite o email no campo acima.","",""),
 			
+			"email_envi_suc" => array("Email enviado com sucesso.","",""),
+			"email_prob_enviar" => array("Problemas ao enviar o email.","",""),
+			"erro_tentar_logar" => array("Erro ao tentar logar. Contacte seu administrador.","",""),
+			"email_imposs_enviar" => array("Impossivel trocar a senha. Contacte um administrador do sistema.","",""),
 			
 			
 			

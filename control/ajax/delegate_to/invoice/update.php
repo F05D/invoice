@@ -29,18 +29,24 @@
 	require_once ( $local_root . $local_simbolic . "/control/ajax/Classes/user/User.php");
 	$oUser = new User();
 	
+	require_once ( $local_root . $local_simbolic . "/control/ajax/Classes/companies/Comp.php");
+	$oComp = new Comp();
+	
+	require_once ( $local_root . $local_simbolic . "/control/ajax/Classes/common/Emails.php");
+	$oEmails = new Emails();
+	
 	//ERROS:
 	$cache_html = "";
 	$error = false;
 	
 
 	if(!$oUser->userPermission( $_POST['id_usuario']."!_D(F*",$_POST['code_user']) ) {
-		$cache_html .= "Erro de integridade. Contacte o administrador do sistema.<br>";
+		$cache_html .= $oConfigs->get('cadastro_usuario','erro_integridade').".<br>";
 		$error = true;
 	}
 	
 	if(!$oUser->userPermission( $_POST['id_invoice'] . "X#$_)" ,$_POST['code_update'] ) ) {
-		$cache_html .= "Erro de integridade. Clique no botao 'Cadastrar' novamente.<br>";
+		$cache_html .= $oConfigs->get('cadastro_usuario','erro_integridade').".<br>";
 		$error = true;
 	}
 	
@@ -396,14 +402,16 @@
 			'invoice_banco'                => $_POST['invoice_banco'],
 			'invoice_status'               => $_POST['invoice_status'],			
 			'arrDocs'                      => $arrDocs
-			
-
 	);
 	
 	$cache_html = "";	
 	$return = $oInvoice->update($arr_args);
 	
 	if ($return['transaction'] == 'OK') {
+		
+		$emailResult = $oEmails->notificacaoInvoice('update', $oUser, $oComp, $oConfigs, $arr_args);
+		
+		$cache_html .= $oConfigs->get('cadastro_invoice','email_enviado') .": ". $emailResult . "\n";
 		$cache_html .= $oConfigs->get('cadastro_invoice','update_sucesso');
 		$arr = array('transaction' => 'OK', 'msg' => $cache_html );
 		

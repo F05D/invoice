@@ -35,12 +35,12 @@
 	
 	
 	if(!$oUser->userPermission( $_POST['id_usuario'].'$H' , $_POST['code_user'] ) ) {
-		$cache_html .= "Usuario: Erro de integridade. Contacte o administrador do sistema.<br>";
+		$cache_html .= $oConfigs->get('cadastro_usuario','erro_integridade').".<br>";
 		$error = true;
 	}
 	
 	if(!$oUser->userPermission( $_POST['id_usuario'] . '&@' , $_POST['code_edit'] ) ) {
-		$cache_html .= "Permissao: Erro de integridade. Contacte o administrador do sistema.<br>";
+		$cache_html .= $oConfigs->get('cadastro_usuario','erro_integridade').".<br>";
 		$error = true;
 	}
 	
