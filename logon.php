@@ -33,10 +33,15 @@ $oConfigs->setLanguage( $_SESSION["lang"], false);
 //VERIFICA AUTENCIDADE DO USUARIO
 require_once ( $local_root. $local_simbolic . "/control/ajax/Classes/user/User.php");//CLASSE USUARIO
 $oUser = new User();
-if(!$oUser->autenticaUsuario($_SESSION["pincode"])) {	
+if(!$oUser->autenticaUsuario($_SESSION["pincode"])) {
 	header("Location: index.php?error=invalid_user");
 	die();
 }
+
+//USADO PARA VERIFICAR O TIPO DE USUARIO E EMPRESA
+$_priv = $oUser->getPrivilegiosByPincode($_SESSION["pincode"]);
+$_empr = $oUser->getEmpresaByPincode($_SESSION["pincode"]);
+$_arrUserPerm = array('priv' => $_priv, 'emp' => $_empr );
 
 $urlStrSelector = $oHtmlSuport->serializeGET(
 	array(

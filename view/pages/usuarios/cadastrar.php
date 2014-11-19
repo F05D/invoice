@@ -1,5 +1,8 @@
 <?php 
 
+//PERMITIDO SOMENTE PARA ADM
+if($_arrUserPerm['priv'] == 1 ) return;
+
 require_once ( $local_root. $local_simbolic . "/control/ajax/Classes/common/Validacoes.php");
 $oValidacoes = new Validacoes();
 
@@ -13,34 +16,71 @@ $arr_result = $oComp->read(array('id','nome'));
 <div class="well widget">
 	<div class="widget-header">
 		<h3 class="title"><?=$oConfigs->get('cadastro_usuario','lista_cadastro_tit')?></h3>
-	</div>	
-	<input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_usuario','lista_nome_comp')?>" id="user_nome">
-	<input class="datePicker_<?=$oUser->get('lingua')?>" type="text" placeholder="<?=$oConfigs->get('cadastro_usuario','lista_dt_nasc')?>" id="user_dt_nasc" readonly value="<?=$oValidacoes->dataNowLang($oUser->get('lingua'))?>">
-	<input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_usuario','lista_email')?>" id="user_email">
-	<input class="input-block-level" type="password" placeholder="<?=$oConfigs->get('cadastro_usuario','lista_senha')?>" id="user_senha">
-	<input class="input-block-level" type="password" placeholder="<?=$oConfigs->get('cadastro_usuario','lista_senha_rep')?>" id="user_senha_ver">
-	<input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_usuario','lista_dica_senha')?>" id="user_dica">
-	<select class="input-block-level" id="user_privilegio">
-		<option value="" selected>- <?=$oConfigs->get('cadastro_usuario','lista_priv_text')?> -</option>
-		<? foreach ( $oUser->getListPrivilegios() as $val) { ?> 
-			<option value="<?=$val['id']?>"><?=$oConfigs->get('cadastro_usuario',$val['desc'])?></option>
-		<? } ?>
-	</select>
-	
-	<select class="input-block-level" id="user_lang">
-		<option value="" selected>- <?=$oConfigs->get('cadastro_usuario','lista_lang_text')?> -</option>
-		<? foreach ( $oUser->getListLinguas() as $val) { ?>
-			<option value="<?=$val['lingua']?>"><?=$oConfigs->get('cadastro_usuario','desc_'.$val['lingua'])?></option>
-		<? } ?>
-	</select>
-	
-	<select class="input-block-level" id="user_empresa_associada">
-		<option value="0" selected>- <?=$oConfigs->get('cadastro_usuario','lista_empresa')?> -</option>
-		<? foreach ( $arr_result as $val) { ?> 
-			<option value="<?=$val['id']?>"><?=$val['nome']?></option>
-		<? } ?>
-	</select>	
-	
+	</div>
+	<table class="table table-hover">		
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_usuario','lista_nome_comp')?></td>
+			<td><input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_usuario','lista_nome_comp')?>" id="user_nome"></td>
+		</tr>
+		
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_usuario','lista_dt_nasc')?></td>
+			<td><input class="datePicker_<?=$oUser->get('lingua')?>" type="text" placeholder="<?=$oConfigs->get('cadastro_usuario','lista_dt_nasc')?>" id="user_dt_nasc" readonly value="<?=$oValidacoes->dataNowLang($oUser->get('lingua'))?>"></td>
+		</tr>
+		
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_usuario','lista_email')?></td>
+			<td><input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_usuario','lista_email')?>" id="user_email"></td>
+		</tr>
+		
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_usuario','lista_senha')?></td>
+			<td><input class="input-block-level" type="password" placeholder="<?=$oConfigs->get('cadastro_usuario','lista_senha')?>" id="user_senha"></td>
+		</tr>
+		
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_usuario','lista_senha_rep')?></td>
+			<td><input class="input-block-level" type="password" placeholder="<?=$oConfigs->get('cadastro_usuario','lista_senha_rep')?>" id="user_senha_ver"></td>
+		</tr>
+		
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_usuario','lista_dica_senha')?></td>
+			<td><input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_usuario','lista_dica_senha')?>" id="user_dica"></td>
+		</tr>
+		
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_usuario','lista_priv_text')?></td><td>
+				<select class="input-block-level" id="user_privilegio">
+					<option value="" selected>- <?=$oConfigs->get('cadastro_usuario','lista_priv_text')?> -</option>
+					<? foreach ( $oUser->getListPrivilegios() as $val) { ?> 
+						<option value="<?=$val['id']?>"><?=$oConfigs->get('cadastro_usuario',$val['desc'])?></option>
+					<? } ?>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_usuario','lista_lang_text')?></td>
+			<td>
+				<select class="input-block-level" id="user_lang">
+					<option value="" selected>- <?=$oConfigs->get('cadastro_usuario','lista_lang_text')?> -</option>
+					<? foreach ( $oUser->getListLinguas() as $val) { ?>
+						<option value="<?=$val['lingua']?>"><?=$oConfigs->get('cadastro_usuario','desc_'.$val['lingua'])?></option>
+					<? } ?>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_usuario','lista_empresa')?></td>
+			<td>
+				<select class="input-block-level" id="user_empresa_associada">
+					<option value="0" selected>- <?=$oConfigs->get('cadastro_usuario','lista_empresa')?> -</option>
+					<? foreach ( $arr_result as $val) { ?> 
+						<option value="<?=$val['id']?>"><?=$val['nome']?></option>
+					<? } ?>
+				</select>
+			</td>
+		</tr>
+	</table>
 	<div class="row-fluid">
 		<div class="span4">
 			<div class="button-action">

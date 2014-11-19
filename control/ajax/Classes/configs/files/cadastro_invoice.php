@@ -19,7 +19,7 @@
 			"deseja_deletar_invoice" => array("Tem certeza que deseja DELETAR a invoice:","yyyyyyyyyy","zzzzzzzzzzz"),
 			"add_invoice" => array("Adicionar Invoice","yyyyyyyyyy","zzzzzzzzzzz"),
 			
-			"cad_invoice_nr" => array("INVOICE","yyyyyyyyyy","zzzzzzzzzzz"),
+			"cad_invoice_nr" => array("Invoice Nº","yyyyyyyyyy","zzzzzzzzzzz"),
 			"cad_invoice_container" => array("Container","yyyyyyyyyy","zzzzzzzzzzz"),
 			"cad_invoice_booking" => array("Booking","yyyyyyyyyy","zzzzzzzzzzz"),
 			"cad_invoice_tipo" => array("Tipo","yyyyyyyyyy","zzzzzzzzzzz"),
@@ -29,7 +29,7 @@
 			"cad_invoice_qnt" => array("Quantidade","yyyyyyyyyy","zzzzzzzzzzz"),
 			"cad_invoice_nota_fiscal" => array("Nota Fiscal","yyyyyyyyyy","zzzzzzzzzzz"),
 			"cad_invoice_lacres" => array("Lacres","yyyyyyyyyy","zzzzzzzzzzz"),
-			"cad_invoice_po" => array("Numero PO#","yyyyyyyyyy","zzzzzzzzzzz"),
+			"cad_invoice_po" => array("PO#","yyyyyyyyyy","zzzzzzzzzzz"),
 			"cad_invoice_fatura_valor" => array("Valor da Fatura","yyyyyyyyyy","zzzzzzzzzzz"),
 			"cad_invoice_data_vencimento" => array("Data de Vencimento","yyyyyyyyyy","zzzzzzzzzzz"),
 			"cad_invoice_embarque_data" => array("Data de Embarque","yyyyyyyyyy","zzzzzzzzzzz"),

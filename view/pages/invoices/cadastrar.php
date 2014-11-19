@@ -1,4 +1,8 @@
 <? 
+
+	//PERMITIDO SOMENTE PARA ADM
+	if($_arrUserPerm['priv'] == 1 ) return;
+
 	require_once ( $local_root. $local_simbolic . "/control/ajax/Classes/companies/Comp.php");
 	$oComp = new Comp();
 	

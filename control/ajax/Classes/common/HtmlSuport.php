@@ -29,7 +29,8 @@ class HtmlSuport {
 		$range = "page_n=0&";
 		$n     = "n=1&";
 		
-		$pages = round( ($num_rows / $max) , 0 , PHP_ROUND_HALF_UP);
+		$pages = ceil($num_rows / $max);
+		
 		$n_ini = ($n_atual < 1 ?  1 : $n_atual - 5 ); $n_ini = ($n_ini < 1 ? 1 : $n_ini);
 		$n_fim = ($n_fim > $pages ? $pages : $n_atual + 5 ); $n_fim = ($n_fim > $pages ? $pages : $n_fim);
 		

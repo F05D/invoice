@@ -1,5 +1,8 @@
 <?php 
 
+//PERMITIDO SOMENTE PARA ADM
+if($_arrUserPerm['priv'] == 1 ) return;
+
 require_once ( $local_root. $local_simbolic . "/control/ajax/Classes/common/Validacoes.php");
 $oValidacoes = new Validacoes();
 

@@ -1,20 +1,67 @@
+<?php 
+
+	//PERMITIDO SOMENTE PARA ADM
+	if($_arrUserPerm['priv'] == 1 ) return;
+	
+?>
+
 <div class="well widget">
 	<div class="widget-header">
 		<h3 class="title"><?=$oConfigs->get('cadastro_companies','cadastro_empresas')?>:</h3>
 	</div>
-	<input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_nome')?>"      id="emp_nome">
-	<input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_cnpj')?>"      id="emp_cnpj_id">
-	<input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_end')?>"       id="emp_end">
-	<input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_cidade')?>"    id="emp_cidade">
-	<input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_estado')?>"    id="emp_estado">
-	<input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_pais')?>"      id="emp_pais">
-	<input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_tel_p')?>"     id="emp_tel_p">
-	<input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_tel_s')?>"     id="emp_tel_s">
-	<input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_email')?>"     id="emp_email">
-	<input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_site')?>"      id="emp_site">
-	<input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_maps')?>"      id="emp_link_map">
-	<input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_nome_prop')?>" id="emp_nome_prop">	
-	<textarea class="input-block-level" placeholder="<?=$oConfigs->get('cadastro_companies','cad_coments')?>" rows="4"   id="emp_comentarios"></textarea>
+	<table class="table table-hover">		
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_companies','cad_nome')?></td>
+			<td><input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_nome')?>"      id="emp_nome"></td>
+		</tr>
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_companies','cad_cnpj')?></td>
+			<td><input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_cnpj')?>"      id="emp_cnpj_id"></td>
+		</tr>
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_companies','cad_end')?></td>
+			<td><input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_end')?>"       id="emp_end"></td>
+		</tr>
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_companies','cad_cidade')?></td>
+			<td><input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_cidade')?>"    id="emp_cidade"></td>
+		</tr>
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_companies','cad_estado')?></td>
+			<td><input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_estado')?>"    id="emp_estado"></td>
+		</tr>
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_companies','cad_pais')?></td>
+			<td><input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_pais')?>"      id="emp_pais"></td>
+		</tr>
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_companies','cad_tel_p')?></td>
+			<td><input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_tel_p')?>"     id="emp_tel_p"></td>
+		</tr>
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_companies','cad_tel_s')?></td>
+			<td><input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_tel_s')?>"     id="emp_tel_s"></td>
+		</tr>
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_companies','cad_email')?></td>
+			<td><input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_email')?>"     id="emp_email"></td>
+		</tr>
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_companies','cad_site')?></td>
+			<td><input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_site')?>"      id="emp_site"></td>
+		</tr>
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_companies','cad_maps')?></td>
+			<td><input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_maps')?>"      id="emp_link_map"></td>
+		</tr>
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_companies','cad_nome_prop')?></td>
+			<td><input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_companies','cad_nome_prop')?>" id="emp_nome_prop">	
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_companies','cad_coments')?></td>
+			<td><textarea class="input-block-level" placeholder="<?=$oConfigs->get('cadastro_companies','cad_coments')?>" rows="4"   id="emp_comentarios"></textarea></td>
+		</tr>
+	</table>
 
 	<div class="row-fluid">
 		<div class="span4">

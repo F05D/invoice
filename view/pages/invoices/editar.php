@@ -1,5 +1,8 @@
 <? 
-
+	$not_edit = "";
+	if($_arrUserPerm['priv'] != 1 ) {
+		$not_edit = " readonly ";
+	}
 	require_once ( $local_root. $local_simbolic . "/control/ajax/Classes/common/Validacoes.php");
 	$oValidacoes = new Validacoes();
 
@@ -60,36 +63,57 @@
 		<tr>
 			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_empresa')?></td>                         
 			<td>
-				<select class="input-block-level" id="invoice_empresa">
+				<?php if($_arrUserPerm['priv'] != 1 ) {
+					foreach ( $arr_result_empresas as $val) {
+						if( $arr_result['company_id'] == $val['id'] ) {
+							print $val['nome'];
+						}
+					}
+				} else { ?>
+				<select class="input-block-level" id="invoice_empresa" >
 					<option value="">- <?=$oConfigs->get('cadastro_invoice','cad_empresa')?> -</option>
-					<? foreach ( $arr_result_empresas as $val) { ?> 
+					<? foreach ( $arr_result_empresas as $val) { ?>
 						<option value="<?=$val['id']?>" <?=($arr_result['company_id'] == $val['id'] ? 'selected' : '')?> ><?=$val['nome']?></option>
-					<? } ?>
-				</select>	
+					<? }?>
+				</select>
+					
+				<?php }?>
 			</td>
 		</tr>
-		<tr><td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_nr')?></td>                      <td><input class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_nr')?>"                   id="invoice_nr"              value="<?=$arr_result['invoice_nr']?>"></td></tr>
-		<tr><td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_po')?></td>                <td><input class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_po')?>"             id="invoice_po"        value="<?=$arr_result['po']?>"></td></tr>
-		<tr><td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_fatura_valor')?></td>            <td><input class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_fatura_valor')?>"         id="invoice_fatura_valor"    value="<?=$arr_result['fatura_valor']?>"></td></tr>
-		
 		<tr>
-			<td class="invoice_cadastro">
-				<?=$oConfigs->get('cadastro_invoice','cad_invoice_data_vencimento')?></td>
-			<td>
-			<input type="text" readonly id="invoice_data_vencimento" value="<?=$oValidacoes->convertDBtoData( $arr_result['data_vencimento'], $oUser->get('lingua'));?>" class="datePicker_<?=$oUser->get('lingua')?>" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_data_vencimento')?>">
-			
-			</td>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_nr')?></td>
+			<td><input <?=$not_edit?> class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_nr')?>" id="invoice_nr" value="<?=$arr_result['invoice_nr']?>"></td>
 		</tr>
-				
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_po')?></td>
+		    <td><input <?=$not_edit?> class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_po')?>" id="invoice_po" value="<?=$arr_result['po']?>"></td>
+		</tr>
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_fatura_valor')?></td>
+			<td><input <?=$not_edit?> class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_fatura_valor')?>" id="invoice_fatura_valor" value="<?=$arr_result['fatura_valor']?>"></td>
+		</tr>
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_data_vencimento')?></td>
+			<td><input <?=$not_edit?> type="text" readonly id="invoice_data_vencimento" value="<?=$oValidacoes->convertDBtoData( $arr_result['data_vencimento'], $oUser->get('lingua'));?>" class="datePicker_<?=$oUser->get('lingua')?>" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_data_vencimento')?>"></td>
+		</tr>
 		<tr>
 			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_banco')?></td>                         
 			<td>
-				<select class="input-block-level" id="invoice_banco">
+			<?php if($_arrUserPerm['priv'] != 1 ) {
+				foreach ( $arr_result_bancarios as $val) {
+						if( $arr_result['bancarios_id'] == $val['id'] ) {
+							print $val['banco_nome'];
+						}
+					}
+				} else { ?>
+			
+				<select class="input-block-level" id="invoice_banco" <?=$not_edit?>>
 					<option value="">- <?=$oConfigs->get('cadastro_invoice','cad_banco')?> -</option>
 					<? foreach ( $arr_result_bancarios as $val) { ?> 
 						<option value="<?=$val['id']?>"  <?=($arr_result['bancarios_id'] == $val['id'] ? 'selected' : '')?> ><?=$val['banco_nome']?> (<?=$val['swift_code']?>)</option>
 					<? } ?>
-				</select>	
+				</select>
+				<?php }?>	
 			</td>
 		</tr>		
 	</table>
@@ -103,16 +127,26 @@
 	<table class="table table-hover">
 		<tr>
 			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','update_status')?></td>                         
-			<td>
+			<td>			
+			<?php if($_arrUserPerm['priv'] != 1 ) {
+				if($arr_result['status_id'] == "") print $oConfigs->get('cadastro_invoice','status_invoice');
+				if($arr_result['status_id'] == "1") print $oConfigs->get('cadastro_invoice','status_id_1_pago');
+				if($arr_result['status_id'] == "2") print $oConfigs->get('cadastro_invoice','status_id_2_nao_pago');
+					
+				} else { ?>
+			
 				<select class="input-block-level" id="invoice_status">
 						<option value="" <?=($arr_result['status_id'] == "" ? 'selected' : '')?> > - <?=$oConfigs->get('cadastro_invoice','status_invoice')?> - </option>
 						<option value="1" <?=($arr_result['status_id'] == "1" ? 'selected' : '')?> > <?=$oConfigs->get('cadastro_invoice','status_id_1_pago')?> </option>
 						<option value="2" <?=($arr_result['status_id'] == "2" ? 'selected' : '')?> > <?=$oConfigs->get('cadastro_invoice','status_id_2_nao_pago')?> </option>
 				</select>
+				<?php }?>
 			</td>
 		</tr>
-		<tr><td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','up_notificado')?></td>   <td><input class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','up_notificado')?>"  readonly value="<?=($arr_result['notificado'] == 1 ? $oConfigs->get('cadastro_invoice','sim') . " - " . $arr_result['notificado_dt'] : $oConfigs->get('cadastro_invoice','nao') ) ?>"></td></tr>
-		<tr><td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','up_vizualidado')?></td>  <td><input class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','up_vizualidado')?>" readonly value="<?=($arr_result['visualizado'] == 1 ? $oConfigs->get('cadastro_invoice','sim') . " - " . $arr_result['visualizado_dt']  : $oConfigs->get('cadastro_invoice','nao') ) ?>"></td></tr>	
+		<?php if($_arrUserPerm['priv'] == 1 ) { ?>
+			<tr><td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','up_notificado')?></td>   <td><input class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','up_notificado')?>"  readonly value="<?=($arr_result['notificado'] == 1 ? $oConfigs->get('cadastro_invoice','sim') . " - " . $arr_result['notificado_dt'] : $oConfigs->get('cadastro_invoice','nao') ) ?>"></td></tr>
+			<tr><td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','up_vizualidado')?></td>  <td><input class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','up_vizualidado')?>" readonly value="<?=($arr_result['visualizado'] == 1 ? $oConfigs->get('cadastro_invoice','sim') . " - " . $arr_result['visualizado_dt']  : $oConfigs->get('cadastro_invoice','nao') ) ?>"></td></tr>
+		<?php }?>	
 	</table>
 </div>
 
@@ -121,25 +155,53 @@
 		<h3 class="title">Dados do Container:</h3>
 	</div>
 	<table class="table table-hover">	
-		<tr><td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_container')?></td>               <td><input class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_container')?>"            id="invoice_container"     value="<?=$arr_result['container']?>"></td></tr>
-		<tr><td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_booking')?></td>                 <td><input class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_booking')?>"              id="invoice_booking"       value="<?=$arr_result['booking']?>"></td></tr>
-		<tr><td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_tipo')?></td>                    <td><input class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_tipo')?>"                 id="invoice_tipo"          value="<?=$arr_result['tipo']?>"></td></tr>
-		<tr><td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_tara')?></td>                    <td><input class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_tara')?>"                 id="invoice_tara"          value="<?=$arr_result['tara']?>"></td></tr>
-		<tr><td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_peso_bruto')?></td>              <td><input class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_peso_bruto')?>"           id="invoice_peso_bruto"    value="<?=$arr_result['peso_bruto']?>"></td></tr>
-		<tr><td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_peso_liquido')?></td>            <td><input class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_peso_liquido')?>"         id="invoice_peso_liquido"  value="<?=$arr_result['peso_liquido']?>"></td></tr>
-		<tr><td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_qnt')?></td>                     <td><input class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_qnt')?>"                  id="invoice_qnt"           value="<?=$arr_result['qnt']?>"></td></tr>
-		<tr><td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_nota_fiscal')?></td>             <td><input class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_nota_fiscal')?>"          id="invoice_nota_fiscal"   value="<?=$arr_result['nota_fiscal']?>"></td></tr>
-		<tr><td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_lacres')?></td>                  <td><input class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_lacres')?>"               id="invoice_lacres"        value="<?=$arr_result['lacres']?>"></td></tr>
-		<tr><td class="invoice_cadastro">
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_container')?></td>
+		    <td><input <?=$not_edit?> class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_container')?>" id="invoice_container" value="<?=$arr_result['container']?>"></td>
+		</tr>
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_ invoice_booking')?></td>                 
+			<td><input <?=$not_edit?> class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_booking')?>" id="invoice_booking" value="<?=$arr_result['booking']?>"></td>
+		</tr>
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_tipo')?></td>                    
+			<td><input <?=$not_edit?> class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_tipo')?>" id="invoice_tipo" value="<?=$arr_result['tipo']?>"></td>
+		</tr>
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_tara')?></td>                    
+			<td><input <?=$not_edit?> class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_tara')?>" id="invoice_tara" value="<?=$arr_result['tara']?>"></td>
+		</tr>
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_peso_bruto')?></td>              
+			<td><input <?=$not_edit?> class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_peso_bruto')?>" id="invoice_peso_bruto" value="<?=$arr_result['peso_bruto']?>"></td>
+		</tr>
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_peso_liquido')?></td>            
+			<td><input <?=$not_edit?> class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_peso_liquido')?>" id="invoice_peso_liquido" value="<?=$arr_result['peso_liquido']?>"></td>
+		</tr>
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_qnt')?></td>                     
+			<td><input <?=$not_edit?> class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_qnt')?>" id="invoice_qnt" value="<?=$arr_result['qnt']?>"></td>
+		</tr>
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_nota_fiscal')?></td>             
+			<td><input <?=$not_edit?> class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_nota_fiscal')?>" id="invoice_nota_fiscal" value="<?=$arr_result['nota_fiscal']?>"></td>
+		</tr>
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_lacres')?></td>                  
+			<td><input <?=$not_edit?> class="span12" type="text" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_lacres')?>" id="invoice_lacres" value="<?=$arr_result['lacres']?>"></td>
+		</tr>
+		<tr>
+			<td class="invoice_cadastro">
 			<?=$oConfigs->get('cadastro_invoice','cad_invoice_embarque_data')?></td>           
 			<td>
-				<input type="text" readonly  id="invoice_embarque_data" value="<?=$oValidacoes->convertDBtoData( $arr_result['embarque_data'], $oUser->get('lingua'));?>" class="datePicker_<?=$oUser->get('lingua')?>" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_embarque_data')?>">
+				<input <?=$not_edit?> type="text" readonly  id="invoice_embarque_data" value="<?=$oValidacoes->convertDBtoData( $arr_result['embarque_data'], $oUser->get('lingua'));?>" class="datePicker_<?=$oUser->get('lingua')?>" placeholder="<?=$oConfigs->get('cadastro_invoice','cad_invoice_embarque_data')?>">
 			</td>
 		</tr>
 		<tr>
 			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_invoice','cad_invoice_embarque_confirmacao')?></td>    
 			<td>
-				<select class="span8"  id="invoice_embarque_confirmacao">
+				<select  <?=$not_edit?> class="span8"  id="invoice_embarque_confirmacao">
 					<option value=""   >- <?=$oConfigs->get('cadastro_invoice','cad_confirmacao')?> -</option>
 					<option value="0" <?=($arr_result['embarque_confirmacao'] == 0 ? 'selected' : '')?> ><?=$oConfigs->get('cadastro_invoice','cad_invoice_embarque_confirmacao_no')?></option>
 					<option value="1" <?=($arr_result['embarque_confirmacao'] == 1 ? 'selected' : '')?> ><?=$oConfigs->get('cadastro_invoice','cad_invoice_embarque_confirmacao_ok')?></option>

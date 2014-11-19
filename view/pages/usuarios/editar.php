@@ -27,34 +27,69 @@ $arrIdBindCompany = $oUser->getBindCompany($id);
 
 <div class="well widget">
 	<div class="widget-header">
-		<h3 class="title">Cadastro de Empresas:</h3>
+		<h3 class="title"><?=$oConfigs->get('cadastro_usuario','selector_editar')?>:</h3>
 	</div>		
-	<input class="input-block-level" type="text"     placeholder="<?=$oConfigs->get('cadastro_usuario','lista_nome_comp')?>"     id="user_nome"       value="<?=$arr_result['nome']?>">
-	<input class="datePicker_<?=$oUser->get('lingua')?>" type="text" placeholder="<?=$oConfigs->get('cadastro_usuario','lista_dt_nasc')?>" id="user_dt_nasc" readonly value="<?=$dt_format?>">
-	<input class="input-block-level" type="text"     placeholder="<?=$oConfigs->get('cadastro_usuario','lista_email')?>"         id="user_email"      value="<?=$arr_result['usuario']?>"    readonly onclick="alterar_email();">
-	<input class="input-block-level" type="password" placeholder="<?=$oConfigs->get('cadastro_usuario','lista_senha')?>"         id="user_senha"      value="<?=$arr_result['senha']?>"      readonly onclick="alert_troca_senha()">
-	<input class="input-block-level" type="password" placeholder="<?=$oConfigs->get('cadastro_usuario','lista_senha_rep')?>"     id="user_senha_ver"  value="<?=$arr_result['senha']?>"      readonly onclick="alert_troca_senha()">
-	<input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_usuario','lista_dica_senha')?>"        id="user_dica"       value="<?=$arr_result['dica_senha']?>" readonly onclick="alert_troca_senha()">
-	<select class="input-block-level" id="user_privilegio">
-		<option value="" selected>- <?=$oConfigs->get('cadastro_usuario','lista_priv_text')?> -</option>
-		<? foreach ( $oUser->getListPrivilegios() as $val) { ?> 
-			<option value="<?=$val['id']?>" <?=($val['id'] == $arr_result['privilegios'] ? ' selected ' : '')?>  ><?=$oConfigs->get('cadastro_usuario',$val['desc'])?></option>
-		<? } ?>
-	</select>
-	
-	<select class="input-block-level" id="user_lang">
-		<option value="" selected>- <?=$oConfigs->get('cadastro_usuario','lista_lang_text')?> -</option>
-		<? foreach ( $oUser->getListLinguas() as $val) { ?>
-			<option value="<?=$val['lingua']?>" <?=($val['lingua'] == $arr_result['lingua'] ? ' selected ' : '')?> > <?=$oConfigs->get('cadastro_usuario','desc_'.$val['lingua'])?></option>
-		<? } ?>
-	</select>
-	
-	<select class="input-block-level" id="user_empresa_associada">
-		<option value="0" selected>- <?=$oConfigs->get('cadastro_usuario','lista_empresa')?> -</option>
-		<? foreach ( $arr_comp as $val) { ?> 
-			<option value="<?=$val['id']?>" <?=($val['id'] == $arrIdBindCompany['id'] ? ' selected ' : '')?> ><?=$val['nome']?></option>
-		<? } ?>
-	</select>	
+	<table class="table table-hover">		
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_usuario','lista_nome_comp')?></td>
+			<td><input class="input-block-level" type="text"     placeholder="<?=$oConfigs->get('cadastro_usuario','lista_nome_comp')?>"     id="user_nome"       value="<?=$arr_result['nome']?>"></td>
+		</tr>
+		
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_usuario','lista_dt_nasc')?></td>
+			<td><input class="datePicker_<?=$oUser->get('lingua')?>" type="text" placeholder="<?=$oConfigs->get('cadastro_usuario','lista_dt_nasc')?>" id="user_dt_nasc" readonly value="<?=$dt_format?>"></td>
+		</tr>
+		
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_usuario','lista_email')?></td>
+			<td><input class="input-block-level" type="text"     placeholder="<?=$oConfigs->get('cadastro_usuario','lista_email')?>"         id="user_email"      value="<?=$arr_result['usuario']?>"    readonly onclick="alterar_email();"></td>
+		</tr>
+		
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_usuario','lista_senha')?></td>
+			<td><input class="input-block-level" type="password" placeholder="<?=$oConfigs->get('cadastro_usuario','lista_senha')?>"         id="user_senha"      value="<?=$arr_result['senha']?>"      readonly onclick="alert_troca_senha()"></td>
+		</tr>
+		
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_usuario','lista_senha_rep')?></td>
+			<td><input class="input-block-level" type="password" placeholder="<?=$oConfigs->get('cadastro_usuario','lista_senha_rep')?>"     id="user_senha_ver"  value="<?=$arr_result['senha']?>"      readonly onclick="alert_troca_senha()"></td>
+		</tr>
+		
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_usuario','lista_dica_senha')?></td>
+			<td><input class="input-block-level" type="text" placeholder="<?=$oConfigs->get('cadastro_usuario','lista_dica_senha')?>"        id="user_dica"       value="<?=$arr_result['dica_senha']?>" readonly onclick="alert_troca_senha()"></td>
+		</tr>
+		
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_usuario','lista_priv_text')?></td>
+			<td><select class="input-block-level" id="user_privilegio">
+					<option value="" selected>- <?=$oConfigs->get('cadastro_usuario','lista_priv_text')?> -</option>
+					<? foreach ( $oUser->getListPrivilegios() as $val) { ?> 
+						<option value="<?=$val['id']?>" <?=($val['id'] == $arr_result['privilegios'] ? ' selected ' : '')?>  ><?=$oConfigs->get('cadastro_usuario',$val['desc'])?></option>
+					<? } ?>
+				</select></td>	
+		</tr>
+		
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_usuario','lista_lang_text')?></td>
+			<td><select class="input-block-level" id="user_lang">
+					<option value="" selected>- <?=$oConfigs->get('cadastro_usuario','lista_lang_text')?> -</option>
+					<? foreach ( $oUser->getListLinguas() as $val) { ?>
+						<option value="<?=$val['lingua']?>" <?=($val['lingua'] == $arr_result['lingua'] ? ' selected ' : '')?> > <?=$oConfigs->get('cadastro_usuario','desc_'.$val['lingua'])?></option>
+					<? } ?>
+				</select></td>	
+		</tr>
+		
+		<tr>
+			<td class="invoice_cadastro"><?=$oConfigs->get('cadastro_usuario','lista_empresa')?></td>
+			<td><select class="input-block-level" id="user_empresa_associada">
+					<option value="0" selected>- <?=$oConfigs->get('cadastro_usuario','lista_empresa')?> -</option>
+					<? foreach ( $arr_comp as $val) { ?> 
+						<option value="<?=$val['id']?>" <?=($val['id'] == $arrIdBindCompany['id'] ? ' selected ' : '')?> ><?=$val['nome']?></option>
+					<? } ?>
+				</select></td>
+		</tr>
+	</table>	
 	
 	<div class="row-fluid">
 		<div class="span4">

@@ -28,7 +28,7 @@
 	$limit = " LIMIT $pageNow,$max ";
 	
 	$arr_result = array();
-	$arr_result = $oInvoice->read(null,$limit,$search,$orderBy);
+	$arr_result = $oInvoice->read(null,$limit,$search,$orderBy, $_arrUserPerm);
 	$num_rows   = $oInvoice->numRows($search);
 	
 	//FOR PAGINATION
@@ -70,8 +70,8 @@
 						<th><span onclick="orderBy('co');" class="pointer"><?=$oConfigs->get('cadastro_invoice','list_container')?> </span> <?=$oHtmlSuport->orderIcon('co',$o_by,$o_tg)?></th>																		
 						<th><span onclick="orderBy('em');" class="pointer"><?=$oConfigs->get('cadastro_invoice','list_empresa')?> </span> <?=$oHtmlSuport->orderIcon('em',$o_by,$o_tg)?></th>			
 						<th><span onclick="orderBy('ve');" class="pointer center"><?=$oConfigs->get('cadastro_invoice','list_dt_vencimento')?> </span> <?=$oHtmlSuport->orderIcon('ve',$o_by,$o_tg)?></th>
-						<th><span onclick="orderBy('nt');" class="pointer center"><?=$oConfigs->get('cadastro_invoice','list_enviado_notificacao_pgto')?> </span> <?=$oHtmlSuport->orderIcon('nt',$o_by,$o_tg)?></th>
-						<th><span onclick="orderBy('vi');" class="pointer center"><?=$oConfigs->get('cadastro_invoice','list_visualizado')?> </span> <?=$oHtmlSuport->orderIcon('vi',$o_by,$o_tg)?></th>
+						<?php if($_arrUserPerm['priv'] == 1 ) { ?><th><span onclick="orderBy('nt');" class="pointer center"><?=$oConfigs->get('cadastro_invoice','list_enviado_notificacao_pgto')?> </span> <?=$oHtmlSuport->orderIcon('nt',$o_by,$o_tg)?></th><?php }?>
+						<?php if($_arrUserPerm['priv'] == 1 ) { ?><th><span onclick="orderBy('vi');" class="pointer center"><?=$oConfigs->get('cadastro_invoice','list_visualizado')?> </span> <?=$oHtmlSuport->orderIcon('vi',$o_by,$o_tg)?></th><?php }?>
 						<th><span onclick="orderBy('st');" class="pointer center"><?=$oConfigs->get('cadastro_invoice','list_status')?></span> <?=$oHtmlSuport->orderIcon('st',$o_by,$o_tg)?></th>
 						<th><?=$oConfigs->get('cadastro_invoice','list_acoes')?></th>									
 					</tr>
@@ -92,10 +92,19 @@
 							print " <td>" . $val['container'] . "</td>";
 							print " <td>" . $val['nome'] . "</td>";
 							print " <td class=center><center>" . $oValidacoes->convertDBtoData($val['data_vencimento'], $oUser->get('lingua')) . "</center></td>";
-							print " <td class=center><center><img src='library/images/icons/notification_". ($val['notificado'] == 1 ? "ok" : 'no' ).".png' ".($val['status_id'] == 1 ? "" : " class='pointer' onclick=\"sendNot($strArgsFunc)\" " ).">".($val['notificado'] == 1 ? '<br>'.$oValidacoes->convertDBtoDataHr($val['notificado_dt'], $oUser->get('lingua')) : '' ) . "</center></td>";
-							print " <td class=center><center><img src='library/images/icons/view_". ($val['visualizado'] == 1 ? "ok" : 'no' ).".png' >".($val['visualizado'] == 1 ? '<br>'.$oValidacoes->convertDBtoDataHr($val['visualizado_dt'], $oUser->get('lingua')) : '') . "</center></td>";
+							
+							if($_arrUserPerm['priv'] == 1 ) { 
+								print " <td class=center><center><img src='library/images/icons/notification_". ($val['notificado'] == 1 ? "ok" : 'no' ).".png' ".($val['status_id'] == 1 ? "" : " class='pointer' onclick=\"sendNot($strArgsFunc)\" " ).">".($val['notificado'] == 1 ? '<br>'.$oValidacoes->convertDBtoDataHr($val['notificado_dt'], $oUser->get('lingua')) : '' ) . "</center></td>";							
+								print " <td class=center><center><img src='library/images/icons/view_". ($val['visualizado'] == 1 ? "ok" : 'no' ).".png' >".($val['visualizado'] == 1 ? '<br>'.$oValidacoes->convertDBtoDataHr($val['visualizado_dt'], $oUser->get('lingua')) : '') . "</center></td>";
+							}
+							
 							print " <td class=center><center><img src='library/images/icons/pago_". ($val['status_id'] == 1 ? "ok" : 'no' ).".png' ></center></td>";							
-							print " <td class=center><center><a href='logon.php?lang=".$oUser->get('lingua')."&p=" . md5("invoices/editar.php") . "&i=" . $val['id'] . $urlStrSelector . "'><span class='icon-pencil'></span></a>&nbsp;&nbsp;<span onclick=\"deletar($strArgsFunc);\" class='icon-remove pointer'></span></center></td>";								
+							print " <td class=center><center>";
+							print       "<a href='logon.php?lang=".$oUser->get('lingua')."&p=" . md5("invoices/editar.php") . "&i=" . $val['id'] . $urlStrSelector . "'><span class='icon-pencil'></span></a>&nbsp;&nbsp;";
+							
+							if($_arrUserPerm['priv'] == 1 )
+								print	"<span onclick=\"deletar($strArgsFunc);\" class='icon-remove pointer'></span></center></td>";								
+							
 							print "</tr>";
 						}						
 					?>					
@@ -117,7 +126,7 @@
 			<i><span id="msg"></span></i>
 		</div>
 	</div>
-	
+	<?php if($_arrUserPerm['priv'] == 1 ) {?>
 	<div class="span4">
 		<div class="button-action">
 			<a class="btn btn-large btn-primary" onclick="add();">
@@ -128,6 +137,7 @@
 			</a>
 		</div>
 	</div> 
+	<?php }?>
 
 
 
@@ -153,7 +163,8 @@
 		window.location.assign("logon.php?p=<?=md5("invoices/listar.php")?>" + order);
 	}
 					
-
+	<?php if($_arrUserPerm['priv'] == 1 ) { ?>
+	
 	function deletar(id,invoice,code_user,code_delete)
 	{
 	
@@ -237,6 +248,5 @@
 			}
 		});
 	}
-
-	
+	<?php }?>
 	</script>

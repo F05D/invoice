@@ -26,9 +26,9 @@ class Invoice extends InvoiceDb {
 		return $this->oInvoiceDb->createDB($arr_args);
 	}
 	
-	public function read($arr_campos = null,$limit = null, $search = null, $orderBy = null)
+	public function read($arr_campos = null,$limit = null, $search = null, $orderBy = null, $_arrUserPerm = null)
 	{
-		return $this->oInvoiceDb->getList($arr_campos, $limit, $search, $orderBy);
+		return $this->oInvoiceDb->getList($arr_campos, $limit, $search, $orderBy, $_arrUserPerm);
 	}
 	
 	public function numRows($search = null)
@@ -103,9 +103,9 @@ class Invoice extends InvoiceDb {
 		return $this->oInvoiceDb->getFileDocsDB($arr_args);
 	}
 	
-	public function getScores($field)
+	public function getScores($field, $_arrUserPerm = null)
 	{
-		return $this->oInvoiceDb->getScoresDB($field);
+		return $this->oInvoiceDb->getScoresDB($field, $_arrUserPerm);
 	}
 	
 }

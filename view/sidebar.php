@@ -5,6 +5,7 @@
 			class="hidden-phone"><?=$oConfigs->get('sidebar_barra','tit_invoices')?></span>
 	</a></li>
 	
+	<?php if($_arrUserPerm['priv'] == 1 ) { ?>
 	<li class="<?=($_GET['a_page'] == 'us' ? 'active' : '')?>"><a href="logon.php?a_page=us&lang=<?=$oUser->get('lingua')?>&p=<?=md5("usuarios/listar.php")?>"> 
 		<i class="micon-screen"></i><span class="hidden-phone"><?=$oConfigs->get('sidebar_barra','tit_usuarios')?></span>
 	</a></li>
@@ -12,6 +13,7 @@
 	<li class="<?=($_GET['a_page'] == 'em' ? 'active' : '')?>"><a href="logon.php?a_page=em&lang=<?=$oUser->get('lingua')?>&p=<?=md5("companies/listar.php")?>"> 
 		<i class="micon-screen"></i><span class="hidden-phone"><?=$oConfigs->get('sidebar_barra','tit_empresas')?></span>
 	</a></li>
+	<?php }?>
 	
 	<!-- 
 	<li class="dropdown"><a href="#" class="dropdown-toggle"

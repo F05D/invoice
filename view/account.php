@@ -6,14 +6,17 @@
 		</a>
 		<ul class="dropdown-menu dropdown-user-account">
 			<li class="account-info">
-				<h3>-> <?=$oUser->get('nome')?></h3>
+				<h3><?=$oUser->get('nome')?></h3>
 				<p></p>
 				<p>
 				
-				<?php					
+				<?php
 					$edit_user = "logon.php?lang=".$_SESSION["lang"]."&p=" . md5("usuarios/editar.php") . "&i=" . $oUser->get('id') . $urlStrSelector;
 				?>
+				<?php if($_arrUserPerm['priv'] == 1 ) { ?>
 					<a href="<?=$edit_user?>"><?=$oConfigs->get('cadastro_usuario','editar')?></a>
+					
+				<?php }?>	
 				</p>
 			</li>
 			<li class="account-footer">

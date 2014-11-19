@@ -39,7 +39,8 @@ class InvoiceDb extends Db {
 	{
 		$arrResult = array();
 	
-		$query = "SELECT * FROM invoices inv INNER JOIN invoices_bind b ON b.invoice_id = inv.id WHERE inv.deletada = 0 AND inv.id = $id;";
+		$query = "SELECT * FROM invoices inv INNER JOIN invoices_bind b ON b.invoice_id = inv.id " .
+				 " WHERE inv.deletada = 0 AND inv.id = $id;";
 		$result = $this->oDB->select ( $query );	
 		return $this->oSupport->transcriberToList($result);		 
 	}
@@ -76,12 +77,13 @@ class InvoiceDb extends Db {
 	{
 		$query = "select u.id,u.nome,u.usuario FROM companies_bind_usuarios bind ".
 				 "INNER JOIN usuarios u ON bind.id_usuario = u.id ".
-				 "INNER JOIN companies c ON bind.id_company = c.id WHERE c.id = $id";
+				 "INNER JOIN companies c ON bind.id_company = c.id " . 
+				 " WHERE c.id = $id ";
 		$result = $this->oDB->select ( $query );
 		return $this->oSupport->transcriberToList($result);
 	}
 	
-	protected function getList($arr_campos=null, $limit = null, $search = null, $orderBy = null)
+	protected function getList($arr_campos=null, $limit = null, $search = null, $orderBy = null, $_arrUserPerm = null)
 	{
 		$arrResult = array();
 		
@@ -104,21 +106,29 @@ class InvoiceDb extends Db {
 
 		
 		$searchStr = '';
-		if($search['s_in']) $searchStr = " WHERE invoice_nr LIKE '%".$search['s_in']."%'";
-		if($search['s_po']) $searchStr = " WHERE po         LIKE '%".$search['s_po']."%'";
-		if($search['s_co']) $searchStr = " WHERE container  LIKE '%".$search['s_co']."%'";
+		if($search['s_in']) $searchStr = " AND invoice_nr LIKE '%".$search['s_in']."%'";
+		if($search['s_po']) $searchStr = " AND po         LIKE '%".$search['s_po']."%'";
+		if($search['s_co']) $searchStr = " AND container  LIKE '%".$search['s_co']."%'";
 		
-		if($search['s_special'] == 'pg_ok') $searchStr = " WHERE i.status_id = 1 ";
-		if($search['s_special'] == 'pg_no') $searchStr = " WHERE i.status_id = 2 ";
-		if($search['s_special'] == 'pg_ve') $searchStr = " WHERE i.status_id = 2 AND i.data_vencimento < '".date("Y-m-d")."'";
+		if($search['s_special'] == 'pg_ok') $searchStr = " AND i.status_id = 1 ";
+		if($search['s_special'] == 'pg_no') $searchStr = " AND i.status_id = 2 ";
+		if($search['s_special'] == 'pg_ve') $searchStr = " AND i.status_id = 2 AND i.data_vencimento < '".date("Y-m-d")."'";
 		if($search['s_special'] == 'pg_tt') $searchStr = " ";
+		
+		$privEmpStr = "";
+		if(count($_arrUserPerm)) 
+			if( $_arrUserPerm['priv'] != 1 ) 
+				$privEmpStr = " AND c.id = " . $_arrUserPerm['emp'];
 		
 		$fields = ($arr_campos ? $this->oSupport->arrToText($arr_campos) : '*');
 		$query = "SELECT i.*, c.nome FROM invoices i " . 
 				 "INNER JOIN invoices_bind bind ON bind.invoice_id = i.id ". 
-				 "INNER JOIN companies c ON bind.company_id = c.id $searchStr $orderStr ";
+				 "INNER JOIN companies c ON bind.company_id = c.id ".
+				 "WHERE deletada = 0 $searchStr $privEmpStr $orderStr ";
 		
 		$query .= ($limit != null ? $limit : '');
+		
+		print "[->$query]";
 		
 		$result = $this->oDB->select ( $query );	
 		return $this->oSupport->transcriberToList($result);		
@@ -128,19 +138,20 @@ class InvoiceDb extends Db {
 	{
 		
 		$searchStr = '';
-		if($search['s_in']) $searchStr = " WHERE invoice_nr LIKE '%".$search['s_in']."%'";
-		if($search['s_po']) $searchStr = " WHERE po         LIKE '%".$search['s_po']."%'";
-		if($search['s_co']) $searchStr = " WHERE container  LIKE '%".$search['s_co']."%'";
+		if($search['s_in']) $searchStr = " AND invoice_nr LIKE '%".$search['s_in']."%'";
+		if($search['s_po']) $searchStr = " AND po         LIKE '%".$search['s_po']."%'";
+		if($search['s_co']) $searchStr = " AND container  LIKE '%".$search['s_co']."%'";
 		
-		if($search['s_special'] == 'pg_ok') $searchStr = " WHERE i.status_id = 1 ";
-		if($search['s_special'] == 'pg_no') $searchStr = " WHERE i.status_id = 2 ";
-		if($search['s_special'] == 'pg_ve') $searchStr = " WHERE i.status_id = 2 AND i.data_vencimento < '".date("Y-m-d")."'";
+		if($search['s_special'] == 'pg_ok') $searchStr = " AND i.status_id = 1 ";
+		if($search['s_special'] == 'pg_no') $searchStr = " AND i.status_id = 2 ";
+		if($search['s_special'] == 'pg_ve') $searchStr = " AND i.status_id = 2 AND i.data_vencimento < '".date("Y-m-d")."'";
 		if($search['s_special'] == 'pg_tt') $searchStr = " ";
 		
 		$fields = ($arr_campos ? $this->oSupport->arrToText($arr_campos) : '*');
 		$query = "SELECT i.id FROM invoices i " .
 				"INNER JOIN invoices_bind bind ON bind.invoice_id = i.id ".
-				"INNER JOIN companies c ON bind.company_id = c.id $searchStr ";
+				"INNER JOIN companies c ON bind.company_id = c.id ".
+				" WHERE i.deletada = 0 $searchStr ";
 		
 		$result = $this->oDB->select ( $query );
 		return $result->num_rows;
@@ -355,7 +366,7 @@ class InvoiceDb extends Db {
 	
 	protected function verPermissaoUsuarioDB($id_usuario,$code_auth_user)
 	{
-		$query = "SELECT * FROM usuarios WHERE id = '$id_usuario' LIMIT 1";
+		$query = "SELECT * FROM usuarios WHERE id = '$id_usuario' AND ativo = 1 LIMIT 1";
 	
 		$result = $this->oDB->select ( $query );
 			
@@ -392,24 +403,40 @@ class InvoiceDb extends Db {
 		return $this->oSupport->transcriberToList($result);
 	}
 	
-	protected function getScoresDB($field)
+	protected function getScoresDB($field, $_arrUserPerm)
 	{
+		$privEmpStr = "";
+		if(count($_arrUserPerm)) 
+			if( $_arrUserPerm['priv'] != 1 ) 
+				$privEmpStr = " AND c.id = " . $_arrUserPerm['emp'];
+					
 		switch ($field)
 		{
 			case 'total':
-				$query = "SELECT id FROM invoices WHERE deletada = 0";
+				$query = "SELECT i.id FROM invoices i " .
+						" INNER JOIN invoices_bind bind ON bind.invoice_id = i.id ".
+						" INNER JOIN companies c ON bind.company_id = c.id " .
+						" WHERE deletada = 0 $privEmpStr ; ";
 				break;
 			case 'pagas_ok':
-				$query = "SELECT * FROM invoices WHERE deletada = 0 AND status_id = 1;";
+				$query = "SELECT i.id FROM invoices i " .
+				" INNER JOIN invoices_bind bind ON bind.invoice_id = i.id ".
+				" INNER JOIN companies c ON bind.company_id = c.id ".
+				" WHERE deletada = 0 AND status_id = 1 $privEmpStr ; ";
 				break;
 			case 'pagas_no':
-				$query = "SELECT * FROM invoices WHERE deletada = 0 AND status_id = 2;";
+				$query = "SELECT i.id FROM invoices i " .
+						" INNER JOIN invoices_bind bind ON bind.invoice_id = i.id ".
+						" INNER JOIN companies c ON bind.company_id = c.id ".
+						" WHERE deletada = 0 AND status_id = 2 $privEmpStr ; ";
 				break;
 			case 'a_vencer':
 				date_default_timezone_set("America/Sao_Paulo");
 				$dataNow = date("Y-m-d");
-				
-				$query = "SELECT * FROM invoices WHERE deletada = 0 AND status_id = 2 AND data_vencimento < '$dataNow';";
+				$query = "SELECT i.id FROM invoices i " .
+						" INNER JOIN invoices_bind bind ON bind.invoice_id = i.id ".
+						" INNER JOIN companies c ON bind.company_id = c.id ".
+						" WHERE deletada = 0 AND status_id = 2 AND data_vencimento < '$dataNow' $privEmpStr; ";
 				break;
 		}		
 		
